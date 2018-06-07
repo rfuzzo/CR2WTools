@@ -42,23 +42,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\ArrayAttribute.cs" />
-    <Compile Include="Attributes\BoolAttribute.cs" />
-    <Compile Include="Attributes\CGUIDAttribute.cs" />
-    <Compile Include="Attributes\CNameAttribute.cs" />
-    <Compile Include="Attributes\FloatAttribute.cs" />
-    <Compile Include="Attributes\Int16Attribute.cs" />
-    <Compile Include="Attributes\Int32Attribute.cs" />
-    <Compile Include="Attributes\Int64Attribute.cs" />
-    <Compile Include="Attributes\Int8Attribute.cs" />
-    <Compile Include="Attributes\LocStringAttribute.cs" />
-    <Compile Include="Attributes\PropAttribute.cs" />
-    <Compile Include="Attributes\ResourceAttribute.cs" />
-    <Compile Include="Attributes\StringAttribute.cs" />
-    <Compile Include="Attributes\Uint16Attribute.cs" />
-    <Compile Include="Attributes\Uint32Attribute.cs" />
-    <Compile Include="Attributes\Uint64Attribute.cs" />
-    <Compile Include="Attributes\Uint8Attribute.cs" />
     <Compile Include="IO\SBlock6Item.cs" />
     <Compile Include="CR2WController.cs" />
     <Compile Include="CRC32\Crc32Algorithm.cs" />

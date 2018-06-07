@@ -11,6 +11,7 @@ using CR2W.Types.W3;
 using CR2W.Testing;
 using CR2W.Resources;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace CR2WConsole
 {
@@ -26,7 +27,7 @@ namespace CR2WConsole
                 {
                     try
                     {
-                        CR2WParser.New(of.FileName);
+                        TestParser.New(of.FileName);
                     }
                     catch(Exception e)
                     {

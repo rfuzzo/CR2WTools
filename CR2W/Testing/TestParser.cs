@@ -503,20 +503,146 @@ namespace CR2W.Testing
 
             var varType = references[Convert.ToInt32(TypeID)].Value;
 
-            var chunkBytes = br.ReadBytes(Convert.ToInt32(Size));
-            using (var mem = new MemoryStream(chunkBytes))
+            var end = br.BaseStream.Position + Size;
+            Console.WriteLine("Data");
+            Console.WriteLine("{");
+            ReadVariable(br, "\t");
+            Console.WriteLine("}");
+
+            if(end - br.BaseStream.Position != 0)
             {
-                using (var varBr = new BinaryReader(mem))
+                var unknown = br.ReadBytes(Convert.ToInt32(end - br.BaseStream.Position));
+                Console.WriteLine("Unknown Bytes: {0}", unknown.Length);
+            }
+            else
+            {
+                Console.WriteLine("Unknown Bytes: 0");
+            }
+            Console.WriteLine();
+        }
+
+        private void ReadVariable( BinaryReader br, string offset )
+        {
+            br.ReadByte();
+            while(true)
+            {
+                var nameId = br.ReadInt16();
+                if(nameId == 0)
                 {
-                    Console.WriteLine("Data");
-                    Console.WriteLine("{");
-                    ReadVariable(varBr, varType, "\t");
-                    Console.WriteLine("}");
-                    Console.WriteLine();
+                    break;
                 }
+                var typeId = br.ReadInt16();
+                var size = br.ReadInt32() - 4;
+                Console.Write("{0}{1} {2}", offset, references[nameId].Value, references[typeId].Value);
+                ParseVariale(br, references[typeId].Value, size, $"\t{offset}");
             }
         }
 
+        private void ParseVariale( BinaryReader br, string type, int size, string offset )
+        {
+            var arr = type.Split(new char[] { ':' }, 2);
+            switch(arr[0])
+            {
+                case "Uint8":
+                    Console.WriteLine(" {0}", br.ReadByte());
+                    return;
+                case "Uint16":
+                    Console.WriteLine(" {0}", br.ReadUInt16());
+                    return;
+                case "Uint32":
+                    Console.WriteLine(" {0}", br.ReadUInt32());
+                    return;
+                case "Uint64":
+                    Console.WriteLine(" {0}", br.ReadUInt64());
+                    return;
+                case "Int8":
+                    Console.WriteLine(" {0}", br.ReadSByte());
+                    return;
+                case "Int16":
+                    Console.WriteLine(" {0}", br.ReadInt16());
+                    return;
+                case "Int32":
+                    Console.WriteLine(" {0}", br.ReadInt32());
+                    return;
+                case "Int64":
+                    Console.WriteLine(" {0}", br.ReadInt64());
+                    return;
+                case "Float":
+                    Console.WriteLine(" {0}", br.ReadSingle());
+                    return;
+                case "Double":
+                    Console.WriteLine(" {0}", br.ReadDouble());
+                    return;
+                case "String":
+                    Console.WriteLine(" {0}", br.ReadCR2WStringSingle());
+                    return;
+                case "StringAnsi":
+                    Console.WriteLine(" {0}", br.ReadStringAnsi());
+                    return;
+                case "Bool":
+                    Console.WriteLine(" {0}", br.ReadBoolean());
+                    return;
+                case "CName":
+                    Console.WriteLine(" {0}", references[br.ReadUInt16()].Value);
+                    return;
+                case "CGUID":
+                    Console.WriteLine(" {0}", br.ReadGuid());
+                    return;
+                case "LocalizedString":
+                    Console.WriteLine(" {0}", br.ReadUInt32());
+                    return;
+                case "ptr":
+                    Console.WriteLine(" Chunk {0}", br.ReadUInt32());
+                    return;
+                case "soft":
+                    var Id = br.ReadUInt16();
+                    Console.WriteLine(" {0} {1} ({2})", handles[Id-1].Type, handles[Id-1].Path, handles[Id-1].Flags);
+                    return;
+                case "array":
+                    var len = br.ReadUInt32();
+                    arr = arr[1].Split(new char[] { ',' }, 3);
+                    Console.WriteLine(" {0}", len);
+                    Console.WriteLine("{0}{{", offset.Substring(1));
+                    for (uint i = 0; i < len; i++)
+                    {
+                        Console.Write("{0}Id {1}:", offset, i);
+                        ParseVariale(br, arr[2], size, $"\t{offset}");
+                    }
+                    Console.WriteLine("{0}}}", offset.Substring(1));
+                    return;
+                case "handle":
+                    Console.WriteLine(" Chunk {0}", br.ReadInt32());
+                    return;
+                case "static":
+                case "IdTag": 
+                case "DeferredDataBuffer":
+                case "SharedDataBuffer":
+                case "EntityHandle":
+                case "EngineTransform":
+                case "TagList":
+                case "CClipMapCookedData":
+                case "DataBuffer":
+                    Console.WriteLine("{0}{1} bytes", offset, size);
+                    br.ReadBytes(size);
+                    return;
+            }
+            Type myType = Type.GetType($"CR2W.Types.W3.{type}");
+            if (myType != null)
+            {
+                if (myType.IsEnum)
+                {
+                    Console.WriteLine( " {0}", references[br.ReadUInt16()].Value );
+                    return;
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("{0}{{", offset.Substring(1));
+            ReadVariable(br, offset);
+            Console.WriteLine("{0}}}", offset.Substring(1));
+        }
+
+        //Obsolete / Old
+        /*
         void ReadVariable(BinaryReader br, string type, string offset )
         {
             if(IsBaseType(type, br, out var value, offset))
@@ -677,6 +803,9 @@ namespace CR2W.Testing
             value = null;
             return false;
         }
+        */
+        //Obsolete / Old
+
 
         //Read a single embedded file from an item in block 7
         //Should only be called by ReadEmbedded().

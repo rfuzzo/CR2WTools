@@ -55,6 +55,22 @@ namespace CR2W
             return strs;
         }
 
+        public static string ReadStringAnsi(this BinaryReader br)
+        {
+            var b = br.ReadByte();
+            var nxt = (b & (1 << 7)) != 0;
+            int len = b & ((1 << 7) - 1);
+
+            if (nxt)
+            {
+                return Encoding.Unicode.GetString(br.ReadBytes(len * 2));
+            }
+            else
+            {
+                return Encoding.ASCII.GetString(br.ReadBytes(len));
+            }
+        }
+
         public static string ReadString(this BinaryReader br, int length)
         {
             return new string(br.ReadChars(length));

@@ -1,4 +1,11 @@
-﻿namespace CR2W.Types.W3
+﻿
+
+
+
+
+
+
+namespace CR2W.Types.W3
 {
     public class CSwfTexture : CBitmapTexture
     {

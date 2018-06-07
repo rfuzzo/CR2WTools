@@ -20,9 +20,9 @@ namespace CR2W.Types.W3
         public override void ParseBytes(BinaryReader br, CR2WParser parser)
         {
             base.ParseBytes(br, parser);
-            /* - TODO: As CBitmapTexture has additional data beyond 
-             *         the class structure here needs to come some more
-             *         code to parse the remaining bytes.
+
+            /* - ToDo:
+             *   Read Bitmap texture bytes.
              */
         }
     }
