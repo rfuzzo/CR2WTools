@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace CR2W.IO
 {
-    public struct SChunk
+    public struct SObject
     {
-        public string type;
-        public uint flags;
+        public ushort typeID;
+        public ushort flags;
         public uint parentID;
-        public byte[] data;
+        public uint size;
+        public uint offset;
+        public uint template;
     }
 }

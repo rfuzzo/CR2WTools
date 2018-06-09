@@ -1,5 +1,6 @@
 ﻿using CR2W.IO;
 using System.IO;
+using System.Drawing;
 
 namespace CR2W.Types.W3
 {
@@ -17,9 +18,11 @@ namespace CR2W.Types.W3
         public int ResidentMipIndex { get; set; }
         public int TextureCacheKey { get; set; }
 
-        public override void ParseBytes(BinaryReader br, CR2WParser parser)
+        public Bitmap TextureMap { get; set; }
+
+        public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
-            base.ParseBytes(br, parser);
+            base.ParseBytes(br, size);
 
             /* - ToDo:
              *   Read Bitmap texture bytes.

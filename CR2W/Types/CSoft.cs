@@ -19,15 +19,15 @@ namespace CR2W.Types
             return typeof(T);
         }
 
-        public void ParseBytes(BinaryReader br, CR2WParser parser)
+        public void ParseBytes(CR2WBinaryReader br, uint size)
         {
             var id = br.ReadUInt16();
-            if(parser.handles[id].type != typeof(T).Name)
+            if(br.resources[id].type != typeof(T).Name)
             {
-                throw new InvalidOperationException($"[soft] Mismatch type! Expected type is {typeof(T).Name} but value was read as {parser.handles[id].type}");
+                throw new InvalidOperationException($"[soft] Mismatch type! Expected type is {typeof(T).Name} but value was read as {br.resources[id].type}");
             }
-            DepotPath = parser.handles[id].path;
-            Flags     = parser.handles[id].flags;
+            DepotPath = br.resources[id].path;
+            Flags     = br.resources[id].flags;
         }
     }
 }

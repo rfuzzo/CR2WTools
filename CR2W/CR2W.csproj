@@ -34,6 +34,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,7 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IO\SBlock6Item.cs" />
+    <Compile Include="Attributes\W3TypeAttribute.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="IO\SBuffer.cs" />
     <Compile Include="CR2WController.cs" />
     <Compile Include="CRC32\Crc32Algorithm.cs" />
     <Compile Include="CRC32\Crc32CAlgorithm.cs" />
@@ -51,12 +54,11 @@
     <Compile Include="Exceptions\MismatchCRC32Exception.cs" />
     <Compile Include="Exceptions\InvalidCR2WFileException.cs" />
     <Compile Include="Exceptions\UnknownObjectTypeException.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="IO\CR2WExporter.cs" />
-    <Compile Include="IO\CR2WParser.cs" />
-    <Compile Include="IO\SChunk.cs" />
+    <Compile Include="IO\CR2WBinaryWriter.cs" />
+    <Compile Include="IO\CR2WBinaryReader.cs" />
+    <Compile Include="IO\SObject.cs" />
     <Compile Include="IO\SEmbedded.cs" />
-    <Compile Include="IO\SHandle.cs" />
+    <Compile Include="IO\SResource.cs" />
     <Compile Include="IO\SHeader.cs" />
     <Compile Include="Resources\CResourceExt.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -83,10 +85,14 @@
     <Compile Include="Types\LocalizedString.cs" />
     <Compile Include="Types\SharedDataBuffer.cs" />
     <Compile Include="Types\TagList.cs" />
+    <Compile Include="Types\W3\C2dArray.cs" />
     <Compile Include="Types\W3\CBitmapTexture.cs" />
+    <Compile Include="Types\W3\CEnvironmentDefinition.cs" />
+    <Compile Include="Types\W3\CIndexed2dArray.cs" />
     <Compile Include="Types\W3\CRagdoll.cs" />
     <Compile Include="Types\W3\CSourceTexture.cs" />
     <Compile Include="Types\W3\CSwfTexture.cs" />
+    <Compile Include="Types\W3\CTerrainTile.cs" />
     <Compile Include="Types\W3\CWizardBaseNode.cs" />
     <Compile Include="Types\W3\CWizardDefinition.cs" />
     <Compile Include="Types\W3\CWizardQuestionNode.cs" />

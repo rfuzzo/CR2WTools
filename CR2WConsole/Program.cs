@@ -3,15 +3,18 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Reflection;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CR2W;
 using CR2W.IO;
 using CR2W.Types;
 using CR2W.Types.W3;
+using CR2W.CRC32;
 using CR2W.Testing;
 using CR2W.Resources;
-using System.Reflection;
-using System.Diagnostics;
+using CR2W.Attributes;
 
 namespace CR2WConsole
 {
@@ -27,7 +30,7 @@ namespace CR2WConsole
                 {
                     try
                     {
-                        TestParser.New(of.FileName);
+                        CR2WController.LoadResource(of.FileName);
                     }
                     catch(Exception e)
                     {

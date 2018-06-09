@@ -10,6 +10,6 @@ namespace CR2W.Types
 {
     public interface IReferencable
     {
-        void ParseBytes(BinaryReader br, CR2WParser parser);
+        void ParseBytes(CR2WBinaryReader parser, uint size);
     }
 }

@@ -28,9 +28,9 @@ namespace CR2W.Types.W3
         float ModifySwingZ { get; set; }
         Int32 ProjectionIterations { get; set; }
 
-        public override void ParseBytes(BinaryReader br, CR2WParser parser)
+        public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
-            base.ParseBytes(br, parser);
+            base.ParseBytes(br, size);
             /* - TODO:
              *   Read the XML file embedded inside.
              */

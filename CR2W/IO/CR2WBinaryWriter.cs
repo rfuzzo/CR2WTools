@@ -7,7 +7,7 @@ using CR2W.Types.W3;
 
 namespace CR2W.IO
 {
-    public sealed class CR2WExporter
+    public sealed class CR2WBinaryWriter
     {
         private uint AddToStringTable( string value )
         {
