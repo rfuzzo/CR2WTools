@@ -12,6 +12,6 @@ namespace CR2W.Types
 {
     public class CArray<T> : List<T>
     {
-
+        
     }
 }

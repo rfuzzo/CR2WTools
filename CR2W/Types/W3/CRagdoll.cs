@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using CR2W.IO;
+using CR2W.Attributes;
 
 namespace CR2W.Types.W3
 {
-    class CRagdoll : CResource
+    public class CRagdoll : CResource
     {
         float WindScaler { get; set; }
         float DensityScaler { get; set; }
@@ -28,12 +30,15 @@ namespace CR2W.Types.W3
         float ModifySwingZ { get; set; }
         Int32 ProjectionIterations { get; set; }
 
+        XmlDocument Data { get; set; }
+
         public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
+            //Parse the bytes at the beginning which will map the class structure
             base.ParseBytes(br, size);
-            /* - TODO:
-             *   Read the XML file embedded inside.
-             */
+
+            //Now read the XML document at the end of the object data
+            Data = br.ReadXMLDocument();
         }
     }
 }

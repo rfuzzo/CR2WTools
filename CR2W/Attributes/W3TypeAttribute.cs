@@ -11,10 +11,10 @@ namespace CR2W.Attributes
     public class W3TypeAttribute : Attribute
     {
         public string Name { get; set; }
-        public Type Handler { get; set; }
+        public string Type { get; set; }
         public string Description { get; set; }
 
-        public W3TypeAttribute( string name, Type handler )
+        public W3TypeAttribute( string name, string type )
         {
             if(String.IsNullOrEmpty(name))
             {
@@ -25,10 +25,10 @@ namespace CR2W.Attributes
                 throw new InvalidOperationException("[W3TypeAttribute] Name property is not a CName");
             }
             Name = name;
-            Handler = handler;
+            Type = type;
         }
 
-        public W3TypeAttribute(string name, Type handler, string description) : this(name, handler)
+        public W3TypeAttribute(string name, string type, string description) : this(name, type)
         {
             if (String.IsNullOrEmpty(description))
             {

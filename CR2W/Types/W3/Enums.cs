@@ -23,24 +23,45 @@ namespace CR2W.Types.W3
         PED_Right,
         PED_RightForward
     }
+
+    [Flags]
     public enum EDrawableFlags
     {
-        DF_IsVisible,
-        DF_CastShadows,
-        DF_NoDissolves,
-        DF_CastShadowsWhenNotVisible,
-        DF_MissedUpdateTransform,
+        DF_IsVisible = 1,
+        DF_MissedUpdateTransform = 2,
+        DF_CastShadows = 4,
+        DF_ForceNoAutohide = 8,
+        DF_DynamicGeometry = 16,
+        DF_CastShadowsWhenNotVisible = 32,
+        DF_IsCharacterShadowFallback = 64,
+        DF_NoDissolves = 128,
+        DF_ForceTwoSided = 256,
+        DF_ForceHighestLOD = 512,
+        DF_UseInAllApperances = 1024,
+        DF_ClimbBlock = 2048,
+        DF_UseWithSimplygonOnly = 4096,
+        DF_Collapsed = 8192,
+        DF_CastShadowsFromLocalLightsOnly = 16384,
+        DF_NoLighting = 32768,
+        DF_CameraTransformOnlyPosition = 65536,
     }
+
+    [Flags]
     public enum ELightChannel
     {
-        LC_Characters,
-        LC_Interactive,
-        LC_Custom0,
+        LC_Characters = 1,
+        LC_Interactive = 2,
+        LC_Custom0 = 4,
     }
+
+    [Flags]
     public enum EEntityStaticFlags
     {
-
+        ESF_Streamed = 1,
+        ESF_NoCompExtract = 2,
+        ESF_NoVisibilityQuery = 4,
     }
+
     public enum EPlayerParryDirection
     {
         PPD_Forward,
@@ -48,6 +69,7 @@ namespace CR2W.Types.W3
         PPD_Back,
         PPD_Right
     }
+
     public enum EPlayerRepelType
     {
         PRT_Random,
@@ -56,11 +78,13 @@ namespace CR2W.Types.W3
         PRT_Slash,
         PRT_SideStepSlash
     }
+
     public enum EItemType
     {
         IT_Petard,
         IT_Bolt
     }
+
     public enum ESpecialAbilityInput
     {
         SAI_Up,
@@ -68,6 +92,7 @@ namespace CR2W.Types.W3
         SAI_Left,
         SAI_Right
     }
+
     public enum EThrowStage
     {
         TS_Start,
@@ -75,6 +100,7 @@ namespace CR2W.Types.W3
         TS_End,
         TS_Stop
     }
+
     public enum EParryStage
     {
         PS_Start,
@@ -3132,51 +3158,86 @@ namespace CR2W.Types.W3
         MainCharacter,
         SideCharacter
     }
+
     public enum eGwintFaction
     {
         GwintFaction_Neutral,
         GwintFaction_NoMansLand,
         GwintFaction_Nilfgaard,
         GwintFaction_NothernKingdom,
-        GwintFaction_Scoiatael
+        GwintFaction_Scoiatael,
+        GwintFaction_Skellige
     }
+
+    [Flags]
     public enum eGwintType
     {
-        GwintType_None,
-        GwintType_Melee,
-        GwintType_Ranged,
-        GwintType_Siege,
-        GwintType_Creature
+        GwintType_None = 0,
+        GwintType_Melee = 1,
+        GwintType_Ranged = 2,
+        GwintType_Siege = 4,
+        GwintType_Creature = 8,
+        GwintType_Weather = 16,
+        GwintType_Spell = 32,
+        GwintType_RowModifier = 64,
+        GwintType_Hero = 128,
+        GwintType_Spy = 256,
+        GwintType_FriendlyEffect = 512,
+        GwintType_OffensiveEffect = 1024,
+        GwintType_GlobalEffect = 2048,
     }
+
+    //Commented out values are effects that exist within the game, but only as numbers
+    //the enum 'text' is missing, and so cannot be referenced by that value.
     public enum eGwintEffect
     {
-        GwintEffect_None,
-        GwintEffect_Bin2,
-        GwintEffect_MeleeScorch,
-        GwintEffect_11thCard,
-        GwintEffect_ClearWeather,
-        GwintEffect_PickWeatherCard,
-        GwintEffect_PickRainCard,
-        GwintEffect_PickFogCard,
-        GwintEffect_PickFrostCard,
-        GwintEffect_View3EnemyCard,
-        GwintEffect_ResurectCard,
-        GwintEffect_ResurectFromEnemy,
-        GwintEffect_Bin2Pick1,
-        GwintEffect_MeleeHorn,
-        GwintEffect_RangedHorn,
-        GwintEffect_SiegeHorn,
-        GwintEffect_SiegeScorch,
-        GwintEffect_CounterKingAbility,
-        GwintEffect_Melee,
-        GwintEffect_Ranged,
-        GwintEffect_Siege,
-        GwintEffect_UnsummonDummy,
-        GwintEffect_Horn,
-        GwintEffect_Draw,
-        GwintEffect_Scorch,
-        GwintEffect_ClearSky
+        GwintEffect_None = 0,
+        // GwintEffect_BackStab = 1,
+        // GwintEffect_MoraleBoost = 2,
+        // GwintEffect_Ambush = 3,
+        // GwintEffect_ToughSkin = 4,
+        GwintEffect_Bin2 = 5,
+        // GwintEffect_Bin3 = 6,
+        GwintEffect_MeleeScorch = 7,
+        GwintEffect_11thCard = 8,
+        GwintEffect_ClearWeather = 9,
+        GwintEffect_PickWeatherCard = 10,
+        GwintEffect_PickRainCard = 11,
+        GwintEffect_PickFogCard = 12,
+        GwintEffect_PickFrostCard = 13,
+        GwintEffect_View3EnemyCard = 14,
+        GwintEffect_ResurectCard = 15,
+        GwintEffect_ResurectFromEnemy = 16,
+        GwintEffect_Bin2Pick1 = 17,
+        GwintEffect_MeleeHorn = 18,
+        GwintEffect_RangedHorn = 19,
+        GwintEffect_SiegeHorn = 20,
+        GwintEffect_SiegeScorch = 21,
+        GwintEffect_CounterKingAbility = 22,
+        GwintEffect_Melee = 23,
+        GwintEffect_Ranged = 24,
+        GwintEffect_Siege = 25,
+        GwintEffect_UnsummonDummy = 26,
+        GwintEffect_Horn = 27,
+        GwintEffect_Draw = 28,
+        GwintEffect_Scorch = 29,
+        GwintEffect_ClearSky = 30,
+        GwintEffect_SummonClones = 31,
+        GwintEffect_ImproveNeightbours = 32,
+        GwintEffect_Nurse = 33,
+        GwintEffect_Draw2 = 34,
+        GwintEffect_SameTypeMorale = 35,
+        // GwintEffect_AgileReposition = 36,
+        // GwintEffect_RandomRessurect = 37,
+        // GwintEffect_DoubleSpy = 38,	
+        // GwintEffect_RangedScorch = 39,
+        // GwintEffect_SuicideSummon = 40,	
+        GwintEffect_Mushroom = 41,
+        GwintEffect_Morph = 42,
+        GwintEffect_WeatherResistant = 43,
+        GwintEffect_GraveyardShuffle = 44,
     }
+
     public enum ECombatTargetSelectionSkipTarget
     {
         CTSST_SKIP_ALWAYS,
@@ -4253,33 +4314,36 @@ namespace CR2W.Types.W3
         CSM_4,
         CSM_5
     }
+
+    [Flags]
     public enum ETriggerChannel
     {
-        TC_Default,
-        TC_Player,
-        TC_Camera,
-        TC_NPC,
-        TC_SoundReverbArea,
-        TC_SoundAmbientArea,
-        TC_Quest,
-        TC_Projectiles,
-        TC_Horse,
-        TC_Custom0,
-        TC_Custom1,
-        TC_Custom2,
-        TC_Custom3,
-        TC_Custom4,
-        TC_Custom5,
-        TC_Custom6,
-        TC_Custom7,
-        TC_Custom8,
-        TC_Custom9,
-        TC_Custom10,
-        TC_Custom11,
-        TC_Custom12,
-        TC_Custom13,
-        TC_Custom14,
+        TC_Default = 1,
+        TC_Player = 2,
+        TC_Camera = 4,
+        TC_NPC = 8,
+        TC_SoundReverbArea = 16,
+        TC_SoundAmbientArea = 32,
+        TC_Quest = 64,
+        TC_Projectiles = 128,
+        TC_Horse = 256,
+        TC_Custom0 = 65536,
+        TC_Custom1 = 131072,
+        TC_Custom2 = 262144,
+        TC_Custom3 = 524288,
+        TC_Custom4 = 1048576,
+        TC_Custom5 = 2097152,
+        TC_Custom6 = 4194304,
+        TC_Custom7 = 8388608,
+        TC_Custom8 = 16777216,
+        TC_Custom9 = 33554432,
+        TC_Custom10 = 67108864,
+        TC_Custom11 = 134217728,
+        TC_Custom12 = 268435456,
+        TC_Custom13 = 536870912,
+        TC_Custom14 = 1073741824,
     }
+
     public enum EGameplayMimicMode
     {
         GMM_Default,

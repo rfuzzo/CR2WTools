@@ -6,6 +6,7 @@ using System.Text;
 using System.Reflection;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using CR2W;
 using CR2W.IO;
@@ -31,6 +32,7 @@ namespace CR2WConsole
                     try
                     {
                         CR2WController.LoadResource(of.FileName);
+                        //TestParser.New(of.FileName);
                     }
                     catch(Exception e)
                     {
@@ -39,6 +41,7 @@ namespace CR2WConsole
                 }
             }
         }
+
 
         /* - Class Types
          *      ClassTypes: Dumped from all CR2W files, and are all the different chunk types.

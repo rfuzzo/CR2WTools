@@ -10,32 +10,52 @@ namespace CR2W.Types.W3
 {
     public class C2dArray : CResource
     {
-        public CArray<string>         Headers { get; set; }
+        public CArray<string> Headers { get; set; }
         public CArray<CArray<string>> Data { get; set; }
 
         public string GetValueAt(int collumn, int row)
         {
-            throw new NotImplementedException();
+            return Data[row][collumn];
         }
 
         public string GetValue(string header, int row)
         {
-            throw new NotImplementedException();
+            var id = Headers.IndexOf(header);
+            return Data[row][id];
         }
 
-        public string GetNumRows()
+        public int GetNumRows()
         {
-            throw new NotImplementedException();
+            return Data.Count;
         }
 
-        public string GetRowIndexAt(int collumn, string value)
+        public int GetRowIndexAt(int collumn, string value)
         {
-            throw new NotImplementedException();
+            for (int row = 0; row < Data.Count; row++)
+            {
+                if(Data[row][collumn] == value)
+                {
+                    return row;
+                }
+            }
+            return -1;
         }
 
-        public string GetRowIndex(string header, string value)
+        public int GetRowIndex(string header, string value)
         {
-            throw new NotImplementedException();
+            var collumn = Headers.IndexOf(header);
+            return GetRowIndexAt(collumn, value);
+        }
+
+        public void SetValue( int row, int collumn, string value )
+        {
+            Data[row][collumn] = value;
+        }
+
+        public void SetValue( string header, int row, string value )
+        {
+            var collumn = Headers.IndexOf(header);
+            SetValue(row, collumn, value);
         }
     }
 }

@@ -15,6 +15,11 @@ namespace CR2W.Types.W3
         public Dictionary<Guid, CObject> Children  { get; set; }
         public uint Flags { get; set; }
 
+        public CObject()
+        {
+            Children = new Dictionary<Guid, CObject>();
+        }
+
         /// <summary>
         /// Get the CObject parent for this instance 
         /// </summary>
@@ -50,7 +55,7 @@ namespace CR2W.Types.W3
             Console.WriteLine($"\t- Type:     {GetType().Name}");
             Console.WriteLine($"\t- Size:     {size} bytes");
             Console.WriteLine($"\t- Flags:    {Flags}");
-            //Console.WriteLine($"\t- Children: {Children.Count}");
+            Console.WriteLine($"\t- Children: {Children.Count}");
 
             /*
              *  - TODO:
@@ -85,17 +90,6 @@ namespace CR2W.Types.W3
             Console.WriteLine("{");
             ReadVariable(br, "\t");
             Console.WriteLine("}");
-            if (end - br.BaseStream.Position != 0)
-            {
-                Console.WriteLine("Unknown Bytes: {0}", end - br.BaseStream.Position);
-                var unknown = br.ReadBytes(Convert.ToInt32(end - br.BaseStream.Position));
-                Console.WriteLine("Unknown Data: |{0}|", Encoding.ASCII.GetString(unknown));
-            }
-            else
-            {
-                Console.WriteLine("Unknown Bytes: 0");
-            }
-            Console.WriteLine();
         }
 
         [Obsolete("This will need to be replaced by a proper class mapping system.")]
@@ -221,19 +215,19 @@ namespace CR2W.Types.W3
         }
 
         /// <summary>
-        /// Get the first property from an instance where the name given matches that of the name defined in a W3TypeAttribute. 
+        /// Get the first property from an instance where the name and type given matches that of the name defined in a W3TypeAttribute. 
         /// </summary>
         /// <param name="name">Name to check for</param>
         /// <param name="value">The object instance to check in</param>
         /// <returns>A property info object of the first property with the name</returns>
-        public static PropertyInfo GetPropertyByW3Name(string name, object value)
+        public static PropertyInfo GetPropertyByW3Name(string name, string type, object value)
         {
             var props = value.GetType().GetProperties().Where(prop =>
             {
                 if (prop.IsDefined(typeof(W3TypeAttribute), false))
                 {
                     var attribute = (W3TypeAttribute)prop.GetCustomAttribute(typeof(W3TypeAttribute));
-                    return attribute.Name == name;
+                    return (attribute.Name == name) && (attribute.Type == type);
                 }
                 else
                 {

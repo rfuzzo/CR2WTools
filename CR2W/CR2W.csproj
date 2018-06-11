@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\ResourceTypeAttribute.cs" />
     <Compile Include="Attributes\W3TypeAttribute.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IO\SBuffer.cs" />
@@ -75,12 +76,13 @@
     <Compile Include="Types\CPtr.cs" />
     <Compile Include="Types\CSoft.cs" />
     <Compile Include="Types\DataBuffer.cs" />
+    <Compile Include="Types\EngineQsTransform.cs" />
     <Compile Include="Types\EngineTransform.cs" />
     <Compile Include="Types\EntityHandle.cs" />
     <Compile Include="Types\IdTag.cs" />
-    <Compile Include="Types\IReferencable.cs" />
-    <Compile Include="Types\IScriptable.cs" />
-    <Compile Include="Types\ISerializable.cs" />
+    <Compile Include="Types\W3\IReferencable.cs" />
+    <Compile Include="Types\W3\IScriptable.cs" />
+    <Compile Include="Types\W3\ISerializable.cs" />
     <Compile Include="Types\ITexture.cs" />
     <Compile Include="Types\LocalizedString.cs" />
     <Compile Include="Types\SharedDataBuffer.cs" />

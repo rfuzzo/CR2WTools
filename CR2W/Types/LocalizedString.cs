@@ -8,9 +8,12 @@ namespace CR2W.Types
 {
     public class LocalizedString
     {
+        public LocalizedString(uint value)
+        {
 
 
 
 
+        }
     }
 }

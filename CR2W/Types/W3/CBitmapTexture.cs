@@ -1,6 +1,7 @@
-﻿using CR2W.IO;
+﻿using System;
 using System.IO;
 using System.Drawing;
+using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
@@ -23,10 +24,6 @@ namespace CR2W.Types.W3
         public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
             base.ParseBytes(br, size);
-
-            /* - ToDo:
-             *   Read Bitmap texture bytes.
-             */
         }
     }
 }

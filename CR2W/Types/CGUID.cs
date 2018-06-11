@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
-    public sealed class CGUID
+    public struct CGUID
     {
         private Guid _value;
 

@@ -28,7 +28,8 @@ namespace CR2W
                     resource,
                     FileMode.Open,
                     FileAccess.Read
-                )
+                ),
+                false
             );
             return br.Resource;
         }

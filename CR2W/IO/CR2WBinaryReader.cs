@@ -8,6 +8,7 @@ using CR2W.CRC32;
 using CR2W.Types.W3;
 using CR2W.Exceptions;
 using CR2W.Attributes;
+using System.Xml;
 
 namespace CR2W.IO
 {
@@ -15,15 +16,11 @@ namespace CR2W.IO
     {
         #region Constructors
 
-        public CR2WBinaryReader( string filePath, Stream input ) : base(input, Encoding.ASCII, false)
-        {
-            FilePath = filePath;
-            ReadAll();
-        }
-
-        public CR2WBinaryReader(string filePath, Stream input, bool ignoreCrc) : this(filePath, input)
+        public CR2WBinaryReader( string filePath, Stream input, bool ignoreCrc = false) : base(input, Encoding.ASCII, false)
         {
             IgnoreCRC = ignoreCrc;
+            FilePath = filePath;
+            ReadAll();
         }
 
         #endregion
@@ -77,21 +74,20 @@ namespace CR2W.IO
         /// <summary>
         /// Read the whole file
         /// </summary>
-        /// <param name="br"></param>
         public void ReadAll()
         {
             BaseStream.Seek(0, SeekOrigin.Begin);
 
             if (!Magic.SequenceEqual(ReadBytes(4)))
             {
-                throw new InvalidCR2WFileException("Not a CR2W file - Missing 'CR2W' magic header");
+                throw new InvalidCR2WFileException("Not a CR2W file - Missing 'CR2W' magic header.");
             }
 
             var version = ReadUInt32();
 
             if( !(version == 162 || version == 163) )
             {
-                throw new InvalidCR2WFileException($"This reader only supports CR2W versions 162 and 163. File version was read as {version}");
+                throw new InvalidCR2WFileException($"This reader only supports CR2W versions 162 and 163. File version was read as {version}.");
             }
 
             //Base data.
@@ -117,10 +113,6 @@ namespace CR2W.IO
 
             //Class Constructing
             CreateResource();
-
-            //Clear uneeded data.
-            headers = null;
-            stringtable = null;
         }
 
         /// <summary>
@@ -167,10 +159,13 @@ namespace CR2W.IO
             var size = headers[0].size;
             var crc = headers[0].crc32;
 
-            BaseStream.Seek(start, SeekOrigin.Begin);
-            if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size))) != crc)
+            if(!IgnoreCRC)
             {
-                throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 1 - String Table");
+                BaseStream.Seek(start, SeekOrigin.Begin);
+                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size))) != crc)
+                {
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 1 - String Table");
+                }
             }
 
             stringtable = new Dictionary<uint, string>();
@@ -202,10 +197,13 @@ namespace CR2W.IO
             var size = headers[1].size;
             var crc = headers[1].crc32;
 
-            BaseStream.Seek(start, SeekOrigin.Begin);
-            if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
+            if (!IgnoreCRC)
             {
-                throw new MismatchCRC32Exception( "CRC32 Checksum failed for Block 2 - References" );
+                BaseStream.Seek(start, SeekOrigin.Begin);
+                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
+                {
+                    throw new MismatchCRC32Exception( "CRC32 Checksum failed for Block 2 - References" );
+                }
             }
 
             names = new string[size];
@@ -232,10 +230,13 @@ namespace CR2W.IO
             var size = headers[2].size;
             var crc = headers[2].crc32;
 
-            BaseStream.Seek(start, SeekOrigin.Begin);
-            if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
+            if (!IgnoreCRC)
             {
-                throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 3 - Handles");
+                BaseStream.Seek(start, SeekOrigin.Begin);
+                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
+                {
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 3 - Handles");
+                }
             }
 
             resources = new SResource[size];
@@ -276,10 +277,13 @@ namespace CR2W.IO
             var size = headers[4].size;
             var crc = headers[4].crc32;
 
-            BaseStream.Seek(start, SeekOrigin.Begin);
-            if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
+            if (!IgnoreCRC)
             {
-                throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 5 - Chunks");
+                BaseStream.Seek(start, SeekOrigin.Begin);
+                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
+                {
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 5 - Chunks");
+                }
             }
 
             objects = new SObject[size];
@@ -297,16 +301,17 @@ namespace CR2W.IO
                 };
                 var crc32 = ReadUInt32();
 
-                var pos = BaseStream.Position;
-
-                BaseStream.Seek(Convert.ToInt32(temp.offset), SeekOrigin.Begin);
-                if(Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(temp.size))) != crc32)
+                if (!IgnoreCRC)
                 {
-                    throw new MismatchCRC32Exception($"CRC32 checksum failed for chunk {i+1} ({names[temp.typeID]})");
+                    var pos = BaseStream.Position;
+                    BaseStream.Seek(Convert.ToInt32(temp.offset), SeekOrigin.Begin);
+                    if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(temp.size))) != crc32)
+                    {
+                        throw new MismatchCRC32Exception($"CRC32 checksum failed for chunk {i+1} ({names[temp.typeID]})");
+                    }
+                    BaseStream.Seek(pos, SeekOrigin.Begin);
                 }
-
                 objects[i] = temp;
-                BaseStream.Seek(pos, SeekOrigin.Begin);
             }
         }
 
@@ -319,10 +324,13 @@ namespace CR2W.IO
             var size = headers[5].size;
             var crc = headers[5].crc32;
 
-            BaseStream.Seek(start, SeekOrigin.Begin);
-            if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
+            if (!IgnoreCRC)
             {
-                throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 6 - Buffers");
+                BaseStream.Seek(start, SeekOrigin.Begin);
+                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
+                {
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 6 - Buffers");
+                }
             }
 
             buffers = new SBuffer[size];
@@ -350,10 +358,13 @@ namespace CR2W.IO
             var size = headers[6].size;
             var crc = headers[6].crc32;
 
-            BaseStream.Seek(start, SeekOrigin.Begin);
-            if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
+            if (!IgnoreCRC)
             {
-                throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 7 - Embedded");
+                BaseStream.Seek(start, SeekOrigin.Begin);
+                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
+                {
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 7 - Embedded");
+                }
             }
 
             embedded = new SEmbedded[size];
@@ -434,11 +445,6 @@ namespace CR2W.IO
             return new CName(names[ReadUInt16()]);
         }
 
-        public string ReadName()
-        {
-            return names[ReadUInt16()];
-        }
-
         public CGUID ReadCGUID()
         {
             return new CGUID(ReadBytes(16));
@@ -503,6 +509,20 @@ namespace CR2W.IO
             }
         }
 
+        public LocalizedString ReadLocalizedString()
+        {
+            return new LocalizedString(ReadUInt32());
+        }
+
+        public XmlDocument ReadXMLDocument()
+        {
+            var length = ReadInt32();
+            var xmlstr = Encoding.UTF8.GetString(ReadBytes(length));
+            Console.WriteLine(xmlstr);
+            var doc = new XmlDocument();
+            doc.LoadXml(xmlstr);
+            return doc;
+        }
         #endregion
 
         #region Cleaning Up
@@ -510,7 +530,7 @@ namespace CR2W.IO
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            //Most likey will want to clear some uneeded varibales and wahatnot
+            //Most likely will want to clear some unneeded variables and whatnot
             //Anything that isn't needed like the headers and blocks 1,2,3.
             //Will not do until the data is mapped from block 5 and i can be
             //sure of what data will not be needed once that is done.

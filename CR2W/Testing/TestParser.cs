@@ -219,6 +219,8 @@ namespace CR2W.Testing
 
         #region Blocks
 
+        static List<string> prev = new List<string>();
+
         //Block 1 - Strings
         public Dictionary<uint, string> dictionary;
         void GetTable(BinaryReader br)
@@ -383,7 +385,6 @@ namespace CR2W.Testing
 
         //Block 6 - Buffers
         List<SBuffer> block6;
-        static List<uint> prev = new List<uint>();
         void GetBuffers(BinaryReader br)
         {
             block6 = new List<SBuffer>();
@@ -611,11 +612,21 @@ namespace CR2W.Testing
                 case "handle":
                     Console.WriteLine(" Chunk {0}", br.ReadInt32());
                     return;
+                case "SAppearanceAttachment":
+                    Console.WriteLine();
+                    Console.WriteLine("{0}{{", offset.Substring(1));
+                    ReadVariable(br, offset);
+                    var bytecount = br.ReadInt32();
+                    br.ReadBytes(bytecount - 4);
+                    Console.WriteLine("{0}Unknown Bytes: {1}", offset, bytecount - 4);
+                    Console.WriteLine("{0}}}", offset.Substring(1));
+                    return;
                 case "static":
                 case "IdTag":
                 case "DeferredDataBuffer":
                 case "SharedDataBuffer":
                 case "EntityHandle":
+                case "EngineQsTransform":
                 case "EngineTransform":
                 case "TagList":
                 case "CClipMapCookedData":
@@ -629,7 +640,25 @@ namespace CR2W.Testing
             {
                 if (myType.IsEnum)
                 {
-                    Console.WriteLine( " {0}", references[br.ReadUInt16()].Value );
+                    if (myType.IsDefined(typeof(FlagsAttribute), false))
+                    {
+                        var values = new List<string>();
+                        while (true)
+                        {
+                            var flag = br.ReadUInt16();
+                            if(flag == 0)
+                            {
+                                break;
+                            }
+                            values.Add(references[flag].Value);
+                        }
+                        Console.WriteLine(" {0}", Enum.Parse(myType, String.Join(",", values)));
+                        Console.ReadKey();
+                    }
+                    else
+                    {
+                        Console.WriteLine(" {0}", references[br.ReadUInt16()].Value);
+                    }
                     return;
                 }
             }

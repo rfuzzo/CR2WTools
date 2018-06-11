@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
-    public struct EngineTransform
+    public struct EngineQsTransform
     {
         public float ScaleX { get; set; }
         public float ScaleY { get; set; }
@@ -15,9 +15,14 @@ namespace CR2W.Types
         public float Pitch { get; set; }
         public float Yaw { get; set; }
         public float Roll { get; set; }
+        public float RotW { get; set; }
 
         public float PositionX { get; set; }
         public float PositionY { get; set; }
         public float PositionZ { get; set; }
+
+        public string QsType { get; set; }
+
+        public byte Flags { get; set; }
     }
 }

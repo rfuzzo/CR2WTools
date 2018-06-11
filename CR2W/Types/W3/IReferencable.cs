@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using CR2W.IO;
 
-namespace CR2W.Types
+namespace CR2W.Types.W3
 {
     public interface IReferencable
     {
-        void ParseBytes(CR2WBinaryReader parser, uint size);
+        void ParseBytes(CR2WBinaryReader br, uint size);
     }
 }

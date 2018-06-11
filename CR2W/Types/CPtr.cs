@@ -10,7 +10,7 @@ using CR2W.Types.W3;
 
 namespace CR2W.Types
 {
-    public class CPtr<T> : IReferencable where T : CObject
+    public class CPtr<T> : IReferencable
     {
         public void ParseBytes(CR2WBinaryReader parser, uint size)
         {
