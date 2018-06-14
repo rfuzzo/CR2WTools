@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace CR2W.IO
 {
-    public class SEmbedded
+    public struct SEmbedded
     {
-        public uint unknown1;
+        public uint importIndex;
         public uint path;
-        public uint unknown3;
-        public uint unknown4;
+        public ulong pathHash;
         public byte[] data;
     }
 }

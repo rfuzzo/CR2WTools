@@ -13,8 +13,8 @@ namespace CR2W.Types
         public float ScaleZ { get; set; }
 
         public float Pitch { get; set; }
-        public float Yaw { get; set; }
-        public float Roll { get; set; }
+        public float Yaw   { get; set; }
+        public float Roll  { get; set; }
 
         public float PositionX { get; set; }
         public float PositionY { get; set; }

@@ -20,17 +20,7 @@ namespace CR2W
         /// <returns>CResource instance from the file</returns>
         public static CResource LoadResource(string resource, bool isDepotPath = false)
         {
-            CR2WBinaryReader br = new CR2WBinaryReader
-            (
-                resource,
-                new FileStream
-                (
-                    resource,
-                    FileMode.Open,
-                    FileAccess.Read
-                ),
-                false
-            );
+            CR2WBinaryReader br = new CR2WBinaryReader(resource, false);
             return br.Resource;
         }
 
@@ -43,6 +33,26 @@ namespace CR2W
         public static async Task<CResource> LoadResourceAsync(string resource, bool isDepotPath = false)
         {
             return await Task.Run(() => LoadResource(resource, isDepotPath));
+        }
+
+        public static C2dArray LoadCSV( string resource )
+        {
+            if(!File.Exists(resource))
+            {
+                throw new FileNotFoundException($"The file '{resource}' cannot be found.");
+            }
+
+            var arr = new C2dArray();
+            var lines = File.ReadAllLines(resource);
+
+            arr.Headers.AddRange(lines[0].Split(new char[] { ';' }));
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                arr.Data[i - 1].AddRange(lines[i].Split(new char[] { ';' }));
+            }
+
+            return arr;
         }
     }
 }

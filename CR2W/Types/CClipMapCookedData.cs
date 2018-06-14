@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
-    public class CClipMapCookedData
+    public struct CClipMapCookedData
     {
     }
 }

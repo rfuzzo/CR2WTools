@@ -11,13 +11,13 @@ namespace CR2W.Types.W3
         public uint Height { get; set; }
         public ETextureRawFormat Format { get; set; }
         public ETextureCompression Compression { get; set; }
-        public CHandle<CSourceTexture> SourceData { get; set; }
+        public Handle<CSourceTexture> SourceData { get; set; }
         public CName TextureGroup { get; set; }
         public int PCDownscaleBias { get; set; }
         public int XBoneDownscaleBias { get; set; }
         public int PS4DownscaleBias { get; set; }
-        public int ResidentMipIndex { get; set; }
-        public int TextureCacheKey { get; set; }
+        public byte ResidentMipIndex { get; set; }
+        public uint TextureCacheKey { get; set; }
 
         public Bitmap TextureMap { get; set; }
 

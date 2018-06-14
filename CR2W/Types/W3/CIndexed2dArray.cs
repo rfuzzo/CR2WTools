@@ -9,9 +9,9 @@ namespace CR2W.Types.W3
 {
     public class CIndexed2dArray : C2dArray
     {
-        public override void ParseBytes(CR2WBinaryReader br, uint size)
+        public int GetRowIndexByKey( CName name )
         {
-            base.ParseBytes(br, size);
+            throw new NotImplementedException();
         }
     }
 }

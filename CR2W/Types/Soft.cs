@@ -9,7 +9,7 @@ using CR2W.Types.W3;
 
 namespace CR2W.Types
 {
-    class CSoft<T> : IReferencable where T : CResource
+    public class Soft<T> : IReferencable where T : CResource
     {
         public string DepotPath { get; set; }
         public ushort Flags     { get; set; }
@@ -22,12 +22,13 @@ namespace CR2W.Types
         public void ParseBytes(CR2WBinaryReader br, uint size)
         {
             var id = br.ReadUInt16();
-            if(br.resources[id].type != typeof(T).Name)
+            var res = br.resources[id];
+            if(res.type != typeof(T).Name)
             {
-                throw new InvalidOperationException($"[soft] Mismatch type! Expected type is {typeof(T).Name} but value was read as {br.resources[id].type}");
+                throw new InvalidOperationException("soft: Type mismatch. Expected {typeof(T).Nam}, but value was read as {res.type}");
             }
-            DepotPath = br.resources[id].path;
-            Flags     = br.resources[id].flags;
+            DepotPath = res.path;
+            Flags = res.flags;
         }
     }
 }

@@ -22,6 +22,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,7 +47,6 @@
   <ItemGroup>
     <Compile Include="Attributes\ResourceTypeAttribute.cs" />
     <Compile Include="Attributes\W3TypeAttribute.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="IO\SBuffer.cs" />
     <Compile Include="CR2WController.cs" />
     <Compile Include="CRC32\Crc32Algorithm.cs" />
@@ -68,22 +69,24 @@
     </Compile>
     <Compile Include="Testing\TestParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Types\CArray.cs" />
+    <Compile Include="Types\Array.cs" />
     <Compile Include="Types\CClipMapCookedData.cs" />
     <Compile Include="Types\CGUID.cs" />
-    <Compile Include="Types\CHandle.cs" />
+    <Compile Include="Types\Handle.cs" />
     <Compile Include="Types\CName.cs" />
-    <Compile Include="Types\CPtr.cs" />
-    <Compile Include="Types\CSoft.cs" />
+    <Compile Include="Types\Ptr.cs" />
+    <Compile Include="Types\Soft.cs" />
     <Compile Include="Types\DataBuffer.cs" />
+    <Compile Include="Types\CDateTime.cs" />
     <Compile Include="Types\EngineQsTransform.cs" />
     <Compile Include="Types\EngineTransform.cs" />
     <Compile Include="Types\EntityHandle.cs" />
     <Compile Include="Types\IdTag.cs" />
+    <Compile Include="Types\W3\CSwfResource.cs" />
     <Compile Include="Types\W3\IReferencable.cs" />
     <Compile Include="Types\W3\IScriptable.cs" />
     <Compile Include="Types\W3\ISerializable.cs" />
-    <Compile Include="Types\ITexture.cs" />
+    <Compile Include="Types\W3\ITexture.cs" />
     <Compile Include="Types\LocalizedString.cs" />
     <Compile Include="Types\SharedDataBuffer.cs" />
     <Compile Include="Types\TagList.cs" />
@@ -101,6 +104,8 @@
     <Compile Include="Types\W3\Enums.cs" />
     <Compile Include="Types\W3\CObject.cs" />
     <Compile Include="Types\W3\CResource.cs" />
+    <Compile Include="Types\W3\SSwfFontDesc.cs" />
+    <Compile Include="Types\W3\SSwfHeaderInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\CResourceExt.resx">

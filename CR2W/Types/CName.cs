@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
-    public sealed class CName
+    public struct CName
     {
         private string _value;
 

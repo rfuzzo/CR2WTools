@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
-    public struct LocalizedString
+    public struct CDateTime
     {
-        public LocalizedString(uint value)
+        private DateTime _value;
+
+        public CDateTime( DateTime value )
         {
-
-
-
-
+            _value = value;
         }
     }
 }

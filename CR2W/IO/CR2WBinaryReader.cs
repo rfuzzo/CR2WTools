@@ -16,7 +16,8 @@ namespace CR2W.IO
     {
         #region Constructors
 
-        public CR2WBinaryReader( string filePath, Stream input, bool ignoreCrc = false) : base(input, Encoding.ASCII, false)
+        public CR2WBinaryReader( string filePath, bool ignoreCrc = false) 
+            : base(new FileStream(filePath, FileMode.Open, FileAccess.Read), Encoding.ASCII, false)
         {
             IgnoreCRC = ignoreCrc;
             FilePath = filePath;
@@ -39,19 +40,18 @@ namespace CR2W.IO
         //Resource instance.
         private CResource _resource;
 
-        //Basic file details
-        public uint Unknown2;
-        public uint Date;
-        public uint Time;
-        public uint Unknown5;
+        //Basic file details.
+        public uint Flags;
+        public CDateTime TimeStamp;
+        public uint BuildVersion;
         public uint CR2WSize;
         public uint BufferSize;
         public uint CRC32;
-        public uint Unknown9;
+        public uint NumChunks;
 
-        //File info, blocks and temp structs
+        //Tables
         public SHeader[]                headers;
-        public Dictionary<uint, string> stringtable;
+        public Dictionary<uint, string> strings;
         public string[]                 names;
         public SResource[]              resources;
         public SObject[]                objects;
@@ -91,35 +91,33 @@ namespace CR2W.IO
             }
 
             //Base data.
-            Unknown2     = ReadUInt32();
-            Date         = ReadUInt32();
-            Time         = ReadUInt32();
-            Unknown5     = ReadUInt32();
+            Flags        = ReadUInt32();
+            TimeStamp    = ReadCDateTime();
+            BuildVersion = ReadUInt32();
             CR2WSize     = ReadUInt32();
             BufferSize   = ReadUInt32();
             CRC32        = ReadUInt32();
-            Unknown9     = ReadUInt32();
+            NumChunks    = ReadUInt32();
 
             //Headers.
-            ReadBlockHeaders();
-
+            ReadTableHeaders();
+            
             //Blocks.
-            ReadStringTable();
-            ReadNameArray();
+            ReadStrings();
+            ReadNames();
             ReadResources();
             ReadObjects();
             ReadBuffers();
             ReadEmbedded();
-
+            
             //Class Constructing
             CreateResource();
         }
 
         /// <summary>
-        /// Read the 10 Block Headers
+        /// Read the 10 Table Headers
         /// </summary>
-        /// <param name="br"></param>
-        private void ReadBlockHeaders()
+        private void ReadTableHeaders()
         {
             headers = new SHeader[10];
             for (int i = 0; i < 10; i++)
@@ -135,25 +133,25 @@ namespace CR2W.IO
 
         #endregion
 
-        #region Block Reading
+        #region Table Reading
         /* - Info
-         *      Region for methods dedicated to reading the blocks in the file
-         *      Block 1  - String Table
-         *      Block 2  - Names
-         *      Block 3  - Resources
-         *      Block 4  - Nothing
-         *      Block 5  - Objects
-         *      Block 6  - Buffers
-         *      Block 7  - Embedded Files
-         *      Block 8  - Not used in this version
-         *      Block 9  - Not used in this version
-         *      Block 10 - Not used in this version
+         *      Region for methods dedicated to reading the tables in the file
+         *      Table 1  - Strings
+         *      Table 2  - Names
+         *      Table 3  - Resources
+         *      Table 4  - Nothing
+         *      Table 5  - Objects
+         *      Table 6  - Buffers
+         *      Table 7  - Embedded Files
+         *      Table 8  - Not used in this version
+         *      Table 9  - Not used in this version
+         *      Table 10 - Not used in this version
          */
         
         /// <summary>
-        /// Block 1 - String Table
+        /// Table 1 - Strings
         /// </summary>
-        private void ReadStringTable()
+        private void ReadStrings()
         {
             var start = headers[0].offset;
             var size = headers[0].size;
@@ -168,30 +166,30 @@ namespace CR2W.IO
                 }
             }
 
-            stringtable = new Dictionary<uint, string>();
+            strings = new Dictionary<uint, string>();
             StringBuilder sb = new StringBuilder();
             BaseStream.Seek(start, SeekOrigin.Begin);
             uint offset = 0;
             for (uint i = 1; i <= size; i++)
             {
-                byte b = ReadByte();
-                if (b == 0)
+                char c = ReadChar();
+                if (c == 0)
                 {
-                    stringtable.Add(offset, sb.ToString());
+                    strings.Add(offset, sb.ToString());
                     sb.Clear();
                     offset = i;
                 }
                 else
                 {
-                    sb.Append((char)b);
+                    sb.Append(c);
                 }
             }
         }
 
         /// <summary>
-        /// Block 2 - Names
+        /// Table 2 - Names
         /// </summary>
-        private void ReadNameArray()
+        private void ReadNames()
         {
             var start = headers[1].offset;
             var size = headers[1].size;
@@ -212,7 +210,7 @@ namespace CR2W.IO
             {
                 var o = ReadUInt32();
                 var u = ReadUInt32();
-                names[i] = stringtable[o];
+                names[i] = strings[o];
 
                 //'u' is currently unknown.
                 //In WK and Sarcen's editor it was listed as a CRC32 checksum value
@@ -222,7 +220,7 @@ namespace CR2W.IO
         }
 
         /// <summary>
-        /// Block 3 - Resources
+        /// Table 3 - Resources
         /// </summary>
         private void ReadResources()
         {
@@ -251,25 +249,25 @@ namespace CR2W.IO
                 {
                     type = names[t],
                     flags = f,
-                    path = stringtable[o],
+                    path = strings[o],
                 };
             }
         }
 
-        /* - Block 4
-         *   This block is always of size 1 and all 
-         *   data is null so no need to read it.
+        /* - Table 4
+         *   This table is always of size 1 and all 
+         *   data is 0 so no need to read it.
          *   Reconstructed in CR2WExporter
          *   
          *   It may be the case that the file is valid with
-         *   this block empty.
+         *   this table empty.
          *   So: TODO - Check to see if the removal of the null
-         *   data in the block will break the file.
+         *   data in the table will break the file.
          *   If not then no point reconstructing it later when saving
          */
         
         /// <summary>
-        /// Block 5 - Objects
+        /// Table 5 - Objects
         /// </summary>
         private void ReadObjects()
         {
@@ -307,7 +305,7 @@ namespace CR2W.IO
                     BaseStream.Seek(Convert.ToInt32(temp.offset), SeekOrigin.Begin);
                     if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(temp.size))) != crc32)
                     {
-                        throw new MismatchCRC32Exception($"CRC32 checksum failed for chunk {i+1} ({names[temp.typeID]})");
+                        throw new MismatchCRC32Exception($"CRC32 checksum failed for object {i+1} ({names[temp.typeID]})");
                     }
                     BaseStream.Seek(pos, SeekOrigin.Begin);
                 }
@@ -316,7 +314,7 @@ namespace CR2W.IO
         }
 
         /// <summary>
-        /// Block 6 - Buffers
+        /// Table 6 - Buffers
         /// </summary>
         private void ReadBuffers()
         {
@@ -350,7 +348,7 @@ namespace CR2W.IO
         }
 
         /// <summary>
-        /// Block 7 - Embedded
+        /// Table 7 - Embedded
         /// </summary>
         private void ReadEmbedded()
         {
@@ -373,10 +371,9 @@ namespace CR2W.IO
             {
                 var temp = new SEmbedded()
                 {
-                    unknown1  = ReadUInt32(),
-                    path      = ReadUInt32(),
-                    unknown3  = ReadUInt32(),
-                    unknown4  = ReadUInt32(),
+                    importIndex = ReadUInt32(),
+                    path        = ReadUInt32(),
+                    pathHash    = ReadUInt64(),
                 };
                 var offset    = ReadUInt32();
                 var len       = ReadUInt32();
@@ -396,9 +393,9 @@ namespace CR2W.IO
         /* - Info
          *      Region for creating the finished CResource
          *      from the data held in the buffers that blocks 5 and 7 point to.
-         *      Block 5 - List of objects that together make a Single CResource object and 
+         *      Table 5 - List of objects that together make a Single CResource object and 
          *                all the CObjects the are referenced by it.
-         *      Block 7 - List of embedded CR2W files that the main CResource can use
+         *      Table 7 - List of embedded CR2W files that the main CResource can use
          *      
          *      TODO - Come up with an elegant solution to hold the emebedded files.
          *          Option 1: Parse each as a new CResource and return each one with the main as a list.
@@ -436,20 +433,31 @@ namespace CR2W.IO
 
         #region Reading Variables
         /* - Info
-         *      Region for methods for reading variables from data in block 5.
-         *      
+         *      Region for methods for reading variables.
          */
-
+        
+        /// <summary>
+        /// Read a 2 byte CName from the current stream
+        /// </summary>
+        /// <returns>CName value</returns>
         public CName ReadCName()
         {
             return new CName(names[ReadUInt16()]);
         }
 
+        /// <summary>
+        /// Read a 16 byte CGUID from the current stream.
+        /// </summary>
+        /// <returns>CGUID Value</returns>
         public CGUID ReadCGUID()
         {
             return new CGUID(ReadBytes(16));
         }
 
+        /// <summary>
+        /// Read a single string from the current stream, where the first bytes indicate the length.
+        /// </summary>
+        /// <returns>string value read</returns>
         public string ReadStringDefaultSingle()
         {
             var b = ReadByte();
@@ -467,6 +475,11 @@ namespace CR2W.IO
             return Encoding.ASCII.GetString(ReadBytes(len));
         }
 
+        /// <summary>
+        /// Read a group of strings from the current stream where the first bytes of any string is the legnth of the string to read.
+        /// </summary>
+        /// <param name="size">The byte length of the whole group</param>
+        /// <returns>An array of strings</returns>
         public string[] ReadStringDefaultGroup(uint size)
         {
             var strs = new List<string>();
@@ -493,6 +506,10 @@ namespace CR2W.IO
             return strs.ToArray();
         }
 
+        /// <summary>
+        /// Read a single ANSI encoded string from the current stream.
+        /// </summary>
+        /// <returns></returns>
         public string ReadStringAnsi()
         {
             var b = ReadByte();
@@ -509,20 +526,162 @@ namespace CR2W.IO
             }
         }
 
+        /// <summary>
+        /// Read a 4 byte localized string key from the current stream.
+        /// </summary>
+        /// <returns>Localized string key</returns>
         public LocalizedString ReadLocalizedString()
         {
             return new LocalizedString(ReadUInt32());
         }
 
+        /// <summary>
+        /// Read an embedded XML document where the beginning 4 bytes indicate the bytes to read.
+        /// </summary>
+        /// <returns>XML document object</returns>
         public XmlDocument ReadXMLDocument()
         {
             var length = ReadInt32();
             var xmlstr = Encoding.UTF8.GetString(ReadBytes(length));
-            Console.WriteLine(xmlstr);
             var doc = new XmlDocument();
             doc.LoadXml(xmlstr);
             return doc;
         }
+
+        /// <summary>
+        /// Read a 8 byte CDateTime value from the current stream.
+        /// </summary>
+        /// <returns>CDatetime value</returns>
+        public CDateTime ReadCDateTime()
+        {
+            var date = ReadUInt32();
+            var year = date >> 20;
+            var month = date >> 15 & 0x1F;
+            var day = date >> 10 & 0x1F;
+
+            var time = ReadUInt32();
+            var hour = time >> 22;
+            var minute = time >> 16 & 0x3F;
+            var second = time >> 10 & 0x3F;
+            var millisecond = time & 0b11_11111111;
+            return new CDateTime( new DateTime(
+                (int)year, (int)month, (int)day + 1,
+                (int)hour, (int)minute, (int)second, (int)millisecond));
+        }
+
+        /// <summary>
+        /// Read a single 2 byte enumarator from the current stream, or if the enumarator is a flags enumarator, read 
+        /// a list of 2 byte enumarator flags from the current stream.
+        /// </summary>
+        /// <param name="enumType"></param>
+        /// <returns></returns>
+        public object ReadEnumarator( Type enumType )
+        {
+            if (enumType.IsDefined(typeof(FlagsAttribute), false))
+            {
+                var flags = new List<string>();
+                while (true)
+                {
+                    var id = ReadUInt16();
+                    if (id == 0)
+                    {
+                        break;
+                    }
+                    flags.Add(names[id]);
+                }
+                return Enum.Parse(enumType, String.Join(",", flags));
+            }
+            else
+            {
+                var id = ReadUInt16();
+                return Enum.Parse(enumType, names[id]);
+            }
+        }
+
+        /// <summary>
+        /// Read an Engine transform object from the current stream
+        /// </summary>
+        /// <returns>Engine Transform value</returns>
+        public EngineTransform ReadEngineTransform()
+        {
+            var e = new EngineTransform();
+            var flags = ReadByte();
+            if ((flags & 1) == 1)
+            {
+                e.PositionX = ReadSingle();
+                e.PositionY = ReadSingle();
+                e.PositionZ = ReadSingle();
+            }
+            if ((flags & 2) == 2)
+            {
+                e.Pitch = ReadSingle();
+                e.Roll  = ReadSingle();
+                e.Yaw   = ReadSingle();
+            }
+            if ((flags & 4) == 4)
+            {
+                e.ScaleX = ReadSingle();
+                e.ScaleY = ReadSingle();
+                e.ScaleZ = ReadSingle();
+            }
+            return e;
+        }
+
+        /// <summary>
+        /// Read an EngineQsTransform object from the current stream
+        /// </summary>
+        /// <returns></returns>
+        public EngineQsTransform ReadEngineQsTransform()
+        {
+            var e = new EngineQsTransform();
+            var flags = ReadByte();
+            if ((flags & 1) == 1)
+            {
+                e.PositionX = ReadSingle();
+                e.PositionY = ReadSingle();
+                e.PositionZ = ReadSingle();
+            }
+            if ((flags & 2) == 2)
+            {
+                e.Pitch = ReadSingle();
+                e.Roll = ReadSingle();
+                e.Yaw = ReadSingle();
+                e.RotW = ReadSingle();
+            }
+            if ((flags & 4) == 4)
+            {
+                e.ScaleX = ReadSingle();
+                e.ScaleY = ReadSingle();
+                e.ScaleZ = ReadSingle();
+            }
+            return e;
+        }
+
+        /// <summary>
+        /// Read a tag list from the current stream where the first byte is the list length.
+        /// </summary>
+        /// <returns></returns>
+        public TagList ReadTagList()
+        {
+            var size = ReadByte();
+            var list = new TagList();
+            for (var i = 0; i < size; i++)
+            {
+                //ToDo - Add in the way tags are stored in a tag list.
+                //       I will keep tag list as a struct and not a class.
+            }
+            return list;
+        }
+
+        public IdTag ReadIdTag()
+        {
+            var tag = new IdTag();
+
+            //Read IdTag - 17 Bytes long
+
+            return tag;
+        }
+
         #endregion
 
         #region Cleaning Up
@@ -531,8 +690,8 @@ namespace CR2W.IO
         {
             base.Dispose(disposing);
             //Most likely will want to clear some unneeded variables and whatnot
-            //Anything that isn't needed like the headers and blocks 1,2,3.
-            //Will not do until the data is mapped from block 5 and i can be
+            //Anything that isn't needed like the headers and tables 1,2,3.
+            //Will not do until the data is mapped from table 5 and i can be
             //sure of what data will not be needed once that is done.
         }
 

@@ -5,13 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CR2W.IO;
+using CR2W.Attributes;
 
 namespace CR2W.Types.W3
 {
     public class C2dArray : CResource
     {
-        public CArray<string> Headers { get; set; }
-        public CArray<CArray<string>> Data { get; set; }
+        [W3Type("headers")]
+        public Array<string> Headers { get; set; }
+
+        [W3Type("data")]
+        public Array<Array<string>> Data { get; set; }
 
         public string GetValueAt(int collumn, int row)
         {

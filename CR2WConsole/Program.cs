@@ -40,8 +40,23 @@ namespace CR2WConsole
                     }
                 }
             }
-        }
 
+            //var dir = new DirectoryInfo(@"D:\ModKit\modkit_tools\r4data");
+            //var files = dir.GetFiles("*.w2ragdoll", SearchOption.AllDirectories);
+            //
+            //for (int i = 0; i < files.Length; i++)
+            //{
+            //    Console.Title = $"{i}/{files.Length}";
+            //    try
+            //    {
+            //        TestParser.New(files[i].FullName);
+            //    }
+            //    catch
+            //    {
+            //        continue;
+            //    }
+            //}
+        }
 
         /* - Class Types
          *      ClassTypes: Dumped from all CR2W files, and are all the different chunk types.

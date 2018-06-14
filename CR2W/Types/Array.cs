@@ -10,8 +10,7 @@ using System.IO;
 
 namespace CR2W.Types
 {
-    public class CArray<T> : List<T>
+    public class Array<T> : List<T>
     {
-        
     }
 }

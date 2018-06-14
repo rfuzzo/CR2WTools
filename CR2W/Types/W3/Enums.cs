@@ -3229,7 +3229,7 @@ namespace CR2W.Types.W3
         GwintEffect_SameTypeMorale = 35,
         // GwintEffect_AgileReposition = 36,
         // GwintEffect_RandomRessurect = 37,
-        // GwintEffect_DoubleSpy = 38,	
+        // GwintEffect_DoubleSpy = 38,
         // GwintEffect_RangedScorch = 39,
         // GwintEffect_SuicideSummon = 40,	
         GwintEffect_Mushroom = 41,

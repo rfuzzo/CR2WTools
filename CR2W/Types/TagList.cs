@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
-    public class TagList : List<CName>
+    public struct TagList
     {
-        public TagList()
-        {
 
-        }
     }
 }
