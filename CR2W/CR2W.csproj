@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ResourceTypeAttribute.cs" />
+    <Compile Include="Attributes\W3ArrayFlagsAttribute.cs" />
     <Compile Include="Attributes\W3TypeAttribute.cs" />
     <Compile Include="IO\SBuffer.cs" />
     <Compile Include="CR2WController.cs" />
