@@ -8,5 +8,7 @@ namespace CR2W.Types
 {
     public struct IdTag
     {
+        public byte Flags { get; set; }
+        public CGUID ID { get; set; }
     }
 }

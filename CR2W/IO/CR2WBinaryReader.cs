@@ -16,7 +16,7 @@ namespace CR2W.IO
     {
         #region Constructors
 
-        public CR2WBinaryReader( string filePath, bool ignoreCrc = false) 
+        public CR2WBinaryReader(string filePath, bool ignoreCrc = false) 
             : base(new FileStream(filePath, FileMode.Open, FileAccess.Read), Encoding.ASCII, false)
         {
             IgnoreCRC = ignoreCrc;
@@ -37,9 +37,6 @@ namespace CR2W.IO
         //Magic Identifier 'CR2W' in byte[].
         private readonly byte[] Magic = { 67, 82, 50, 87 };
 
-        //Resource instance.
-        private CResource _resource;
-
         //Basic file details.
         public uint Flags;
         public CDateTime TimeStamp;
@@ -57,15 +54,6 @@ namespace CR2W.IO
         public SObject[]                objects;
         public SBuffer[]                buffers;
         public SEmbedded[]              embedded;
-
-        //Get the parsed CResource file
-        public CResource Resource
-        {
-            get
-            {
-                return _resource;
-            }
-        }
 
         #endregion
 
@@ -109,9 +97,6 @@ namespace CR2W.IO
             ReadObjects();
             ReadBuffers();
             ReadEmbedded();
-            
-            //Class Constructing
-            CreateResource();
         }
 
         /// <summary>
@@ -162,7 +147,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size))) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 1 - String Table");
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 1 - Strings");
                 }
             }
 
@@ -200,7 +185,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
                 {
-                    throw new MismatchCRC32Exception( "CRC32 Checksum failed for Block 2 - References" );
+                    throw new MismatchCRC32Exception( "CRC32 Checksum failed for Table 2 - References" );
                 }
             }
 
@@ -212,10 +197,8 @@ namespace CR2W.IO
                 var u = ReadUInt32();
                 names[i] = strings[o];
 
-                //'u' is currently unknown.
-                //In WK and Sarcen's editor it was listed as a CRC32 checksum value
-                //But that wouldn't make sense as the whole block has a valid CRC32 value in the header
-                //For now i will just ignore until it's figured out.
+                //'u' is a hash of the name.
+                //without the algorithm that was used to hash it the value is basically useless. 
             }
         }
 
@@ -233,7 +216,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 3 - Handles");
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 3 - Handles");
                 }
             }
 
@@ -280,7 +263,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 5 - Chunks");
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 5 - Chunks");
                 }
             }
 
@@ -327,7 +310,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 6 - Buffers");
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 6 - Buffers");
                 }
             }
 
@@ -361,7 +344,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Block 7 - Embedded");
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 7 - Embedded");
                 }
             }
 
@@ -404,7 +387,7 @@ namespace CR2W.IO
          *          Option 4: Export as a new CR2W physical file that can be later parsed.
          */
 
-        public void CreateResource()
+        public CResource CreateResource()
         {
             var temp = objects[0];
             var type = names[temp.typeID];
@@ -423,26 +406,28 @@ namespace CR2W.IO
 
             BaseStream.Seek(temp.offset, SeekOrigin.Begin);
 
-            _resource = (CResource)Activator.CreateInstance(resType);
-            _resource.Flags = temp.flags;
-            _resource.Template = temp.template;
-            _resource.ParseBytes(this, temp.size);
+            CResource resource = (CResource)Activator.CreateInstance(resType);
+            resource.Flags     = temp.flags;
+            resource.Template  = temp.template;
+            resource.ParseBytes(this, temp.size);
 
             Console.WriteLine("|Name                         |Type                         |Value");
             Console.WriteLine("|-----------------------------|-----------------------------|--------------------------");
-            foreach (var prop in _resource.GetType().GetProperties())
+            foreach (var prop in resource.GetType().GetProperties())
             {
-                Console.WriteLine("|{0}|{1}|{2}", prop.Name.PadRight(29), prop.PropertyType.Name.PadRight(29), prop.GetValue(_resource));
+                Console.WriteLine("|{0}|{1}|{2}", prop.Name.PadRight(29), prop.PropertyType.Name.PadRight(29), prop.GetValue(resource));
             }
+
+            return resource;
         }
 
         #endregion
 
-        #region Reading Variables
+        #region Reading Properties
         /* - Info
-         *      Region for methods for reading variables.
+         *      Region for methods for reading properties.
          */
-        
+
         /// <summary>
         /// Read a 2 byte CName from the current stream
         /// </summary>
@@ -596,7 +581,11 @@ namespace CR2W.IO
                     }
                     flags.Add(names[id]);
                 }
-                return Enum.Parse(enumType, String.Join(",", flags));
+                if(flags.Any())
+                {
+                    return Enum.Parse(enumType, String.Join(",", flags));
+                }
+                return null;
             }
             else
             {
@@ -680,15 +669,18 @@ namespace CR2W.IO
             return list;
         }
 
+        /// <summary>
+        /// Read a 17 byte long IdTag struct from the current stream.
+        /// </summary>
+        /// <returns>IdTagObject</returns>
         public IdTag ReadIdTag()
         {
-            var tag = new IdTag();
-
-            //Read IdTag - 17 Bytes long
-
-            return tag;
+            return new IdTag
+            {
+                Flags = ReadByte(),
+                ID = ReadCGUID()
+            };
         }
-
         #endregion
 
         #region Cleaning Up

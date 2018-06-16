@@ -69,7 +69,7 @@ namespace CR2W.Types.W3
             sw.Start();
             ParseClass(br, this);
             sw.Stop();
-            Console.WriteLine("Done - Time Taken: {0} seconds", (float)sw.ElapsedMilliseconds/(float)1000);
+            Console.WriteLine("Done - Time Taken: {0} seconds", (float)sw.ElapsedMilliseconds / (float)1000);
             Console.WriteLine();
 
             #region Comments
@@ -100,11 +100,6 @@ namespace CR2W.Types.W3
             #endregion
         }
 
-        public override string ToString()
-        {
-            return String.Format("[{0}] Template: {1} Flags: {2} Children: {3}", GetType().Name, Template, Flags, Children.Count);
-        }
-
         protected void ParseClass(CR2WBinaryReader br, object instance)
         {
             br.ReadByte();
@@ -118,13 +113,14 @@ namespace CR2W.Types.W3
                 var typeId = br.ReadInt16();
                 var size = br.ReadUInt32() - 4;
                 var prop = GetPropertybyW3Name(br.names[nameId], instance.GetType());
-                var value = ParseVariable(br, prop.PropertyType);
+                var value = ParseProperty(br, prop.PropertyType);
                 prop.SetValue(instance, value);
             }
         }
 
-        protected object ParseVariable(CR2WBinaryReader br, Type proptype )
+        protected object ParseProperty(CR2WBinaryReader br, Type proptype)
         {
+            //Basic / Value Types
             switch (proptype.Name)
             {
                 case "Byte":              return br.ReadByte();
@@ -145,13 +141,33 @@ namespace CR2W.Types.W3
                 case "EngineTransform":   return br.ReadEngineTransform();
                 case "EngineQsTransform": return br.ReadEngineQsTransform();
                 case "CDateTime":         return br.ReadCDateTime();
+                case "String":            return br.ReadStringDefaultSingle();
             }
 
+            //Parse Enumarators
             if (proptype.IsEnum)
             {
                 return br.ReadEnumarator(proptype);
             }
 
+            //Parse Arrays
+            if(proptype.IsGenericType && proptype.GetGenericTypeDefinition() == typeof(Array<>))
+            {
+                Console.WriteLine("Creating Array: {0}", proptype);
+                var instance = Activator.CreateInstance(proptype);
+                var genprop = proptype.GetTypeInfo().GenericTypeArguments[0];
+                var length = br.ReadUInt32();
+                Console.WriteLine("Array Length: {0}", length);
+                for (int i = 0; i < length; i++)
+                {
+                    var value = ParseProperty(br, genprop);
+                    Console.WriteLine("\t{0}", value.ToString());
+                    proptype.GetMethod("Add").Invoke(instance, new[] { value });
+                }
+                return instance;
+            }
+
+            //Parse classes
             if (proptype.IsClass)
             {
                 var instance = Activator.CreateInstance(proptype);
@@ -159,6 +175,8 @@ namespace CR2W.Types.W3
                 return instance;
             }
 
+            //Any Unknown Type
+            //Should be impossible to reach if all types get coverd above.
             return null;
         }
 
@@ -181,6 +199,11 @@ namespace CR2W.Types.W3
                 return props.First();
             }
             return null;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("[{0}] Template: {1} Flags: {2} Children: {3}", GetType().Name, Template, Flags, Children.Count);
         }
     }
 }

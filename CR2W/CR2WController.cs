@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using CR2W.Types.W3;
 using CR2W.Types;
 using CR2W.IO;
+using CR2W.Attributes;
 using System.IO;
+using System.Reflection;
 
 namespace CR2W
 {
@@ -20,8 +22,14 @@ namespace CR2W
         /// <returns>CResource instance from the file</returns>
         public static CResource LoadResource(string resource, bool isDepotPath = false)
         {
-            CR2WBinaryReader br = new CR2WBinaryReader(resource, false);
-            return br.Resource;
+            if(!File.Exists(resource))
+            {
+                throw new FileNotFoundException($"The file '{resource}' could not be found.");
+            }
+            using (var br = new CR2WBinaryReader(resource, false))
+            {
+                return br.CreateResource();
+            }
         }
 
         /// <summary>

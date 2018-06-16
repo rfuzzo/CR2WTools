@@ -509,7 +509,6 @@ namespace CR2W.Testing
                 Console.WriteLine("Unknown Bytes: 0");
             }
             Console.WriteLine();
-            Console.ReadKey();
         }
 
         #endregion
@@ -581,7 +580,7 @@ namespace CR2W.Testing
                     Console.WriteLine(" {0}", references[br.ReadUInt16()].Value);
                     return;
                 case "CGUID":
-                    Console.WriteLine(" {0}", new Guid(br.ReadBytes(16)).ToString());
+                    Console.WriteLine(" {0}", new CGUID(br.ReadBytes(16)).ToString());
                     return;
                 case "LocalizedString":
                     Console.WriteLine(" {0}", br.ReadUInt32());
@@ -617,13 +616,17 @@ namespace CR2W.Testing
                     Console.WriteLine("{0}Unknown Bytes: {1}", offset, bytecount - 4);
                     Console.WriteLine("{0}}}", offset.Substring(1));
                     return;
-                case "static":
                 case "IdTag":
+                    Console.Write(" {0}", br.ReadByte());
+                    Console.WriteLine(" - {0}", new CGUID(br.ReadBytes(16)).ToString());
+                    Console.ReadKey();
+                    return;
+                case "EngineTransform":
+                case "static":
                 case "DeferredDataBuffer":
                 case "SharedDataBuffer":
                 case "EntityHandle":
                 case "EngineQsTransform":
-                case "EngineTransform":
                 case "TagList":
                 case "CClipMapCookedData":
                 case "DataBuffer":

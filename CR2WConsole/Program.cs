@@ -19,6 +19,7 @@ using CR2W.Attributes;
 
 namespace CR2WConsole
 {
+
     class Program
     {
         [STAThread]

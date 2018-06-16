@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using CR2W.Types.W3;
 
 namespace CR2W.IO
 {
-    public sealed class CR2WBinaryWriter
+    public sealed class CR2WBinaryWriter : BinaryWriter
     {
         private uint AddToStringTable( string value )
         {
