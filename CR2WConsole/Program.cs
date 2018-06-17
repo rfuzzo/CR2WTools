@@ -19,20 +19,21 @@ using CR2W.Attributes;
 
 namespace CR2WConsole
 {
-
     class Program
     {
         [STAThread]
         static void Main(string[] args)
         {
             Console.Title = "CR2W Reader";
+
+            CResource res = null;
             using (var of = new OpenFileDialog())
             {
                 if (of.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        CR2WController.LoadResource(of.FileName);
+                        res = CR2WController.LoadResource(of.FileName);
                         //TestParser.New(of.FileName);
                     }
                     catch(Exception e)
@@ -42,21 +43,33 @@ namespace CR2WConsole
                 }
             }
 
-            //var dir = new DirectoryInfo(@"D:\ModKit\modkit_tools\r4data");
-            //var files = dir.GetFiles("*.w2ragdoll", SearchOption.AllDirectories);
-            //
-            //for (int i = 0; i < files.Length; i++)
-            //{
-            //    Console.Title = $"{i}/{files.Length}";
-            //    try
-            //    {
-            //        TestParser.New(files[i].FullName);
-            //    }
-            //    catch
-            //    {
-            //        continue;
-            //    }
-            //}
+            if (res == null)
+                return;
+
+            Console.WriteLine("Type:        {0}", res.GetType().Name);
+            Console.WriteLine("Flags:       {0}", res.Flags);
+            Console.WriteLine("Children:    {0}", res.Children.Count);
+            Console.WriteLine("Template:    {0}", res.Template);
+            Console.WriteLine();
+            Console.WriteLine("Test Values:");
+
+            //Test to read off some values from the parsed file.
+            if (res is CEnvironmentDefinition env)
+            {
+                Console.WriteLine("\tBalanceMap0:       {0}", env.EnvParams.M_finalColorBalance.BalanceMap0.DepotPath);
+                Console.WriteLine("\tBalanceMap1:       {0}", env.EnvParams.M_finalColorBalance.BalanceMap1.DepotPath);
+                Console.WriteLine("\tBloom:             {0}", env.EnvParams.M_bloomNew.Activated);
+                Console.WriteLine("\tDOF Range:         {0}", env.EnvParams.M_depthOfField.SkyRange);
+                Console.WriteLine("\tGame Effects:      {0}", env.EnvParams.M_gameplayEffects.Activated);
+                Console.WriteLine("\tWater Curve Type:  {0}", env.EnvParams.M_water.UnderWaterColor.CurveType);
+                Console.WriteLine("\tSun and Moon:      {0}", env.EnvParams.M_sunAndMoonParams.Activated);
+            }
+            else if (res is CIndexed2dArray arr)
+            {
+                Console.WriteLine("\tHeaders:  {0}", arr.Headers.ToString());
+                Console.WriteLine("\tData:     {0}", arr.Data.ToString());
+            }
+            Console.WriteLine();
         }
 
         /* - Class Types

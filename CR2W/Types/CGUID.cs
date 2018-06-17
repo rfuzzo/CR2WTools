@@ -92,7 +92,7 @@ namespace CR2W.Types
         /// Returns a value that indicates whether this instance is equal to a specified object
         /// </summary>
         /// <param name="o">The object to compare with this instance.</param>
-        /// <returns>true if o is a System.Guid that has the same value as this instance; otherwise, false.</returns>
+        /// <returns>true if o is a CR2W.Types.CGUID that has the same value as this instance; otherwise, false.</returns>
         public override bool Equals(object o)
         {
             if(o is CGUID g)

@@ -12,7 +12,7 @@ namespace CR2W.Types.W3
     public class C2dArray : CResource
     {
         [W3Type("headers")]
-        [W3ArrayFlags(12,0)]
+        [W3ArrayFlags(12, 0)]
         public Array<string> Headers { get; set; }
 
         [W3Type("data")]

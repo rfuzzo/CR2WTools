@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using System;
+using CR2W.Attributes;
 
 namespace CR2W.Types.W3
 {
-    class CEnvironmentDefinition : CResource
-    {
-        
-    }
+	public class CEnvironmentDefinition : CResource
+	{
+		[W3Type("envParams")]
+		public CAreaEnvironmentParams EnvParams { get; set; }
+
+	}
 }

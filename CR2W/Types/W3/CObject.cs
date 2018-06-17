@@ -57,21 +57,7 @@ namespace CR2W.Types.W3
 
         public virtual void ParseBytes(CR2WBinaryReader br, uint size)
         {
-            Console.WriteLine("Parse Bytes Begin:");
-            Console.WriteLine($"\t- Type:     {GetType().Name}");
-            Console.WriteLine($"\t- Size:     {size} bytes");
-            Console.WriteLine($"\t- Flags:    {Flags}");
-            Console.WriteLine($"\t- Children: {Children.Count}");
-
-            Console.WriteLine();
-            Stopwatch sw = new Stopwatch();
-            Console.WriteLine("Mapping Data...");
-            sw.Start();
             ParseClass(br, this);
-            sw.Stop();
-            Console.WriteLine("Done - Time Taken: {0} seconds", (float)sw.ElapsedMilliseconds / (float)1000);
-            Console.WriteLine();
-
             #region Comments
             // - TODO:
             //      Figure out an elegant solution to map the data within a chunk to the class structure.
@@ -150,21 +136,32 @@ namespace CR2W.Types.W3
                 return br.ReadEnumarator(proptype);
             }
 
-            //Parse Arrays
-            if(proptype.IsGenericType && proptype.GetGenericTypeDefinition() == typeof(Array<>))
+            //Parse Generic Types (Array, Soft, Ptr, Handle)
+            if(proptype.IsGenericType)
             {
-                Console.WriteLine("Creating Array: {0}", proptype);
                 var instance = Activator.CreateInstance(proptype);
                 var genprop = proptype.GetTypeInfo().GenericTypeArguments[0];
-                var length = br.ReadUInt32();
-                Console.WriteLine("Array Length: {0}", length);
-                for (int i = 0; i < length; i++)
+                if(proptype.GetGenericTypeDefinition() == typeof(Array<>))
                 {
-                    var value = ParseProperty(br, genprop);
-                    Console.WriteLine("\t{0}", value.ToString());
-                    proptype.GetMethod("Add").Invoke(instance, new[] { value });
+                    var length = br.ReadUInt32();
+                    for (int i = 0; i < length; i++)
+                    {
+                        var value = ParseProperty(br, genprop);
+                        proptype.GetMethod("Add").Invoke(instance, new[] { value });
+                    }
+                    return instance;
                 }
-                return instance;
+                else if(proptype.GetGenericTypeDefinition() == typeof(Soft<>))
+                {
+                    var id = br.ReadUInt16() - 1;
+                    if(br.resources[id].type != genprop.Name)
+                    {
+                        throw new InvalidOperationException($"Soft type mistatch. Expected Type: {genprop.Name}. Type Read: {br.resources[id].type}.");
+                    }
+                    proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id].path);
+                    proptype.GetProperty("Flags").SetValue(instance, br.resources[id].flags);
+                    return instance;
+                }
             }
 
             //Parse classes

@@ -179,10 +179,10 @@ namespace CR2W.Testing
             GetHeaders(br);
             GetTable(br);
             GetNames(br);
-            GetResources(br);
-            GetObjects(br);
-            GetBuffers(br);
-            ReadEmbedded(br);
+            //GetResources(br);
+            //GetObjects(br);
+            //GetBuffers(br);
+            //ReadEmbedded(br);
         }
 
         SHeader[] headers;
@@ -280,14 +280,18 @@ namespace CR2W.Testing
             {
                 var o = br.ReadUInt32();
                 var c = br.ReadUInt32();
-                var v = dictionary[o];
 
-                references.Add(new SName()
-                {
-                    Offset = o,
-                    CRC32 = c,
-                    Value = v,
-                });
+                Console.WriteLine("Name:");
+                Console.WriteLine("\tValue:   {0}", dictionary[o]);
+                Console.WriteLine("\tHash:    {0}", c);
+
+                //var v = dictionary[o];
+                //references.Add(new SName()
+                //{
+                //    Offset = o,
+                //    CRC32 = c,
+                //    Value = v,
+                //});
             }
 
             Console.WriteLine("\n");

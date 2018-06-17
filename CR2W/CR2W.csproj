@@ -83,6 +83,39 @@
     <Compile Include="Types\EngineTransform.cs" />
     <Compile Include="Types\EntityHandle.cs" />
     <Compile Include="Types\IdTag.cs" />
+    <Compile Include="Types\W3\CAreaEnvironmentParams.cs" />
+    <Compile Include="Types\W3\CEnvAmbientProbesGenParameters.cs" />
+    <Compile Include="Types\W3\CEnvBloomNewParameters.cs" />
+    <Compile Include="Types\W3\CEnvCameraLightParameters.cs" />
+    <Compile Include="Types\W3\CEnvCameraLightsSetupParameters.cs" />
+    <Compile Include="Types\W3\CEnvColorGroupsParameters.cs" />
+    <Compile Include="Types\W3\CEnvColorModTransparencyParameters.cs" />
+    <Compile Include="Types\W3\CEnvDepthOfFieldParameters.cs" />
+    <Compile Include="Types\W3\CEnvDialogLightParameters.cs" />
+    <Compile Include="Types\W3\CEnvDistanceRangeParameters.cs" />
+    <Compile Include="Types\W3\CEnvFinalColorBalanceParameters.cs" />
+    <Compile Include="Types\W3\CEnvFlareColorGroupsParameters.cs" />
+    <Compile Include="Types\W3\CEnvFlareColorParameters.cs" />
+    <Compile Include="Types\W3\CEnvGameplayEffectsParameters.cs" />
+    <Compile Include="Types\W3\CEnvGlobalFogParameters.cs" />
+    <Compile Include="Types\W3\CEnvGlobalLightParameters.cs" />
+    <Compile Include="Types\W3\CEnvGlobalSkyParameters.cs" />
+    <Compile Include="Types\W3\CEnvInteriorFallbackParameters.cs" />
+    <Compile Include="Types\W3\CEnvMotionBlurParameters.cs" />
+    <Compile Include="Types\W3\CEnvMSSSAOParameters.cs" />
+    <Compile Include="Types\W3\CEnvNVSSAOParameters.cs" />
+    <Compile Include="Types\W3\CEnvPaintEffectParameters.cs" />
+    <Compile Include="Types\W3\CEnvParametricBalanceParameters.cs" />
+    <Compile Include="Types\W3\CEnvReflectionProbesGenParameters.cs" />
+    <Compile Include="Types\W3\CEnvShadowsParameters.cs" />
+    <Compile Include="Types\W3\CEnvSharpenParameters.cs" />
+    <Compile Include="Types\W3\CEnvSpeedTreeParameters.cs" />
+    <Compile Include="Types\W3\CEnvSpeedTreeRandomColorParameters.cs" />
+    <Compile Include="Types\W3\CEnvSunAndMoonParameters.cs" />
+    <Compile Include="Types\W3\CEnvToneMappingCurveParameters.cs" />
+    <Compile Include="Types\W3\CEnvToneMappingParameters.cs" />
+    <Compile Include="Types\W3\CEnvWaterParameters.cs" />
+    <Compile Include="Types\W3\CEnvWindParameters.cs" />
     <Compile Include="Types\W3\CSwfResource.cs" />
     <Compile Include="Types\W3\IReferencable.cs" />
     <Compile Include="Types\W3\IScriptable.cs" />
@@ -105,14 +138,20 @@
     <Compile Include="Types\W3\Enums.cs" />
     <Compile Include="Types\W3\CObject.cs" />
     <Compile Include="Types\W3\CResource.cs" />
+    <Compile Include="Types\W3\SCurveDataEntry.cs" />
+    <Compile Include="Types\W3\SSimpleCurve.cs" />
     <Compile Include="Types\W3\SSwfFontDesc.cs" />
     <Compile Include="Types\W3\SSwfHeaderInfo.cs" />
+    <Compile Include="Types\W3\Vector.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\CResourceExt.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>CResourceExt.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FNV1a\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

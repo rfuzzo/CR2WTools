@@ -410,14 +410,6 @@ namespace CR2W.IO
             resource.Flags     = temp.flags;
             resource.Template  = temp.template;
             resource.ParseBytes(this, temp.size);
-
-            Console.WriteLine("|Name                         |Type                         |Value");
-            Console.WriteLine("|-----------------------------|-----------------------------|--------------------------");
-            foreach (var prop in resource.GetType().GetProperties())
-            {
-                Console.WriteLine("|{0}|{1}|{2}", prop.Name.PadRight(29), prop.PropertyType.Name.PadRight(29), prop.GetValue(resource));
-            }
-
             return resource;
         }
 
