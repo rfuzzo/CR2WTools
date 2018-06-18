@@ -48,6 +48,7 @@
     <Compile Include="Attributes\ResourceTypeAttribute.cs" />
     <Compile Include="Attributes\W3ArrayFlagsAttribute.cs" />
     <Compile Include="Attributes\W3TypeAttribute.cs" />
+    <Compile Include="FNV1a\FNV1A.cs" />
     <Compile Include="IO\SBuffer.cs" />
     <Compile Include="CR2WController.cs" />
     <Compile Include="CRC32\Crc32Algorithm.cs" />
@@ -116,7 +117,12 @@
     <Compile Include="Types\W3\CEnvToneMappingParameters.cs" />
     <Compile Include="Types\W3\CEnvWaterParameters.cs" />
     <Compile Include="Types\W3\CEnvWindParameters.cs" />
+    <Compile Include="Types\W3\CGuiConfigResource.cs" />
+    <Compile Include="Types\W3\CHudResource.cs" />
+    <Compile Include="Types\W3\CMenuResource.cs" />
+    <Compile Include="Types\W3\CPopupResource.cs" />
     <Compile Include="Types\W3\CSwfResource.cs" />
+    <Compile Include="Types\W3\EulerAngles.cs" />
     <Compile Include="Types\W3\IReferencable.cs" />
     <Compile Include="Types\W3\IScriptable.cs" />
     <Compile Include="Types\W3\ISerializable.cs" />
@@ -139,6 +145,10 @@
     <Compile Include="Types\W3\CObject.cs" />
     <Compile Include="Types\W3\CResource.cs" />
     <Compile Include="Types\W3\SCurveDataEntry.cs" />
+    <Compile Include="Types\W3\SGuiSceneDescription.cs" />
+    <Compile Include="Types\W3\SHudDescription.cs" />
+    <Compile Include="Types\W3\SMenuDescription.cs" />
+    <Compile Include="Types\W3\SPopupDescription.cs" />
     <Compile Include="Types\W3\SSimpleCurve.cs" />
     <Compile Include="Types\W3\SSwfFontDesc.cs" />
     <Compile Include="Types\W3\SSwfHeaderInfo.cs" />
@@ -150,8 +160,6 @@
       <LastGenOutput>CResourceExt.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FNV1a\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
