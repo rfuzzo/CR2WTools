@@ -158,11 +158,13 @@ namespace CR2W.Types.W3
             //Basic / Value Types
             switch (proptype.Name)
             {
-                case "Byte":              return br.ReadByte();
+                case "Byte":              //return br.ReadByte();
+                case "UInt8":             return br.ReadByte();
                 case "UInt16":            return br.ReadUInt16();
                 case "UInt32":            return br.ReadUInt32();
                 case "UInt64":            return br.ReadUInt64();
-                case "SByte":             return br.ReadSByte();
+                case "SByte":             //return br.ReadSByte();
+                case "Int8":              return br.ReadSByte();
                 case "Int16":             return br.ReadInt16();
                 case "Int32":             return br.ReadInt32();
                 case "Int64":             return br.ReadInt64();

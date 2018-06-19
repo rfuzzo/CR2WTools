@@ -4,7 +4,7 @@ using CR2W.Attributes;
 
 namespace CR2W.Types.W3
 {
-	public class CEntity : CNode
+	public class CPeristentEntity : CEntity
 	{
 		[W3Type("tags")]
 		public TagList Tags { get; set; }
@@ -39,6 +39,12 @@ namespace CR2W.Types.W3
 
 		[W3Type("entityFlags")]
 		public UInt8 EntityFlags { get; set; }
+
+		[W3Type("idTag")]
+		public IdTag IdTag { get; set; }
+
+		[W3Type("isSaveable")]
+		public bool IsSaveable { get; set; }
 
 	}
 }

@@ -4,7 +4,7 @@ using CR2W.Attributes;
 
 namespace CR2W.Types.W3
 {
-	public class CEntity : CNode
+	public class CGameplayEntity : CPeristentEntity
 	{
 		[W3Type("tags")]
 		public TagList Tags { get; set; }
@@ -39,6 +39,33 @@ namespace CR2W.Types.W3
 
 		[W3Type("entityFlags")]
 		public UInt8 EntityFlags { get; set; }
+
+		[W3Type("idTag")]
+		public IdTag IdTag { get; set; }
+
+		[W3Type("isSaveable")]
+		public bool IsSaveable { get; set; }
+
+		[W3Type("propertyAnimationSet")]
+		public Ptr<CPropertyAnimationSet> PropertyAnimationSet { get; set; }
+
+		[W3Type("displayName")]
+		public LocalizedString DisplayName { get; set; }
+
+		[W3Type("stats")]
+		public Ptr<CCharacterStats> Stats { get; set; }
+
+		[W3Type("isInteractionActivator")]
+		public bool IsInteractionActivator { get; set; }
+
+		[W3Type("aimVector")]
+		public Vector AimVector { get; set; }
+
+		[W3Type("gameplayFlags")]
+		public UInt32 GameplayFlags { get; set; }
+
+		[W3Type("focusModeVisibility")]
+		public EFocusModeVisibility FocusModeVisibility { get; set; }
 
 	}
 }

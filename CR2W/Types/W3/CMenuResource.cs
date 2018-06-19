@@ -7,7 +7,8 @@ namespace CR2W.Types.W3
 	public class CMenuResource : CResource, IGuiResource
 	{
 		[W3Type("resourceBlocks")]
-		public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
 
 		[W3Type("menuClass")]
 		public CName MenuClass { get; set; }

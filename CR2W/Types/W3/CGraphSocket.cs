@@ -13,7 +13,8 @@ namespace CR2W.Types.W3
 		public CName Name { get; set; }
 
 		[W3Type("connections")]
-		public Array<Ptr<CGraphConnection>> Connections { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<Ptr<CGraphConnection>> Connections { get; set; }
 
 	}
 }

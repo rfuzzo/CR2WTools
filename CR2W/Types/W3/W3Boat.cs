@@ -19,7 +19,8 @@ namespace CR2W.Types.W3
 		public CGUID Guid { get; set; }
 
 		[W3Type("components")]
-		public Array<Ptr<CComponent>> Components { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<Ptr<CComponent>> Components { get; set; }
 
 		[W3Type("template")]
 		public Handle<CEntityTemplate> Template { get; set; }

@@ -21,8 +21,8 @@ namespace CR2W.Types.W3
 		[W3Type("parentSlotName")]
 		public CName ParentSlotName { get; set; }
 
-		[W3Type("attachmentFlags")]
-		public EHardAttachmentFlags AttachmentFlags { get; set; }
+		//[W3Type("attachmentFlags")]
+		//public EHardAttachmentFlags AttachmentFlags { get; set; } //not in RTTI
 
 		[W3Type("parentSlot")]
 		public Ptr<ISlot> ParentSlot { get; set; }

@@ -7,7 +7,8 @@ namespace CR2W.Types.W3
 	public class CHudResource : CResource, IGuiResource
 	{
 		[W3Type("resourceBlocks")]
-		public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
 
 		[W3Type("hudClass")]
 		public CName HudClass { get; set; }

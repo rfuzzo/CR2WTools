@@ -7,16 +7,17 @@ namespace CR2W.Types.W3
 	public class SCurveData
 	{
 		[W3Type("Curve Values")]
-		public Array<SCurveDataEntry> Curve Values { get; set; }
+        [W3ArrayFlags(142, 0)]
+        public Array<SCurveDataEntry> CurveValues { get; set; } //space in var name
 
 		[W3Type("value type")]
-		public ECurveValueType Value type { get; set; }
+		public ECurveValueType ValueType { get; set; } //space in var name
 
-		[W3Type("type")]
+        [W3Type("type")]
 		public ECurveBaseType Type { get; set; }
 
 		[W3Type("is looped")]
-		public bool Is looped { get; set; }
+		public bool IsLooped { get; set; } //space in var name
 
-	}
+    }
 }

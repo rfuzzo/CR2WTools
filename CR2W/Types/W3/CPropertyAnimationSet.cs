@@ -7,7 +7,8 @@ namespace CR2W.Types.W3
 	public class CPropertyAnimationSet : CObject
 	{
 		[W3Type("animations")]
-		public Array<SPropertyAnimation> Animations { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<SPropertyAnimation> Animations { get; set; }
 
 	}
 }

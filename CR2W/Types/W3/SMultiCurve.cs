@@ -46,16 +46,20 @@ namespace CR2W.Types.W3
 		public bool EnableAutomaticRotationFromDirectionRecalculation { get; set; }
 
 		[W3Type("curves")]
-		public Array<SCurveData> Curves { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<SCurveData> Curves { get; set; }
 
 		[W3Type("leftTangents")]
-		public Array<Vector> LeftTangents { get; set; }
+        [W3ArrayFlags(142, 0)]
+        public Array<Vector> LeftTangents { get; set; }
 
 		[W3Type("rightTangents")]
-		public Array<Vector> RightTangents { get; set; }
+        [W3ArrayFlags(142, 0)]
+        public Array<Vector> RightTangents { get; set; }
 
 		[W3Type("easeParams")]
-		public Array<SCurveEaseParam> EaseParams { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<SCurveEaseParam> EaseParams { get; set; }
 
 		[W3Type("translationRelativeMode")]
 		public ECurveRelativeMode TranslationRelativeMode { get; set; }

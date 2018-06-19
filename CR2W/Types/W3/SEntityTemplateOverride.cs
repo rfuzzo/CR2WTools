@@ -13,7 +13,8 @@ namespace CR2W.Types.W3
 		public CName ClassName { get; set; }
 
 		[W3Type("overriddenProperties")]
-		public Array<CName> OverriddenProperties { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<CName> OverriddenProperties { get; set; }
 
 	}
 }

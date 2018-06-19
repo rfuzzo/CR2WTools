@@ -84,10 +84,27 @@
     <Compile Include="Types\EngineTransform.cs" />
     <Compile Include="Types\EntityHandle.cs" />
     <Compile Include="Types\IdTag.cs" />
+    <Compile Include="Types\Int8.cs" />
+    <Compile Include="Types\UInt8.cs" />
     <Compile Include="Types\W3\CAreaEnvironmentParams.cs" />
     <Compile Include="Types\W3\CCharacterStats.cs" />
+    <Compile Include="Types\W3\CColorShift.cs" />
+    <Compile Include="Types\W3\CComponentReference.cs" />
+    <Compile Include="Types\W3\CEntityAppearance.cs" />
+    <Compile Include="Types\W3\CEntityBodyPart.cs" />
+    <Compile Include="Types\W3\CEntityBodyPartState.cs" />
+    <Compile Include="Types\W3\CEntityTemplateCookedEffect.cs" />
+    <Compile Include="Types\W3\CEntityTemplateParam.cs" />
+    <Compile Include="Types\W3\CFXBase.cs" />
+    <Compile Include="Types\W3\CFXDefinition.cs" />
+    <Compile Include="Types\W3\CFXTrack.cs" />
+    <Compile Include="Types\W3\CFXTrackGroup.cs" />
+    <Compile Include="Types\W3\CFXTrackItem.cs" />
+    <Compile Include="Types\W3\CGameplayEntity.cs" />
     <Compile Include="Types\W3\Color.cs" />
+    <Compile Include="Types\W3\CPeristentEntity.cs" />
     <Compile Include="Types\W3\CPropertyAnimationSet.cs" />
+    <Compile Include="Types\W3\IAttachment.cs" />
     <Compile Include="Types\W3\ISlot.cs" />
     <Compile Include="Types\W3\CNode.cs" />
     <Compile Include="Types\W3\CHardAttachment.cs" />
@@ -174,6 +191,8 @@
     <Compile Include="Types\W3\Enums.cs" />
     <Compile Include="Types\W3\CObject.cs" />
     <Compile Include="Types\W3\CResource.cs" />
+    <Compile Include="Types\W3\SComponentInstancePropertyEntry.cs" />
+    <Compile Include="Types\W3\SEntityTemplateColoringEntry.cs" />
     <Compile Include="Types\W3\SPropertyAnimation.cs" />
     <Compile Include="Types\W3\SCurveDataEntry.cs" />
     <Compile Include="Types\W3\SEntityTemplateOverride.cs" />
@@ -185,8 +204,10 @@
     <Compile Include="Types\W3\SMenuDescription.cs" />
     <Compile Include="Types\W3\SPopupDescription.cs" />
     <Compile Include="Types\W3\SSimpleCurve.cs" />
+    <Compile Include="Types\W3\SStreamedAttachment.cs" />
     <Compile Include="Types\W3\SSwfFontDesc.cs" />
     <Compile Include="Types\W3\SSwfHeaderInfo.cs" />
+    <Compile Include="Types\W3\VoicetagAppearancePair.cs" />
     <Compile Include="Types\W3\W3Boat.cs" />
     <Compile Include="Types\W3\Vector.cs" />
   </ItemGroup>

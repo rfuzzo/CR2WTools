@@ -7,10 +7,12 @@ namespace CR2W.Types.W3
 	public class CEntityTemplate : CResource
 	{
 		[W3Type("includes")]
-		public Array<Handle<CEntityTemplate>> Includes { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<Handle<CEntityTemplate>> Includes { get; set; }
 
 		[W3Type("overrides")]
-		public Array<SEntityTemplateOverride> Overrides { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<SEntityTemplateOverride> Overrides { get; set; }
 
 		[W3Type("properOverrides")]
 		public bool ProperOverrides { get; set; }
@@ -28,40 +30,52 @@ namespace CR2W.Types.W3
 		public Ptr<CEntity> EntityObject { get; set; }
 
 		[W3Type("bodyParts")]
-		public Array<CEntityBodyPart> BodyParts { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<CEntityBodyPart> BodyParts { get; set; }
 
 		[W3Type("appearances")]
-		public Array<CEntityAppearance> Appearances { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<CEntityAppearance> Appearances { get; set; }
 
 		[W3Type("usedAppearances")]
-		public Array<CName> UsedAppearances { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<CName> UsedAppearances { get; set; }
 
 		[W3Type("voicetagAppearances")]
-		public Array<VoicetagAppearancePair> VoicetagAppearances { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<VoicetagAppearancePair> VoicetagAppearances { get; set; }
 
 		[W3Type("effects")]
-		public Array<Ptr<CFXDefinition>> Effects { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<Ptr<CFXDefinition>> Effects { get; set; }
 
 		[W3Type("slots")]
-		public Array<EntitySlot> Slots { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<EntitySlot> Slots { get; set; }
 
 		[W3Type("templateParams")]
-		public Array<Ptr<CEntityTemplateParam>> TemplateParams { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<Ptr<CEntityTemplateParam>> TemplateParams { get; set; }
 
 		[W3Type("coloringEntries")]
-		public Array<SEntityTemplateColoringEntry> ColoringEntries { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<SEntityTemplateColoringEntry> ColoringEntries { get; set; }
 
 		[W3Type("instancePropEntries")]
-		public Array<SComponentInstancePropertyEntry> InstancePropEntries { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<SComponentInstancePropertyEntry> InstancePropEntries { get; set; }
 
 		[W3Type("flatCompiledData")]
-		public Array<UInt8> FlatCompiledData { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<UInt8> FlatCompiledData { get; set; }
 
 		[W3Type("streamedAttachments")]
-		public Array<SStreamedAttachment> StreamedAttachments { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<SStreamedAttachment> StreamedAttachments { get; set; }
 
 		[W3Type("cookedEffects")]
-		public Array<CEntityTemplateCookedEffect> CookedEffects { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<CEntityTemplateCookedEffect> CookedEffects { get; set; }
 
 		[W3Type("cookedEffectsVersion")]
 		public UInt32 CookedEffectsVersion { get; set; }

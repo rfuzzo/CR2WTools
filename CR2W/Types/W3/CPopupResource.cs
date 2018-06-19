@@ -7,7 +7,8 @@ namespace CR2W.Types.W3
 	public class CPopupResource : CResource, IGuiResource
 	{
 		[W3Type("resourceBlocks")]
-		public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
+        [W3ArrayFlags(2, 0)]
+        public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
 
 		[W3Type("popupClass")]
 		public CName PopupClass { get; set; }
