@@ -8,12 +8,6 @@ namespace CR2W.Types
 {
     public struct LocalizedString
     {
-        public LocalizedString(uint value)
-        {
-
-
-
-
-        }
+        public UInt32 ID { get; set; }
     }
 }

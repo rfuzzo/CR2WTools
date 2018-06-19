@@ -90,7 +90,7 @@ namespace CR2W.IO
             //Headers.
             ReadTableHeaders();
             
-            //Blocks.
+            //Tables.
             ReadStrings();
             ReadNames();
             ReadResources();
@@ -240,7 +240,7 @@ namespace CR2W.IO
         /* - Table 4
          *   This table is always of size 1 and all 
          *   data is 0 so no need to read it.
-         *   Reconstructed in CR2WExporter
+         *   Reconstructed in CR2WBinaryWriter
          *   
          *   It may be the case that the file is valid with
          *   this table empty.
@@ -288,7 +288,7 @@ namespace CR2W.IO
                     BaseStream.Seek(Convert.ToInt32(temp.offset), SeekOrigin.Begin);
                     if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(temp.size))) != crc32)
                     {
-                        throw new MismatchCRC32Exception($"CRC32 checksum failed for object {i+1} ({names[temp.typeID]})");
+                        throw new MismatchCRC32Exception($"CRC32 Checksum failed for object {i+1} ({names[temp.typeID]})");
                     }
                     BaseStream.Seek(pos, SeekOrigin.Begin);
                 }
@@ -375,7 +375,7 @@ namespace CR2W.IO
         #region Resource
         /* - Info
          *      Region for creating the finished CResource
-         *      from the data held in the buffers that blocks 5 and 7 point to.
+         *      from the data held in the buffers that tables 5 and 7 point to.
          *      Table 5 - List of objects that together make a Single CResource object and 
          *                all the CObjects the are referenced by it.
          *      Table 7 - List of embedded CR2W files that the main CResource can use
@@ -386,7 +386,8 @@ namespace CR2W.IO
          *          Option 3: Do not parse but just hold as a byte array until the user needs to change stuff.
          *          Option 4: Export as a new CR2W physical file that can be later parsed.
          */
-
+        
+        //TO BE IMPROVED
         public CResource CreateResource()
         {
             var temp = objects[0];
@@ -516,11 +517,14 @@ namespace CR2W.IO
         /// <returns>Localized string key</returns>
         public LocalizedString ReadLocalizedString()
         {
-            return new LocalizedString(ReadUInt32());
+            return new LocalizedString
+            {
+                ID = ReadUInt32()
+            };
         }
 
         /// <summary>
-        /// Read an embedded XML document where the beginning 4 bytes indicate the bytes to read.
+        /// Read an embedded UTF-8 encoded XML document where the beginning 4 bytes indicate the bytes to read.
         /// </summary>
         /// <returns>XML document object</returns>
         public XmlDocument ReadXMLDocument()

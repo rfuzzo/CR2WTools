@@ -12,19 +12,6 @@ namespace CR2W.Types
 {
     public class Array<T> : List<T>
     {
-        public override string ToString()
-        {
-            var sb = new StringBuilder("[");
-            foreach (var item in this)
-            {
-                if(sb.Length > 1)
-                {
-                    sb.Append(", ");
-                }
-                sb.Append(item.ToString());
-            }
-            sb.Append("]");
-            return sb.ToString();
-        }
+        
     }
 }

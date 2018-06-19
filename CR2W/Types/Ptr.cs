@@ -10,7 +10,7 @@ using CR2W.Types.W3;
 
 namespace CR2W.Types
 {
-    public class Ptr<T> : IReferencable
+    public struct Ptr<T>
     {
         /*
          * 
@@ -23,6 +23,7 @@ namespace CR2W.Types
          * 
          * 
          */
+<<<<<<< HEAD
 
         public CGUID Target { get; set; } //if children are referenceable by GUID, if not, int?
 
@@ -31,6 +32,8 @@ namespace CR2W.Types
         {
             throw new NotImplementedException();
         }
+=======
+>>>>>>> upstream/master
     }
 
 

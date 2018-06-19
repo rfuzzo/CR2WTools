@@ -43,6 +43,7 @@ namespace CR2W
             return await Task.Run(() => LoadResource(resource, isDepotPath));
         }
 
+
         public static C2dArray LoadCSV( string resource )
         {
             if(!File.Exists(resource))
@@ -53,13 +54,16 @@ namespace CR2W
             var arr = new C2dArray();
             var lines = File.ReadAllLines(resource);
 
+            arr.Headers = new Array<string>();
             arr.Headers.AddRange(lines[0].Split(new char[] { ';' }));
 
+            arr.Data = new Array<Array<string>>();
             for (int i = 1; i < lines.Length; i++)
             {
-                arr.Data[i - 1].AddRange(lines[i].Split(new char[] { ';' }));
+                var temp = new Array<string>();
+                temp.AddRange(lines[i].Split(new char[] { ';' }));
+                arr.Data.Add(temp);
             }
-
             return arr;
         }
     }

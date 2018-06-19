@@ -1,21 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Reflection;
 using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Windows.Forms;
 using CR2W;
-using CR2W.IO;
-using CR2W.Types;
 using CR2W.Types.W3;
-using CR2W.CRC32;
 using CR2W.Testing;
-using CR2W.Resources;
-using CR2W.Attributes;
+using CR2W.Types;
 
 namespace CR2WConsole
 {
@@ -25,49 +14,96 @@ namespace CR2WConsole
         static void Main(string[] args)
         {
             Console.Title = "CR2W Reader";
-
-            CResource res = null;
             using (var of = new OpenFileDialog())
             {
                 if (of.ShowDialog() == DialogResult.OK)
                 {
-                    try
-                    {
-                        res = CR2WController.LoadResource(of.FileName);
-                        //TestParser.New(of.FileName);
-                    }
-                    catch(Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
+                    OpenFile(of.FileName);
                 }
             }
+        }
 
-            if (res == null)
+        static void OpenFile(string file)
+        {
+            CResource res;
+            var sw = new Stopwatch();
+
+            Console.WriteLine("Reading File...");
+            sw.Start();
+            try
+            {
+                res = CR2WController.LoadResource(file);
+            }
+            catch (Exception e)
+            {
+                sw.Stop();
+                Console.WriteLine(e);
                 return;
+            }
+            sw.Stop();
 
+            Console.WriteLine("Done, time taken: {0}", sw.ElapsedMilliseconds);
+            Console.WriteLine();
+            Console.WriteLine("File:        {0}", file);
             Console.WriteLine("Type:        {0}", res.GetType().Name);
             Console.WriteLine("Flags:       {0}", res.Flags);
             Console.WriteLine("Children:    {0}", res.Children.Count);
             Console.WriteLine("Template:    {0}", res.Template);
             Console.WriteLine();
             Console.WriteLine("Test Values:");
-
-            //Test to read off some values from the parsed file.
-            if (res is CEnvironmentDefinition env)
+            Console.WriteLine();
+            if(res is CGuiConfigResource gui)
             {
-                Console.WriteLine("\tBalanceMap0:       {0}", env.EnvParams.M_finalColorBalance.BalanceMap0.DepotPath);
-                Console.WriteLine("\tBalanceMap1:       {0}", env.EnvParams.M_finalColorBalance.BalanceMap1.DepotPath);
-                Console.WriteLine("\tBloom:             {0}", env.EnvParams.M_bloomNew.Activated);
-                Console.WriteLine("\tDOF Range:         {0}", env.EnvParams.M_depthOfField.SkyRange);
-                Console.WriteLine("\tGame Effects:      {0}", env.EnvParams.M_gameplayEffects.Activated);
-                Console.WriteLine("\tWater Curve Type:  {0}", env.EnvParams.M_water.UnderWaterColor.CurveType);
-                Console.WriteLine("\tSun and Moon:      {0}", env.EnvParams.M_sunAndMoonParams.Activated);
+                foreach (var hud in gui.Huds)
+                {
+                    Console.WriteLine("\t{0}", hud.HudName);
+                    Console.WriteLine("\t{0}", hud.HudResource.DepotPath);
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+                foreach (var menu in gui.Menus)
+                {
+                    Console.WriteLine("\t{0}", menu.MenuName);
+                    Console.WriteLine("\t{0}", menu.MenuResource.DepotPath);
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+                foreach (var popup in gui.Popups)
+                {
+                    Console.WriteLine("\t{0}", popup.PopupName);
+                    Console.WriteLine("\t{0}", popup.PopupResource.DepotPath);
+                    Console.WriteLine();
+                }
             }
-            else if (res is CIndexed2dArray arr)
+            else if(res is CEnvironmentDefinition env)
             {
-                Console.WriteLine("\tHeaders:  {0}", arr.Headers.ToString());
-                Console.WriteLine("\tData:     {0}", arr.Data.ToString());
+                Console.WriteLine("\t{0}", env.EnvParams.M_finalColorBalance.BalanceMap0.DepotPath);
+                Console.WriteLine("\t{0}", env.EnvParams.M_finalColorBalance.BalanceMap1.DepotPath);
+                Console.WriteLine("\t{0}", env.EnvParams.M_speedTree.BillboardsColor.CurveType);
+                Console.WriteLine("\t{0}", env.EnvParams.M_ssaoMS.HierarchyDepth.DataBaseType);
+            }
+            else if(res is C2dArray arr)
+            {
+                foreach (var header in arr.Headers)
+                {
+                    Console.Write("\t{0}", header.PadRight(20));
+                }
+                Console.WriteLine();
+                foreach (var row in arr.Data)
+                {
+                    foreach (var collumn in row)
+                    {
+                        Console.Write("\t{0}", collumn.PadRight(20));
+                    }
+                    Console.WriteLine();
+                }
+            }
+            else if(res is CBitmapTexture xbm)
+            {
+                Console.WriteLine("\t{0}", xbm.Height);
+                Console.WriteLine("\t{0}", xbm.Width);
+                Console.WriteLine("\t{0}", xbm.Format);
+                Console.WriteLine("\t{0}", xbm.Compression);
             }
             Console.WriteLine();
         }
