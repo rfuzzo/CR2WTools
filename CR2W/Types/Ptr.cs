@@ -23,7 +23,6 @@ namespace CR2W.Types
          * 
          * 
          */
-<<<<<<< HEAD
 
         public CGUID Target { get; set; } //if children are referenceable by GUID, if not, int?
 
@@ -32,8 +31,6 @@ namespace CR2W.Types
         {
             throw new NotImplementedException();
         }
-=======
->>>>>>> upstream/master
     }
 
 

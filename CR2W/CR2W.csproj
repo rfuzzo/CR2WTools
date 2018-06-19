@@ -176,17 +176,14 @@
     <Compile Include="Types\W3\CResource.cs" />
     <Compile Include="Types\W3\SPropertyAnimation.cs" />
     <Compile Include="Types\W3\SCurveDataEntry.cs" />
-<<<<<<< HEAD
     <Compile Include="Types\W3\SEntityTemplateOverride.cs" />
     <Compile Include="Types\W3\SMultiCurve.cs" />
     <Compile Include="Types\W3\SCurveData.cs" />
     <Compile Include="Types\W3\SCurveEaseParam.cs" />
-=======
     <Compile Include="Types\W3\SGuiSceneDescription.cs" />
     <Compile Include="Types\W3\SHudDescription.cs" />
     <Compile Include="Types\W3\SMenuDescription.cs" />
     <Compile Include="Types\W3\SPopupDescription.cs" />
->>>>>>> upstream/master
     <Compile Include="Types\W3\SSimpleCurve.cs" />
     <Compile Include="Types\W3\SSwfFontDesc.cs" />
     <Compile Include="Types\W3\SSwfHeaderInfo.cs" />

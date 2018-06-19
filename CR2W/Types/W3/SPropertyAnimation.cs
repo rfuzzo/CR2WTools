@@ -5,7 +5,7 @@ using CR2W.Attributes;
 namespace CR2W.Types.W3
 {
 	public class SPropertyAnimation
-    {
+	{
 		[W3Type("propertyName")]
 		public CName PropertyName { get; set; }
 
@@ -21,8 +21,5 @@ namespace CR2W.Types.W3
 		[W3Type("effectToPlay")]
 		public CName EffectToPlay { get; set; }
 
-
-
-
-    }
+	}
 }
