@@ -24,6 +24,9 @@ namespace CR2W.Types
 
     public class Handle<T> where T : CResource
     {
-
+        public string DepotPath { get; set; }
+        public ushort Flags { get; set; }
     }
+
+   
 }

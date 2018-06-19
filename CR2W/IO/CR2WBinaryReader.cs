@@ -559,7 +559,7 @@ namespace CR2W.IO
         /// </summary>
         /// <param name="enumType"></param>
         /// <returns></returns>
-        public object ReadEnumarator( Type enumType )
+        public object ReadEnumerator( Type enumType )
         {
             if (enumType.IsDefined(typeof(FlagsAttribute), false))
             {
@@ -657,6 +657,9 @@ namespace CR2W.IO
             {
                 //ToDo - Add in the way tags are stored in a tag list.
                 //       I will keep tag list as a struct and not a class.
+                //rf
+                list.Tags.Add(names[ReadUInt16()]); //dbg
+                list.Taglist.Append(names[ReadUInt16()]); //dbg
             }
             return list;
         }

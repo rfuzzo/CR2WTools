@@ -19,11 +19,13 @@ namespace CR2W.Types.W3
         //Here will reside all the of the childern that this CObject instance is dependent on 
         //This will be where all of the CObjects that any ptr or object handle refer to.
         //atm its just a dictionary with a guid as the key.
-        public Dictionary<Guid, CObject> Children  { get; set; }
+        //public Dictionary<Guid, CObject> Children  { get; set; }
+        public Dictionary<int, CObject> Children { get; set; }
 
         public CObject()
         {
-            Children = new Dictionary<Guid, CObject>();
+            //Children = new Dictionary<Guid, CObject>();
+            Children = new Dictionary<int, CObject>();
         }
 
         /// <summary>
@@ -58,6 +60,9 @@ namespace CR2W.Types.W3
         public virtual void ParseBytes(CR2WBinaryReader br, uint size)
         {
             ParseClass(br, this);
+
+            ParseVariables(br, this); //rf
+
             #region Comments
             // - TODO:
             //      Figure out an elegant solution to map the data within a chunk to the class structure.
@@ -85,6 +90,46 @@ namespace CR2W.Types.W3
             //             attributes to map the values then there will be problems trying to integrate this.
             #endregion
         }
+
+        //rf
+        protected void ParseVariables(CR2WBinaryReader br, object instance)
+        {
+            for (int i = 1; i < br.objects.Length; i++) //[0] is the resource
+            {
+                var temp = br.objects[i];
+                var type = br.names[temp.typeID];
+
+                Type classType = Type.GetType($"CR2W.Types.W3.{type}");
+
+                if (classType == null)
+                {
+                    throw new UnknownObjectTypeException($"[UNKOWN TYPE] {type} could not be found");
+                }
+
+                if (!classType.IsSubclassOf(typeof(CResource)))
+                {
+                    throw new InvalidOperationException($"[UNSUPPORTED TYPE] {type} is not a CResource");
+                }
+
+                br.BaseStream.Seek(temp.offset, SeekOrigin.Begin);
+
+
+                CObject child = (CObject)Activator.CreateInstance(classType);
+                child.Flags = temp.flags;
+                child.Template = temp.template;
+                child.ParseClass(br, child);
+
+                Children.Add(i, child);
+                //Children.Add(child.GetGUID(), child);
+            }
+
+        }
+
+        //rf
+        //private CGUID GetGUID(CObject obj)
+        //{
+        //}
+
 
         protected void ParseClass(CR2WBinaryReader br, object instance)
         {
@@ -133,7 +178,7 @@ namespace CR2W.Types.W3
             //Parse Enumarators
             if (proptype.IsEnum)
             {
-                return br.ReadEnumarator(proptype);
+                return br.ReadEnumerator(proptype);
             }
 
             //Parse Generic Types (Array, Soft, Ptr, Handle)
@@ -162,6 +207,35 @@ namespace CR2W.Types.W3
                     proptype.GetProperty("Flags").SetValue(instance, br.resources[id].flags);
                     return instance;
                 }
+                //rf
+                else if (proptype.GetGenericTypeDefinition() == typeof(Ptr<>))
+                {
+                    var id = br.ReadUInt32() - 1;
+                    /*if (br.resources[id].type != genprop.Name)
+                    {
+                        throw new InvalidOperationException($"Ptr type mistatch. Expected Type: {genprop.Name}. Type Read: {br.resources[id].type}.");
+                    }
+                    proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id].path);
+                    proptype.GetProperty("Flags").SetValue(instance, br.resources[id].flags);
+                    */
+                    var target = br.resources[id];
+
+                    return instance;
+                }
+                else if (proptype.GetGenericTypeDefinition() == typeof(Handle<>))
+                {
+                    var id = br.ReadUInt32() - 1;
+                    /*if (br.resources[id].type != genprop.Name)
+                    {
+                        throw new InvalidOperationException($"Ptr type mistatch. Expected Type: {genprop.Name}. Type Read: {br.resources[id].type}.");
+                    }
+                    proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id].path);
+                    proptype.GetProperty("Flags").SetValue(instance, br.resources[id].flags);
+                    */
+                    var target = br.resources[id];
+
+                    return instance;
+                }
             }
 
             //Parse classes
@@ -179,7 +253,8 @@ namespace CR2W.Types.W3
 
         public static PropertyInfo GetPropertybyW3Name( string name, Type parent )
         {
-            var props = parent.GetProperties().Where(prop =>
+            var parentprops = parent.GetProperties(); //rf
+            var props = parentprops.Where(prop =>
             {
                 if(prop.IsDefined(typeof(W3TypeAttribute)))
                 {
