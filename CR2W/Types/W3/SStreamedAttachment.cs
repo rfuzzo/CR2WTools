@@ -20,7 +20,7 @@ namespace CR2W.Types.W3
 
 		[W3Type("data")]
         [W3ArrayFlags(2, 0)]
-        public Array<UInt8> Data { get; set; }
+        public Array<Byte> Data { get; set; }
 
 	}
 }

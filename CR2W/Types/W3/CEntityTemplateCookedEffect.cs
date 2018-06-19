@@ -15,5 +15,7 @@ namespace CR2W.Types.W3
 		[W3Type("buffer")]
 		public SharedDataBuffer Buffer { get; set; }
 
-	}
+       
+
+    }
 }

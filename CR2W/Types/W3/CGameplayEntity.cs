@@ -29,7 +29,7 @@ namespace CR2W.Types.W3
 		public SharedDataBuffer StreamingDataBuffer { get; set; }
 
 		[W3Type("streamingDistance")]
-		public UInt8 StreamingDistance { get; set; }
+		public Byte StreamingDistance { get; set; }
 
 		[W3Type("entityStaticFlags")]
 		public EEntityStaticFlags EntityStaticFlags { get; set; }
@@ -38,7 +38,7 @@ namespace CR2W.Types.W3
 		public CName AutoPlayEffectName { get; set; }
 
 		[W3Type("entityFlags")]
-		public UInt8 EntityFlags { get; set; }
+		public Byte EntityFlags { get; set; }
 
 		[W3Type("idTag")]
 		public IdTag IdTag { get; set; }
@@ -67,5 +67,6 @@ namespace CR2W.Types.W3
 		[W3Type("focusModeVisibility")]
 		public EFocusModeVisibility FocusModeVisibility { get; set; }
 
-	}
+        
+    }
 }

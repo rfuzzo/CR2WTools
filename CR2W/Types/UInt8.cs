@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
-    public struct UInt8
+    public class UInt8
     {
        
 

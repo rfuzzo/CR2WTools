@@ -657,14 +657,15 @@ namespace CR2W.IO
         {
             var size = ReadByte();
             var list = new TagList();
+            var tags = new List<string>();
             for (var i = 0; i < size; i++)
             {
                 //ToDo - Add in the way tags are stored in a tag list.
                 //       I will keep tag list as a struct and not a class.
                 //rf
-                list.Tags.Add(names[ReadUInt16()]); //dbg
-                list.Taglist.Append(names[ReadUInt16()]); //dbg
+                tags.Add(names[ReadUInt16()]);
             }
+            list.Tags = tags;
             return list;
         }
 

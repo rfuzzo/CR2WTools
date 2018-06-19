@@ -12,7 +12,5 @@ namespace CR2W.Types
         //rf
         public List<string> Tags { get; set; }
 
-        public string[] Taglist { get; set; }
-
     }
 }

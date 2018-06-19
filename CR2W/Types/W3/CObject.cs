@@ -109,12 +109,7 @@ namespace CR2W.Types.W3
                 {
                     throw new UnknownObjectTypeException($"[UNKOWN TYPE] {type} could not be found");
                 }
-
-                if (!classType.IsSubclassOf(typeof(CResource)))
-                {
-                    throw new InvalidOperationException($"[UNSUPPORTED TYPE] {type} is not a CResource");
-                }
-
+               
                 br.BaseStream.Seek(temp.offset, SeekOrigin.Begin);
 
 
@@ -124,7 +119,7 @@ namespace CR2W.Types.W3
                 child.ParseClass(br, child);
 
                 Children.Add(i, child);
-                //Children.Add(child.GetGUID(), child);
+                //Children.Add(child.GetGUID(), child); //rf dbg
             }
 
         }
@@ -147,6 +142,10 @@ namespace CR2W.Types.W3
                 }
                 var typeId = br.ReadInt16();
                 var size = br.ReadUInt32() - 4;
+                //rf dbg
+                var _typeName = br.names[typeId];
+                var _name = br.names[nameId];
+                //rf dbg
                 var prop = GetPropertybyW3Name(br.names[nameId], instance.GetType());
                 var value = ParseProperty(br, prop.PropertyType);
                 prop.SetValue(instance, value);
@@ -158,13 +157,11 @@ namespace CR2W.Types.W3
             //Basic / Value Types
             switch (proptype.Name)
             {
-                case "Byte":              //return br.ReadByte();
-                case "UInt8":             return br.ReadByte();
+                case "Byte":              return br.ReadByte();
                 case "UInt16":            return br.ReadUInt16();
                 case "UInt32":            return br.ReadUInt32();
                 case "UInt64":            return br.ReadUInt64();
-                case "SByte":             //return br.ReadSByte();
-                case "Int8":              return br.ReadSByte();
+                case "SByte":             return br.ReadSByte();
                 case "Int16":             return br.ReadInt16();
                 case "Int32":             return br.ReadInt32();
                 case "Int64":             return br.ReadInt64();
@@ -216,21 +213,13 @@ namespace CR2W.Types.W3
                 //rf
                 else if (proptype.GetGenericTypeDefinition() == typeof(Ptr<>))
                 {
-                    var id = br.ReadUInt32() - 1;
-                    /*if (br.resources[id].type != genprop.Name)
-                    {
-                        throw new InvalidOperationException($"Ptr type mistatch. Expected Type: {genprop.Name}. Type Read: {br.resources[id].type}.");
-                    }
-                    proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id].path);
-                    proptype.GetProperty("Flags").SetValue(instance, br.resources[id].flags);
-                    */
-                    var target = br.resources[id];
-
+                    var id = br.ReadInt32() - 1;
+                    proptype.GetProperty("Target").SetValue(instance, id);
                     return instance;
                 }
                 else if (proptype.GetGenericTypeDefinition() == typeof(Handle<>))
                 {
-                    var id = br.ReadUInt32() - 1;
+                    var id = br.ReadInt32();
                     /*if (br.resources[id].type != genprop.Name)
                     {
                         throw new InvalidOperationException($"Ptr type mistatch. Expected Type: {genprop.Name}. Type Read: {br.resources[id].type}.");
@@ -238,10 +227,20 @@ namespace CR2W.Types.W3
                     proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id].path);
                     proptype.GetProperty("Flags").SetValue(instance, br.resources[id].flags);
                     */
-                    var target = br.resources[id];
+                    //var target = br.resources[id];
 
                     return instance;
                 }
+            }
+
+            if (proptype.Name == "SharedDataBuffer") //just reads a byte array and stores it in the instance
+            {
+                var instance = Activator.CreateInstance(proptype);
+                var arraysize = br.ReadUInt32();
+                var bytes = br.ReadBytes((int)arraysize);
+                proptype.GetProperty("Bytes").SetValue(instance, bytes);
+
+                return instance;
             }
 
             //Parse classes

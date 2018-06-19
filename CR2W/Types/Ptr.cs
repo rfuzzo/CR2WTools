@@ -24,7 +24,7 @@ namespace CR2W.Types
          * 
          */
 
-        public CGUID Target { get; set; } //if children are referenceable by GUID, if not, int?
+        public int Target { get; set; } //if children are referenceable by GUID, if not, int?
 
         
         public void ParseBytes(CR2WBinaryReader parser, uint size)

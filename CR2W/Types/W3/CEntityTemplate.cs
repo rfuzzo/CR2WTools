@@ -67,7 +67,7 @@ namespace CR2W.Types.W3
 
 		[W3Type("flatCompiledData")]
         [W3ArrayFlags(2, 0)]
-        public Array<UInt8> FlatCompiledData { get; set; }
+        public Array<Byte> FlatCompiledData { get; set; }
 
 		[W3Type("streamedAttachments")]
         [W3ArrayFlags(2, 0)]
@@ -79,6 +79,8 @@ namespace CR2W.Types.W3
 
 		[W3Type("cookedEffectsVersion")]
 		public UInt32 CookedEffectsVersion { get; set; }
+
+
 
 	}
 }
