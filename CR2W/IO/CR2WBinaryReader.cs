@@ -517,7 +517,10 @@ namespace CR2W.IO
         /// <returns>Localized string key</returns>
         public LocalizedString ReadLocalizedString()
         {
-            return new LocalizedString(ReadUInt32());
+            return new LocalizedString
+            {
+                ID = ReadUInt32()
+            };
         }
 
         /// <summary>

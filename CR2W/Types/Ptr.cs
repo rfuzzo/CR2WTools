@@ -10,7 +10,7 @@ using CR2W.Types.W3;
 
 namespace CR2W.Types
 {
-    public class Ptr<T> : IReferencable
+    public struct Ptr<T>
     {
         /*
          * 
@@ -23,10 +23,6 @@ namespace CR2W.Types
          * 
          * 
          */
-        public void ParseBytes(CR2WBinaryReader parser, uint size)
-        {
-            throw new NotImplementedException();
-        }
     }
 
 

@@ -6,6 +6,7 @@ using CR2W.Attributes;
 
 namespace CR2W.Types.W3
 {
+    [ResourceType("xbm", "Defines an X Bitmap Texture resoure")]
     public class CBitmapTexture : CResource, ITexture
     {
         [W3Type("width")]
@@ -49,4 +50,3 @@ namespace CR2W.Types.W3
         }
     }
 }
- 

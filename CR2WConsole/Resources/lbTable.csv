@@ -1,0 +1,129 @@
+locNameId;camYaw;camPitch;camDist;lookX;lookY;lookZ;sunYaw;sunPitch;entityTemplatePath;appearanceName;effectOn;locName
+548214;194.5;0;3.7;0;0;1;31.6;29.7;characters\npc_entities\monsters\ghoul_lvl1.w2ent;ghoul_01;1;Ghouls
+1077505;200.7;0;8.3;1;0;1.2;31.6;29.7;characters\npc_entities\monsters\gryphon_lvl1.w2ent;gryphon_01;1;Griffins
+1077480;204.3;0;4;0;0;1.3;204;205.7;characters\npc_entities\monsters\drowner_lvl1.w2ent;drowner_01;1;Drowners
+1077512;204.5;357.6;4.4;0.2;0;1;233.6;136.2;characters\npc_entities\monsters\wild_dog_lvl1.w2ent;dog_01;1;Dogs
+354483;196.3;351.9;4.1;0;0;1.3;11.5;8.8;characters\npc_entities\monsters\noonwraith_lvl1.w2ent;noonwraith_01_doppelganger;1;Noonwraiths
+1087086;173.2;355.6;4.1;0;0;1.3;22;12;quests\minor_quests\prologue_village\quest_files\mq0003_freshwater\characters\mq0003_noonwraith.w2ent;noonwraith_01_doppelganger;1;Devil by the Well
+1077510;203.2;355.1;4.3;0.2;0;1;58.1;340.2;characters\npc_entities\monsters\wolf_lvl1.w2ent;wolf_01;1;Wolves
+397223;204.3;354.7;4.4;0;0;1.3;64.5;342.4;characters\npc_entities\monsters\nightwraith_lvl1.w2ent;nightwraith_01_doppelganger;1;Nightwraiths
+397224;166.4;354.4;4.4;0;0;1.3;333.7;340.1;characters\npc_entities\monsters\_quest__noonwright_pesta.w2ent;pesta_01;1;Plague Maidens
+1077608;199.1;353.7;3.9;0;0;1.3;5.4;340.1;characters\npc_entities\monsters\rotfiend_lvl1.w2ent;rotfiend_01;1;Rotfiends
+1077497;189.5;3.1;3.9;0;0;1.2;28.2;7.6;characters\npc_entities\monsters\nekker_lvl1.w2ent;nekker_big_01;1;Nekkers
+593528;159;3;5;-0.2;0;1.7;20.1;7.4;characters\npc_entities\monsters\werewolf_lvl1.w2ent;werewolf_01;1;Werewolves
+1077470;199.4;2.9;5;0.4;0;1.7;17.5;346.2;characters\npc_entities\monsters\werewolf_lvl3__lycan.w2ent;lycanthrope_01;1;Ulfhedinn
+1077489;178.8;355.5;3.7;0;0;1.2;142.7;182.5;characters\npc_entities\monsters\wraith_lvl1.w2ent;wraith_01;1;Wraiths
+339451;203.4;355.1;5.8;0;0;1.7;142.7;182.5;characters\npc_entities\monsters\golem_lvl1.w2ent;elemental_01;1;Golems
+1082623;175.8;359.7;5.1;-0.2;0;1.6;206.1;202.4;characters\npc_entities\monsters\gargoyle_lvl1.w2ent;gargoyle;1;Gargoyles
+1077934;198.7;0.7;3.5;-0.2;0;1;206.7;187.8;characters\npc_entities\monsters\wildhunt_minion_lvl1.w2ent;wildhunt_minion_01;1;Hounds of the Wild Hunt
+1077471;161.7;355.9;6.1;-0.2;0;1.3;124.4;198.1;characters\npc_entities\monsters\bear_berserker_lvl1.w2ent;bear_berserker_01;1;Berserkers
+477322;170.4;322.8;1.7;0.2;0;0;155.6;214;characters\npc_entities\monsters\_quest__miscreant.w2ent;miscreant;1;Botchlings
+1077487;155.9;354.9;5.4;-0.4;0;1.3;121.8;165.6;characters\npc_entities\monsters\wyvern_lvl1.w2ent;wyvern_01;1;Wyverns
+1077506;147.7;356.8;4.5;0;0;0.8;201.7;165.6;characters\npc_entities\monsters\harpy_lvl1.w2ent;harpy_01;1;Harpies
+1077484;166.5;356.8;4.5;0;0;1.2;162;185.1;characters\npc_entities\monsters\hag_water_lvl1.w2ent;waterhag_01;1;Water hags
+1078140;175.6;356.8;2;0;0;1;156.9;175.9;characters\npc_entities\monsters\_quest__godling.w2ent;godling_boy;1;Godlings
+1077304;161.3;356.7;5;-0.2;0;1.6;152.3;192.5;characters\npc_entities\monsters\vampire_ekima_lvl1.w2ent;ekima_01;1;Ekimmaras
+1077513;159;348.1;2.4;0;0;1.3;312;7.8;quests\minor_quests\novigrad\quest_files\mq3037_sleeping_vampire\characters\mq3037_vampire_man.w2ent;__mq3037_vampire_man;1;Higher Vampires
+1077475;197.1;6.1;4.3;0;0;1.2;201.1;176.5;characters\npc_entities\monsters\endriaga_lvl1__worker.w2ent;endriaga_worker_01;1;Endrega workers
+1078138;155.5;6.1;4.3;0;0;1.2;179.7;176.5;characters\npc_entities\monsters\_quest__witch_1.w2ent;witch_1;1;Crones
+1077511;168.7;358.1;5.9;0;0;1.3;143.7;191.8;characters\npc_entities\monsters\bear_lvl1__black.w2ent;bear_black_01;1;Bears
+1077879;188.8;358.1;3.5;0;0;2.5;183.6;196.7;characters\npc_entities\monsters\lessog_lvl1.w2ent;lessog_01;1;Leshens
+1077481;181.8;355.8;4.5;0.2;0;1.3;159.1;183.3;characters\npc_entities\monsters\fogling_lvl1.w2ent;fogling;1;Foglets
+1082146;161.2;355.8;2.4;0;0;1.3;159.1;183.3;quests\generic_quests\novigrad\quest_files\mh305_doppler\characters\mh305_doppler_02.w2ent;__mh_doppler_beggar;1;Doppler
+354496;204.5;354.5;5;0.4;0;1.6;207.2;187.3;characters\npc_entities\monsters\vampire_katakan_lvl1.w2ent;katakan_01;1;Katakans
+354371;159.2;354.5;6;0;0;1.7;214.3;187.3;characters\npc_entities\monsters\elemental_dao_lvl1.w2ent;elemental_01;1;Earth Elementals
+1077496;182.2;359.4;7;0.6;0;2.4;357.7;359.5;characters\npc_entities\monsters\ice_giant.w2ent;ice_giant;1;Ice Giant
+1077880;208.9;357.7;8;0.4;0;2.2;50.8;27.7;characters\npc_entities\monsters\bies_lvl1.w2ent;bies_01;1;Fiends
+1077508;192.9;350.2;3.5;0.2;0;0.8;32.7;338.5;quests\sidequests\skellige\quest_files\sq202_yen\characters\sq202_siren.w2ent;siren_beauty_dialog;1;Sirens
+1077498;155.8;359.5;4.9;0;0;1.2;333.8;26.3;characters\npc_entities\monsters\troll_cave_lvl3__ice.w2ent;cave_troll_ice_01;1;Ice trolls
+1077612;190.2;0.6;4.9;0.2;0;1.2;29.5;28.1;characters\npc_entities\monsters\troll_cave_lvl1.w2ent;cave_troll_01;1;Rock trolls
+1077504;197.8;359.1;4.5;0.2;0;0.8;185.1;220.9;characters\npc_entities\monsters\harpy_lvl3__erynia.w2ent;harpy_01;1;Erynias
+1077509;156.7;349.4;2.7;0;0;1.3;132.8;217.9;quests\sidequests\skellige\quest_files\sq205_alchemist\characters\sq205_succubus.w2ent;succubus_07;1;Succubi
+1081895;210.9;352;2.7;0;0;1.3;224.5;217.9;quests\sidequests\skellige\quest_files\sq205_alchemist\characters\sq205_succubus.w2ent;succubus_06;1;Salma
+1077494;179.1;1.9;8.3;0.6;0;2.4;87.9;157.2;characters\npc_entities\monsters\cyclop_lvl1.w2ent;cyclop_01;1;Cyclopses
+339457;194.6;355.7;4.3;0;0;1.2;191.5;172.4;characters\npc_entities\monsters\alghoul_lvl1.w2ent;alghoul_01;1;Alghouls
+354425;213;354.9;9.8;2;0;1.2;197.7;179.6;characters\npc_entities\monsters\cockatrice_lvl1.w2ent;cockatrice_01;1;Cockatrices
+1081315;214.8;356.3;9.6;2;0;1.2;225;166.5;quests\generic_quests\no_mans_land\quest_files\mh101_cockatrice\characters\mh101_cockatrice.w2ent;cockatrice_01;1;Shrieker
+1080273;181.3;352.8;3.9;0;0;2.5;225;166.5;characters\npc_entities\monsters\_quest__him.w2ent;him_outline;1;Hyms
+1077469;214.2;350.8;5.9;0.2;0;1.7;225;166.5;characters\npc_entities\monsters\golem_lvl2__ifryt.w2ent;elemental_01;0;Fire Elementals
+1081548;196.3;20.9;3.7;0.2;0;1.3;177.8;185.5;quests\generic_quests\skellige\quest_files\mh207_wraith\characters\mh207_expationer_v2.w2ent;wraith_01;1;Penitent
+1077881;208.7;359.7;7.5;0.2;0;1.7;193.8;185.5;characters\npc_entities\monsters\czart_lvl1.w2ent;czart_01;1;Chorts
+1077483;127.3;359.3;4.8;0;0;1.3;142.8;192.9;characters\npc_entities\monsters\hag_grave_lvl1.w2ent;gravehag_01;1;Grave hags
+339456;198.3;356.2;5;0;0;1.3;205.6;195.7;characters\npc_entities\monsters\endriaga_lvl2__tailed.w2ent;endriaga_01;1;Endrega warriors
+1077473;159.3;354.9;7.1;0.2;0;1.7;235.1;235.3;characters\npc_entities\monsters\arachas_lvl3__poison.w2ent;__mh102_arachas;1;Venomous arachasae
+1077468;214.2;350;4.9;0.2;0;1.3;63.2;336.8;characters\npc_entities\monsters\elemental_dao_lvl3__ice.w2ent;elemental_01;1;Ice Elementals
+1077488;152.7;355.6;5.9;-0.4;0;1.3;145.7;186.4;characters\npc_entities\monsters\forktail_lvl1.w2ent;wyvern_01;1;Forktails
+1139676;155.1;358.1;9;-0.2;0;2;213.3;138.5;dlc\ep1\data\characters\npc_entities\monsters\toad.w2ent;toad_02_morph;1;The Toad Prince
+339458;209.5;1.2;8.6;1.6;0;1.3;213.3;138.5;characters\npc_entities\monsters\basilisk_lvl1.w2ent;basilisk_01;1;Basilisks
+1139683;196.6;0.9;5.1;0;0;1.3;11.8;27.4;dlc\ep1\data\characters\npc_entities\monsters\black_spider.w2ent;black_spider_01;1;Arachnomorph (EP1)
+1139394;208.2;0.9;4.6;0.2;0;1.2;29.6;27.3;dlc\ep1\data\characters\npc_entities\monsters\wild_boar_ep1.w2ent;wild_boar_03;1;Wild Boars (EP1)
+1139394;202.8;358.5;4.5;0.1;0;1.2;20.9;2.2;dlc\bob\data\characters\npc_entities\monsters\wild_boar_ep2.w2ent;wild_boar_03;1;Wild Boars (EP2)
+1081313;213.7;358.1;7.4;0.2;0;2.2;75.7;335.6;quests\generic_quests\novigrad\quest_files\mh306_dao\characters\mh306_dao.w2ent;elemental_01;1;Therazane
+1139678;219.3;349.6;2.4;0;0;1.7;291.9;24;dlc\ep1\data\characters\npc_entities\secondary_npc\caretaker.w2ent;caretaker_hood_morph;1;The Caretaker
+1139418;196;31.4;3.2;0.2;-1.3;2;359.8;0;dlc\ep1\data\characters\npc_entities\monsters\nightwraith_iris.w2ent;nightwraith_01;1;The Wraith from the Painting
+1139680;148.3;345;2.2;0;0;1.3;235.2;335.4;dlc\ep1\data\characters\npc_entities\monsters\ethernal.w2ent;ethernal;1;Ethereal
+1182965;213.1;348.1;2;0;0;1.5;64.2;0;dlc\bob\data\quests\main_npcs\dettlaff_van_eretein_vampire.w2ent;dettlaff_vampire;1;The Beast of Beauclair
+1184139;183.3;358.2;8.1;0.2;0;2.2;42.5;4.2;dlc\bob\data\characters\npc_entities\monsters\q701_dagonet_giant.w2ent;cyclop_01;1;Golyat
+1190589;201.1;349.8;4;0;0;1.3;25.1;351.1;dlc\bob\data\characters\npc_entities\monsters\gravier.w2ent;gravier_01;1;Scurvers
+1208713;216.9;347.4;6.3;0.6;0;2;355.8;351.1;dlc\bob\data\characters\npc_entities\monsters\echinops_normal.w2ent;echinops_01;1;Archespores
+1188873;151.6;4.8;2.5;0;0;1.2;14.9;357.4;dlc\bob\data\characters\npc_entities\monsters\bruxa.w2ent;bruxa_monster_gameplay;1;Bruxae
+1173626;187.5;358.9;2.5;0;0;1.2;40.1;2.6;dlc\bob\data\quests\main_quests\quest_files\q701_wine_festival\characters\q701_bruxa.w2ent;bruxa_monster_gameplay;1;The Bruxa of Corvo Bianco
+1203524;187.5;358.9;6;0;0;1.3;40.1;2.6;dlc\bob\data\characters\npc_entities\monsters\sharley.w2ent;sharley_01;1;Shaelmaars
+1189050;159.7;352.3;6.4;0.2;0;1.3;0;0;dlc\bob\data\characters\npc_entities\monsters\sharley_q701.w2ent;sharley_q701;1;Shaelmaar from the Emperor of Nilfgaard
+1207195;151.6;348.1;2.2;0;0;1.3;260.1;0;dlc\bob\data\quests\main_npcs\dettlaff_van_eretein_vampire.w2ent;dettlaff_human_ring;1;Dettlaff van der Eretein
+1212236;194.2;355.7;3.5;0;0;2.2;0;0;dlc\bob\data\quests\minor_quests\quest_files\mq7002_stubborn_knight\characters\mq7002_springgan.w2ent;spriggan_01;1;Grottore
+1203529;218;347.7;5.4;0.4;0;1.4;63.6;45.9;dlc\bob\data\characters\npc_entities\monsters\scolopendromorph.w2ent;scolopendromorph_01;1;Giant Centipedes
+1207905;137.7;343.5;5.4;-0.4;0;1.4;272.8;15.8;dlc\bob\data\characters\npc_entities\monsters\mq7023_albino_centipede.w2ent;mq7023_albino_centipede;1;Pale Widows
+1208950;211.9;346.3;9.1;1.7;0;0.4;90.5;27.4;dlc\bob\data\quests\minor_quests\quest_files\mq7018_last_one\characters\mq7018_basilisk.w2ent;basilisk_01;1;Silver Basilisk
+1208643;202.8;355.8;4.8;0.2;0;1.2;90.5;27.4;dlc\bob\data\characters\npc_entities\monsters\panther_black.w2ent;panther_black_01;1;Panthers
+1208893;196.5;355.1;5.3;0.2;0;1.3;59.3;331;dlc\bob\data\characters\npc_entities\monsters\fleder.w2ent;fleder;1;Fleders
+1208707;154.2;355.8;2.7;0;0;1.1;20.1;322;dlc\bob\data\characters\npc_entities\monsters\bruxa_alp.w2ent;bruxa_monster;1;Alps
+1208686;201.9;353.8;4.5;0;0;1.1;25.3;359.5;dlc\bob\data\characters\npc_entities\monsters\kikimore_small.w2ent;kikimore_01;1;Kikimore Workers
+1208683;165.5;352.3;6.4;0.2;0;1.5;326.2;6.1;dlc\bob\data\characters\npc_entities\monsters\kikimore.w2ent;kikimore_01;1;Kikimore Warrior
+1208635;153.1;0.1;3.9;-0.2;0;0.9;18.2;1.1;dlc\bob\data\characters\npc_entities\monsters\barghest.w2ent;barghest;1;Barghests
+1170003;197;357;3.9;0;0;2;47.8;343.8;dlc\bob\data\characters\npc_entities\monsters\spriggan.w2ent;spriggan_01;1;Spriggans
+1178272;161.9;356;4;0.2;0;1.2;334.6;343.8;dlc\bob\data\quests\main_quests\quest_files\q702_hunt\characters\q702_wight.w2ent;wicht;1;Spotted Wights
+1207197;132.9;351;4.1;0;0;1.2;328.4;343.8;dlc\bob\data\characters\npc_entities\monsters\wicht.w2ent;wicht;1;Wights
+1170319;152.6;357.6;5.9;-0.4;0;1.5;315.4;331.8;dlc\bob\data\characters\npc_entities\monsters\oszluzg.w2ent;wyvern_01;1;Slyzard Matriarchs
+1201766;202.7;357.5;5.9;0.4;0;1.5;18.3;1.5;dlc\bob\data\living_world\enemy_templates\dracolizard.w2ent;wyvern_01;1;Slyzards
+1176357;162.9;356.3;5.6;-0.1;0.2;1.7;324.9;6.1;dlc\bob\data\characters\npc_entities\monsters\garkain.w2ent;garkain;1;Garkains
+1213774;215.4;5.2;3.9;0.1;0;1.5;19.9;343.9;dlc\bob\data\characters\npc_entities\monsters\nightwraith_banshee.w2ent;nightwraith_02;1;Beann'shies
+1156409;233;5.2;6.5;0.1;0;1.7;19.9;343.9;dlc\bob\data\quests\monster_hunts\quest_files\mh701_tectonic_terror\characters\mh701_sharley_matriarch.w2ent;sharley_mh;1;The Monster of Tufo
+1077474;163.7;3;6.1;0.1;0;1.7;13.3;316.4;characters\npc_entities\monsters\endriaga_lvl3__spikey.w2ent;endriaga_spikey_01;1;Endrega drones
+1176338;216.5;1.6;6.1;0.5;0;1.7;92.4;320.6;dlc\bob\data\quests\main_quests\quest_files\q704_truth\characters\q704_garkain.w2ent;garkain;1;Alpha Garkains
+1207033;176.2;358.6;3.9;0.1;0;1.2;18.7;1.4;dlc\bob\data\characters\npc_entities\monsters\fairytale_witch.w2ent;witch_1;1;Wicked Witch
+1208689;198.5;356.9;3.9;0.1;0;1.1;16.8;50.2;dlc\bob\data\quests\main_quests\quest_files\q704b_fairy_tale\entities\imps\q704_ft_pixie_01.w2ent;nekker_big_01;1;Pixies
+1207036;211.1;4.1;3.9;0.1;0;1.5;50.7;353.9;dlc\bob\data\quests\main_quests\quest_files\q704b_fairy_tale\characters\q704_ft_rapunzel.w2ent;nightwraith_01;1;Longlocks
+1207035;207.1;0.5;4.8;0.1;0;1.2;14;353.9;dlc\bob\data\quests\main_quests\quest_files\q704b_fairy_tale\entities\q704_ft_pigs_evil.w2ent;boar_fairytale_01;1;Three Little Pigs
+1212526;149.7;358;4.8;-0.3;0;1.7;331.3;353.8;dlc\bob\data\characters\npc_entities\monsters\bigbadwolf.w2ent;werewolf_01;1;Big Bad Wolf
+1207040;174.3;6.5;8.1;-0.1;0;2.2;12.3;353.8;dlc\bob\data\characters\npc_entities\monsters\q704_cloud_giant.w2ent;cyclop_01;1;Cloud Giant
+1214837;208.2;0.9;4.6;0.2;0;1.2;29.6;27.3;dlc\bob\data\characters\npc_entities\monsters\wild_boar_ep2.w2ent;wild_boar_03;1;Wild Boars
+1214837;202.8;358.5;4.5;0.1;0;1.2;20.9;2.2;dlc\bob\data\characters\npc_entities\monsters\wild_boar_ep2.w2ent;wild_boar_02;1;Wild Boars
+1169843;217;353.4;5.9;0.6;0;1.2;37.8;99.3;dlc\bob\data\quests\minor_quests\quest_files\mq7017_talking_horse\characters\mq7017_spirit.w2ent;nightmare;0;Umbra
+1206787;127.4;352.8;5;-0.5;0;1.2;252.7;2.2;dlc\bob\data\quests\main_quests\quest_files\q704_truth\characters\q704_protofleder.w2ent;protofleder;1;Protofleders
+1081443;144.3;355.2;4.8;-0.1;0;1.1;357.4;2.2;dlc\dlc3\data\characters\mh201_cave_troll.w2ent;black_troll_01;1;Wham-a-Wham
+1077760;198.7;3.8;8.6;-0.1;0;2.2;272;152.8;characters\npc_entities\monsters\arachas_lvl1.w2ent;arachas_01;1;Arachasae
+1077472;150;5;8.6;-0.1;0;2.2;323.6;38.7;characters\npc_entities\monsters\arachas_lvl2__armored.w2ent;arachas_01;1;Armored Arachasae
+1207981;209;349.6;6.5;0.2;0;1.7;329.3;357.4;dlc\bob\data\characters\npc_entities\monsters\mq7007_item__golem_grafitti.w2ent;elemental_01;1;Moreau's Golem
+1086978;182.2;340.1;4.8;-0;0;2.5;201;190.5;quests\sidequests\skellige\quest_files\sq204_forest_spirit\characters\sq204_leshy.w2ent;lessog_ancient_01;1;Woodland Spirit
+1200684;245.9;351.9;3.2;-0;0;1.2;96.4;182.6;dlc\bob\data\characters\npc_entities\secondary_npc\mq7004_ghost.w2ent;__mq7004_ghost;1;Daphne
+1077882;194.9;1.9;4.5;0;0;1.3;40.2;2.5;quests\minor_quests\no_mans_land\quest_files\mq1057_fugas\characters\mq1057_fugas.w2ent;fugas_01;1;Sylvans
+1214635;196.6;0.9;5.1;0;0;1.3;11.8;27.4;dlc\bob\data\characters\npc_entities\monsters\black_spider_ep2.w2ent;black_spider_01;1;Arachnomorph (EP2)
+1081321;210.9;0.2;8.3;0;0;2;53.6;254.9;quests\generic_quests\no_mans_land\quest_files\mh102_arachas\characters\mh102_arachas.w2ent;__mh102_arachas;1;Harrisi
+1081317;210.9;0.2;4.4;0;0;1.5;37.9;5.1;quests\generic_quests\no_mans_land\quest_files\mh103_nightwraith\characters\mh103_nighwraith.w2ent;nightwraith_01;1;Jenny o' the Woods
+1081324;130.5;0.2;5.6;-0.6;0;1.7;338;5.1;quests\generic_quests\no_mans_land\quest_files\mh104_ekimma\characters\mh104_ekimma.w2ent;ekima_01;1;Sarasti
+1081339;205.4;0.2;7;0.5;0;1.7;338;5.1;quests\generic_quests\no_mans_land\quest_files\mh105_wyvern\characters\mh105_wyvern_royal.w2ent;wyvern_01;1;Royal Wyvern
+1081342;168.4;0.2;4.9;0.1;0;1.3;45.5;5.1;quests\generic_quests\no_mans_land\quest_files\mh106_gravehag\characters\mh106_gravehag.w2ent;gravehag_04;1;Mourntart
+1081365;209.1;0.2;8;0.1;0;1.7;350;357.7;quests\generic_quests\no_mans_land\quest_files\mh107_fiend\characters\mh107_czart.w2ent;mh107_czart;1;Howler
+1081369;173.6;0.2;4.9;0.2;0;1.3;41.2;357.7;quests\generic_quests\no_mans_land\quest_files\mh108_fogling\characters\mh108_ancient_fogling.w2ent;fogling_01;1;Ignis Fatuus
+1081445;198.4;0.2;4.1;0;0;1.2;41;357.7;quests\generic_quests\skellige\quest_files\mh202_nekker_warrior\characters\mh202_nekker_alpha.w2ent;nekker_small_01;1;Hagubman
+1081452;201.1;0.2;4.9;0.4;0;1.3;41;357.7;quests\generic_quests\skellige\quest_files\mh203_water_hag\characters\mh203_water_hag.w2ent;waterhag_01;1;Abaya
+1081546;211.8;354;8.1;0.5;0;2;298.3;77.1;quests\generic_quests\skellige\quest_files\mh206_fiend_ruins\characters\mh206_bies.w2ent;bies_01;1;Morvudd  
+1081762;206.3;0.2;6.6;0.4;0;1.7;115.2;41.4;quests\generic_quests\skellige\quest_files\mh208_forktail\characters\mh208_forktail.w2ent;wyvern_01;1;The Dragon of Fyresdal
+1081808;199.9;352.4;4;0.2;0;0.9;55.8;41.4;quests\generic_quests\skellige\quest_files\mh210_lamia\characters\mh210_lamia.w2ent;lamia_01;1;Melusine
+1081891;148.6;352.4;8.8;-1.2;0;0.9;55.8;41.4;quests\generic_quests\novigrad\quest_files\mh301_gryphon\characters\mh301_gryphon.w2ent;volcanic_gryphon_wh;1;Opinicus
+1081893;164.4;352.4;3.7;-0.1;0;2.5;9.9;33;quests\generic_quests\novigrad\quest_files\mh302_leshy\characters\mh302_leshy.w2ent;lessog_01;1;Kernun
+1081903;145;352.4;5.3;-0.3;0;1.3;322.7;23.2;quests\generic_quests\novigrad\quest_files\mh304_katakan\characters\mh304_katakan.w2ent;katakan_large;1;Gael
+1081948;153.8;351.9;2.4;-0;0;1.3;7.3;5.5;quests\generic_quests\novigrad\quest_files\mh305_doppler\characters\mh305_doppler_02.w2ent;__mh_doppler_beggar;1;Imp
+1081906;142;355.9;4.3;-0.1;0;1.2;359.5;5.5;quests\generic_quests\novigrad\quest_files\mh307_minion\characters\mh307_minion.w2ent;wildhunt_minion_01;1;The Apiarian Phantom
+1081908;200.1;5.1;4.1;0.1;0;1.5;56.1;5.5;quests\generic_quests\novigrad\quest_files\mh308_noonwraith\characters\mh308_noonwraith_02.w2ent;noonwraith_01;1;The White Lady

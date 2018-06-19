@@ -9,7 +9,7 @@ using CR2W.Types.W3;
 
 namespace CR2W.Types
 {
-    public class Soft<T> where T : CResource
+    public struct Soft<T> where T : CResource
     {
         //Do not chanage names
         public string DepotPath { get; set; }

@@ -11,6 +11,10 @@ using System.Diagnostics;
 
 namespace CR2W.Types.W3
 {
+    /// <summary>
+    /// Represnts a Witcher 3 object that can be read by the RedEngine3.
+    /// This is the base class of all RedEngine3 serializable types.
+    /// </summary>
     public abstract class CObject : ISerializable, IReferencable, IScriptable
     {
         public uint Template { get; set; }
@@ -173,7 +177,7 @@ namespace CR2W.Types.W3
             }
 
             //Any Unknown Type
-            //Should be impossible to reach if all types get coverd above.
+            //Should be impossible to reach if all types get covered above.
             return null;
         }
 

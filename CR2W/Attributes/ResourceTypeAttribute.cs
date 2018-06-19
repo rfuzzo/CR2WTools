@@ -9,13 +9,13 @@ namespace CR2W.Attributes
     [AttributeUsage(AttributeTargets.Class)]
     class ResourceTypeAttribute : Attribute
     {
-        string ClassName { get; set; }
         string Extension { get; set; }
+        string Description { get; set; }
 
-        public ResourceTypeAttribute(string name, string ext)
+        public ResourceTypeAttribute(string ext, string desc)
         {
-            ClassName = name;
             Extension = ext;
+            Description = desc;
         }
     }
 }

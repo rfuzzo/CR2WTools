@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using CR2W;
 using CR2W.Types.W3;
+using CR2W.Testing;
+using CR2W.Types;
 
 namespace CR2WConsole
 {
@@ -12,35 +14,37 @@ namespace CR2WConsole
         static void Main(string[] args)
         {
             Console.Title = "CR2W Reader";
-            
-            CResource res = null;
-            OpenFileDialog of;
-            using (of = new OpenFileDialog())
+            using (var of = new OpenFileDialog())
             {
                 if (of.ShowDialog() == DialogResult.OK)
                 {
-                    try
-                    {
-                        var sw = new Stopwatch();
-                        Console.WriteLine("Reading File...");
-                        sw.Start();
-                        res = CR2WController.LoadResource(of.FileName);
-                        //TestParser.New(of.FileName);
-                        sw.Stop();
-                        Console.WriteLine("Done, time taken: {0}", sw.ElapsedMilliseconds);
-                        Console.WriteLine();
-                    }
-                    catch(Exception e)
-                    {
-                        Console.WriteLine(e);
-                    }
+                    OpenFile(of.FileName);
                 }
             }
-            
-            if (res == null)
-                return;
+        }
 
-            Console.WriteLine("File:        {0}", of.FileName);
+        static void OpenFile(string file)
+        {
+            CResource res;
+            var sw = new Stopwatch();
+
+            Console.WriteLine("Reading File...");
+            sw.Start();
+            try
+            {
+                res = CR2WController.LoadResource(file);
+            }
+            catch (Exception e)
+            {
+                sw.Stop();
+                Console.WriteLine(e);
+                return;
+            }
+            sw.Stop();
+
+            Console.WriteLine("Done, time taken: {0}", sw.ElapsedMilliseconds);
+            Console.WriteLine();
+            Console.WriteLine("File:        {0}", file);
             Console.WriteLine("Type:        {0}", res.GetType().Name);
             Console.WriteLine("Flags:       {0}", res.Flags);
             Console.WriteLine("Children:    {0}", res.Children.Count);
@@ -48,15 +52,28 @@ namespace CR2WConsole
             Console.WriteLine();
             Console.WriteLine("Test Values:");
             Console.WriteLine();
-
             if(res is CGuiConfigResource gui)
             {
-                Console.WriteLine("\t{0}", gui.Huds[0].HudName);
-                Console.WriteLine("\t{0}", gui.Huds[0].HudResource.DepotPath);
-                Console.WriteLine("\t{0}", gui.Menus[0].MenuName);
-                Console.WriteLine("\t{0}", gui.Menus[0].MenuResource.DepotPath);
-                Console.WriteLine("\t{0}", gui.Popups[0].PopupName);
-                Console.WriteLine("\t{0}", gui.Popups[0].PopupResource.DepotPath);
+                foreach (var hud in gui.Huds)
+                {
+                    Console.WriteLine("\t{0}", hud.HudName);
+                    Console.WriteLine("\t{0}", hud.HudResource.DepotPath);
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+                foreach (var menu in gui.Menus)
+                {
+                    Console.WriteLine("\t{0}", menu.MenuName);
+                    Console.WriteLine("\t{0}", menu.MenuResource.DepotPath);
+                    Console.WriteLine();
+                }
+                Console.WriteLine();
+                foreach (var popup in gui.Popups)
+                {
+                    Console.WriteLine("\t{0}", popup.PopupName);
+                    Console.WriteLine("\t{0}", popup.PopupResource.DepotPath);
+                    Console.WriteLine();
+                }
             }
             else if(res is CEnvironmentDefinition env)
             {
@@ -65,20 +82,32 @@ namespace CR2WConsole
                 Console.WriteLine("\t{0}", env.EnvParams.M_speedTree.BillboardsColor.CurveType);
                 Console.WriteLine("\t{0}", env.EnvParams.M_ssaoMS.HierarchyDepth.DataBaseType);
             }
-            else if(res is CIndexed2dArray arr)
+            else if(res is C2dArray arr)
             {
-                for (int i = 0; i < 4; i++)
+                foreach (var header in arr.Headers)
                 {
-                    Console.WriteLine("\t{0}", arr.Headers[i]);
-                    Console.WriteLine("\t\t{0}", arr.Data[i][0]);
-                    Console.WriteLine("\t\t{0}", arr.Data[i][1]);
-                    Console.WriteLine("\t\t{0}", arr.Data[i][2]);
-                    Console.WriteLine("\t\t{0}", arr.Data[i][3]);
+                    Console.Write("\t{0}", header.PadRight(20));
+                }
+                Console.WriteLine();
+                foreach (var row in arr.Data)
+                {
+                    foreach (var collumn in row)
+                    {
+                        Console.Write("\t{0}", collumn.PadRight(20));
+                    }
+                    Console.WriteLine();
                 }
             }
-
+            else if(res is CBitmapTexture xbm)
+            {
+                Console.WriteLine("\t{0}", xbm.Height);
+                Console.WriteLine("\t{0}", xbm.Width);
+                Console.WriteLine("\t{0}", xbm.Format);
+                Console.WriteLine("\t{0}", xbm.Compression);
+            }
             Console.WriteLine();
         }
+
         /* - Class Types
          *      ClassTypes: Dumped from all CR2W files, and are all the different chunk types.
          *      W3Types:    Dumped from witcher script files, and are all the different class names there.
