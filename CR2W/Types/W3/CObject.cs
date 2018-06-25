@@ -17,12 +17,14 @@ namespace CR2W.Types.W3
     /// </summary>
     public abstract class CObject : ISerializable, IReferencable, IScriptable
     {
+        public Dictionary<uint, CObject> Children { get; set; }
         public uint Template { get; set; }
         public uint Flags { get; set; }
 
         public CObject()
         {
-            
+            Children = new Dictionary<uint, CObject>();
+            Console.WriteLine($"CObject created: {this.GetType().Name}");
         }
 
         /// <summary>
@@ -167,13 +169,24 @@ namespace CR2W.Types.W3
                 }
                 else if (proptype.GetGenericTypeDefinition() == typeof(Ptr<>))
                 {
-                    var id = br.ReadUInt16() - 1;
-                    CObject ptr = null; 
-                    if(id > 0)
+                    var id = br.ReadUInt16();
+                    proptype.GetProperty("Index").SetValue(instance, id);
+                }
+                else if (proptype.GetGenericTypeDefinition() == typeof(Handle<>))
+                {
+                    var id = br.ReadInt32();
+                    if (id >= 0)
                     {
-                        ptr = br.objects[id];
+                        proptype.GetProperty("Type").SetValue(instance, EHandleType.ReferenceHandle);
+                        proptype.GetProperty("Index").SetValue(instance, id);
                     }
-                    proptype.GetProperty("Instance").SetValue(instance, ptr);
+                    else
+                    {
+                        id *= -1;
+                        proptype.GetProperty("Type").SetValue(instance, EHandleType.ResourceHandle);
+                        proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id-1].path);
+                        proptype.GetProperty("Flags").SetValue(instance, br.resources[id-1].flags);
+                    }
                 }
                 return instance;
             }

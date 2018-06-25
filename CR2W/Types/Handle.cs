@@ -22,8 +22,11 @@ namespace CR2W.Types
         ResourceHandle
     }
 
-    public struct Handle<T> where T : CResource
+    public struct Handle<T>
     {
-
+        public EHandleType Type { get; set; }
+        public int   Index { get; set; }
+        public string DepotPath { get; set; }
+        public ushort Flags { get; set; }
     }
 }

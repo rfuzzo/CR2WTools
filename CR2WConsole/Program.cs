@@ -68,6 +68,7 @@ namespace CR2WConsole
             Console.WriteLine("File:        {0}", file);
             Console.WriteLine("Type:        {0}", res.GetType().Name);
             Console.WriteLine("Flags:       {0}", res.Flags);
+            Console.WriteLine("Children:    {0}", res.Children.Count);
             Console.WriteLine("Template:    {0}", res.Template);
             Console.WriteLine();
             Console.WriteLine("Test Values:");
@@ -134,6 +135,29 @@ namespace CR2WConsole
             else if(res is CRagdoll rag)
             {
                 Console.WriteLine(XElement.Parse(rag.Data.OuterXml).ToString());
+            }
+            else if(res is CSwfResource swf)
+            {
+                Console.WriteLine("\tName:        {0}", swf.LinkageName);
+                Console.Write("\tTextures:   ");
+                foreach (var tex in swf.Textures)
+                {
+                    Console.Write(" {0}", tex.Index);
+                }
+                Console.WriteLine();
+                Console.WriteLine("\tResource:    {0} bytes", swf.Data.Length);
+                foreach (var child in swf.Children)
+                {
+                    Console.WriteLine("\t{0}:", child.Key);
+                    if (child.Value is CSwfTexture sbm)
+                    {
+                        Console.WriteLine("\t\t{0}", sbm.LinkageName);
+                        Console.WriteLine("\t\t{0}", sbm.Height);
+                        Console.WriteLine("\t\t{0}", sbm.Width);
+                        Console.WriteLine("\t\t{0}", sbm.Compression);
+                        Console.WriteLine("\t\t{0}", sbm.Format);
+                    }
+                }
             }
             Console.WriteLine();
         }

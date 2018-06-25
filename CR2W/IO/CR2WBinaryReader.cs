@@ -270,10 +270,11 @@ namespace CR2W.IO
 
             sobjs = new SObject[size];
             BaseStream.Seek(start, SeekOrigin.Begin);
-            for (int i = 0; i < size; i++)
+            for (uint i = 0; i < size; i++)
             {
                 var temp = new SObject()
                 {
+                    index = i + 1,
                     typeID = ReadUInt16(),
                     flags = ReadUInt16(),
                     parentID = ReadUInt32(),
@@ -423,6 +424,12 @@ namespace CR2W.IO
             CObject temp  = (CObject)Activator.CreateInstance(resType);
             temp.Flags    = obj.flags;
             temp.Template = obj.template;
+
+            if(obj.parentID > 0)
+            {
+                objects[obj.parentID - 1].Children.Add(obj.index, temp);
+            }
+
             temp.ParseBytes(this, obj.size);
 
             return temp;

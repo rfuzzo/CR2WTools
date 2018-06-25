@@ -11,6 +11,6 @@ namespace CR2W.Types
 {
     public struct Ptr<T>
     {
-        public CObject Instance { get; set; }
+        public int Index { get; set; }
     }
 }

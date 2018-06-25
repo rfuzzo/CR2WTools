@@ -8,6 +8,7 @@ namespace CR2W.IO
 {
     public struct SObject
     {
+        public uint index;
         public ushort typeID;
         public ushort flags;
         public uint parentID;
