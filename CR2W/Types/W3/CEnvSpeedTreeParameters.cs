@@ -6,49 +6,49 @@ namespace CR2W.Types.W3
 {
 	public class CEnvSpeedTreeParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("diffuse")]
+		[REDProp("diffuse")]
 		public SSimpleCurve Diffuse { get; set; }
 
-		[W3Type("specularScale")]
+		[REDProp("specularScale")]
 		public SSimpleCurve SpecularScale { get; set; }
 
-		[W3Type("translucencyScale")]
+		[REDProp("translucencyScale")]
 		public SSimpleCurve TranslucencyScale { get; set; }
 
-		[W3Type("ambientOcclusionScale")]
+		[REDProp("ambientOcclusionScale")]
 		public SSimpleCurve AmbientOcclusionScale { get; set; }
 
-		[W3Type("billboardsColor")]
+		[REDProp("billboardsColor")]
 		public SSimpleCurve BillboardsColor { get; set; }
 
-		[W3Type("billboardsTranslucency")]
+		[REDProp("billboardsTranslucency")]
 		public SSimpleCurve BillboardsTranslucency { get; set; }
 
-		[W3Type("randomColorsTrees")]
+		[REDProp("randomColorsTrees")]
 		public CEnvSpeedTreeRandomColorParameters RandomColorsTrees { get; set; }
 
-		[W3Type("randomColorsBranches")]
+		[REDProp("randomColorsBranches")]
 		public CEnvSpeedTreeRandomColorParameters RandomColorsBranches { get; set; }
 
-		[W3Type("randomColorsGrass")]
+		[REDProp("randomColorsGrass")]
 		public CEnvSpeedTreeRandomColorParameters RandomColorsGrass { get; set; }
 
-		[W3Type("randomColorsFallback")]
+		[REDProp("randomColorsFallback")]
 		public SSimpleCurve RandomColorsFallback { get; set; }
 
-		[W3Type("pigmentBrightness")]
+		[REDProp("pigmentBrightness")]
 		public SSimpleCurve PigmentBrightness { get; set; }
 
-		[W3Type("pigmentFloodStartDist")]
+		[REDProp("pigmentFloodStartDist")]
 		public SSimpleCurve PigmentFloodStartDist { get; set; }
 
-		[W3Type("pigmentFloodRange")]
+		[REDProp("pigmentFloodRange")]
 		public SSimpleCurve PigmentFloodRange { get; set; }
 
-		[W3Type("billboardsLightBleed")]
+		[REDProp("billboardsLightBleed")]
 		public SSimpleCurve BillboardsLightBleed { get; set; }
 
 	}

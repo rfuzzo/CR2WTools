@@ -11,12 +11,10 @@ namespace CR2W.Types.W3
 {
     public class C2dArray : CResource
     {
-        [W3Type("headers")]
-        [W3ArrayFlags(12, 0)]
+        [REDProp("headers", 12, 0)]
         public Array<string> Headers { get; set; }
 
-        [W3Type("data")]
-        [W3ArrayFlags(12, 0, 12, 0)]
+        [REDProp("data", 12, 0, 12, 0)]
         public Array<Array<string>> Data { get; set; }
 
         public string GetValueAt(int collumn, int row)

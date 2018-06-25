@@ -6,202 +6,202 @@ namespace CR2W.Types.W3
 {
 	public class CEnvColorGroupsParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("defaultGroup")]
+		[REDProp("defaultGroup")]
 		public SSimpleCurve DefaultGroup { get; set; }
 
-		[W3Type("lightsDefault")]
+		[REDProp("lightsDefault")]
 		public SSimpleCurve LightsDefault { get; set; }
 
-		[W3Type("lightsDawn")]
+		[REDProp("lightsDawn")]
 		public SSimpleCurve LightsDawn { get; set; }
 
-		[W3Type("lightsNoon")]
+		[REDProp("lightsNoon")]
 		public SSimpleCurve LightsNoon { get; set; }
 
-		[W3Type("lightsEvening")]
+		[REDProp("lightsEvening")]
 		public SSimpleCurve LightsEvening { get; set; }
 
-		[W3Type("lightsNight")]
+		[REDProp("lightsNight")]
 		public SSimpleCurve LightsNight { get; set; }
 
-		[W3Type("fxDefault")]
+		[REDProp("fxDefault")]
 		public SSimpleCurve FxDefault { get; set; }
 
-		[W3Type("fxFire")]
+		[REDProp("fxFire")]
 		public SSimpleCurve FxFire { get; set; }
 
-		[W3Type("fxFireFlares")]
+		[REDProp("fxFireFlares")]
 		public SSimpleCurve FxFireFlares { get; set; }
 
-		[W3Type("fxFireLight")]
+		[REDProp("fxFireLight")]
 		public SSimpleCurve FxFireLight { get; set; }
 
-		[W3Type("fxSmoke")]
+		[REDProp("fxSmoke")]
 		public SSimpleCurve FxSmoke { get; set; }
 
-		[W3Type("fxSmokeExplosion")]
+		[REDProp("fxSmokeExplosion")]
 		public SSimpleCurve FxSmokeExplosion { get; set; }
 
-		[W3Type("fxSky")]
+		[REDProp("fxSky")]
 		public SSimpleCurve FxSky { get; set; }
 
-		[W3Type("fxSkyAlpha")]
+		[REDProp("fxSkyAlpha")]
 		public SSimpleCurve FxSkyAlpha { get; set; }
 
-		[W3Type("fxSkyNight")]
+		[REDProp("fxSkyNight")]
 		public SSimpleCurve FxSkyNight { get; set; }
 
-		[W3Type("fxSkyNightAlpha")]
+		[REDProp("fxSkyNightAlpha")]
 		public SSimpleCurve FxSkyNightAlpha { get; set; }
 
-		[W3Type("fxSkyDawn")]
+		[REDProp("fxSkyDawn")]
 		public SSimpleCurve FxSkyDawn { get; set; }
 
-		[W3Type("fxSkyDawnAlpha")]
+		[REDProp("fxSkyDawnAlpha")]
 		public SSimpleCurve FxSkyDawnAlpha { get; set; }
 
-		[W3Type("fxSkyNoon")]
+		[REDProp("fxSkyNoon")]
 		public SSimpleCurve FxSkyNoon { get; set; }
 
-		[W3Type("fxSkyNoonAlpha")]
+		[REDProp("fxSkyNoonAlpha")]
 		public SSimpleCurve FxSkyNoonAlpha { get; set; }
 
-		[W3Type("fxSkySunset")]
+		[REDProp("fxSkySunset")]
 		public SSimpleCurve FxSkySunset { get; set; }
 
-		[W3Type("fxSkySunsetAlpha")]
+		[REDProp("fxSkySunsetAlpha")]
 		public SSimpleCurve FxSkySunsetAlpha { get; set; }
 
-		[W3Type("fxSkyRain")]
+		[REDProp("fxSkyRain")]
 		public SSimpleCurve FxSkyRain { get; set; }
 
-		[W3Type("fxSkyRainAlpha")]
+		[REDProp("fxSkyRainAlpha")]
 		public SSimpleCurve FxSkyRainAlpha { get; set; }
 
-		[W3Type("mainCloudsMiddle")]
+		[REDProp("mainCloudsMiddle")]
 		public SSimpleCurve MainCloudsMiddle { get; set; }
 
-		[W3Type("mainCloudsMiddleAlpha")]
+		[REDProp("mainCloudsMiddleAlpha")]
 		public SSimpleCurve MainCloudsMiddleAlpha { get; set; }
 
-		[W3Type("mainCloudsFront")]
+		[REDProp("mainCloudsFront")]
 		public SSimpleCurve MainCloudsFront { get; set; }
 
-		[W3Type("mainCloudsFrontAlpha")]
+		[REDProp("mainCloudsFrontAlpha")]
 		public SSimpleCurve MainCloudsFrontAlpha { get; set; }
 
-		[W3Type("mainCloudsBack")]
+		[REDProp("mainCloudsBack")]
 		public SSimpleCurve MainCloudsBack { get; set; }
 
-		[W3Type("mainCloudsBackAlpha")]
+		[REDProp("mainCloudsBackAlpha")]
 		public SSimpleCurve MainCloudsBackAlpha { get; set; }
 
-		[W3Type("mainCloudsRim")]
+		[REDProp("mainCloudsRim")]
 		public SSimpleCurve MainCloudsRim { get; set; }
 
-		[W3Type("mainCloudsRimAlpha")]
+		[REDProp("mainCloudsRimAlpha")]
 		public SSimpleCurve MainCloudsRimAlpha { get; set; }
 
-		[W3Type("backgroundCloudsFront")]
+		[REDProp("backgroundCloudsFront")]
 		public SSimpleCurve BackgroundCloudsFront { get; set; }
 
-		[W3Type("backgroundCloudsFrontAlpha")]
+		[REDProp("backgroundCloudsFrontAlpha")]
 		public SSimpleCurve BackgroundCloudsFrontAlpha { get; set; }
 
-		[W3Type("backgroundCloudsBack")]
+		[REDProp("backgroundCloudsBack")]
 		public SSimpleCurve BackgroundCloudsBack { get; set; }
 
-		[W3Type("backgroundCloudsBackAlpha")]
+		[REDProp("backgroundCloudsBackAlpha")]
 		public SSimpleCurve BackgroundCloudsBackAlpha { get; set; }
 
-		[W3Type("backgroundHazeFront")]
+		[REDProp("backgroundHazeFront")]
 		public SSimpleCurve BackgroundHazeFront { get; set; }
 
-		[W3Type("backgroundHazeFrontAlpha")]
+		[REDProp("backgroundHazeFrontAlpha")]
 		public SSimpleCurve BackgroundHazeFrontAlpha { get; set; }
 
-		[W3Type("backgroundHazeBack")]
+		[REDProp("backgroundHazeBack")]
 		public SSimpleCurve BackgroundHazeBack { get; set; }
 
-		[W3Type("backgroundHazeBackAlpha")]
+		[REDProp("backgroundHazeBackAlpha")]
 		public SSimpleCurve BackgroundHazeBackAlpha { get; set; }
 
-		[W3Type("fxBlood")]
+		[REDProp("fxBlood")]
 		public SSimpleCurve FxBlood { get; set; }
 
-		[W3Type("fxWater")]
+		[REDProp("fxWater")]
 		public SSimpleCurve FxWater { get; set; }
 
-		[W3Type("fxFog")]
+		[REDProp("fxFog")]
 		public SSimpleCurve FxFog { get; set; }
 
-		[W3Type("fxTrails")]
+		[REDProp("fxTrails")]
 		public SSimpleCurve FxTrails { get; set; }
 
-		[W3Type("fxScreenParticles")]
+		[REDProp("fxScreenParticles")]
 		public SSimpleCurve FxScreenParticles { get; set; }
 
-		[W3Type("fxLightShaft")]
+		[REDProp("fxLightShaft")]
 		public SSimpleCurve FxLightShaft { get; set; }
 
-		[W3Type("fxLightShaftSun")]
+		[REDProp("fxLightShaftSun")]
 		public SSimpleCurve FxLightShaftSun { get; set; }
 
-		[W3Type("fxLightShaftInteriorDawn")]
+		[REDProp("fxLightShaftInteriorDawn")]
 		public SSimpleCurve FxLightShaftInteriorDawn { get; set; }
 
-		[W3Type("fxLightShaftSpotlightDawn")]
+		[REDProp("fxLightShaftSpotlightDawn")]
 		public SSimpleCurve FxLightShaftSpotlightDawn { get; set; }
 
-		[W3Type("fxLightShaftReflectionLightDawn")]
+		[REDProp("fxLightShaftReflectionLightDawn")]
 		public SSimpleCurve FxLightShaftReflectionLightDawn { get; set; }
 
-		[W3Type("fxLightShaftInteriorNoon")]
+		[REDProp("fxLightShaftInteriorNoon")]
 		public SSimpleCurve FxLightShaftInteriorNoon { get; set; }
 
-		[W3Type("fxLightShaftSpotlightNoon")]
+		[REDProp("fxLightShaftSpotlightNoon")]
 		public SSimpleCurve FxLightShaftSpotlightNoon { get; set; }
 
-		[W3Type("fxLightShaftReflectionLightNoon")]
+		[REDProp("fxLightShaftReflectionLightNoon")]
 		public SSimpleCurve FxLightShaftReflectionLightNoon { get; set; }
 
-		[W3Type("fxLightShaftInteriorEvening")]
+		[REDProp("fxLightShaftInteriorEvening")]
 		public SSimpleCurve FxLightShaftInteriorEvening { get; set; }
 
-		[W3Type("fxLightShaftSpotlightEvening")]
+		[REDProp("fxLightShaftSpotlightEvening")]
 		public SSimpleCurve FxLightShaftSpotlightEvening { get; set; }
 
-		[W3Type("fxLightShaftReflectionLightEvening")]
+		[REDProp("fxLightShaftReflectionLightEvening")]
 		public SSimpleCurve FxLightShaftReflectionLightEvening { get; set; }
 
-		[W3Type("fxLightShaftInteriorNight")]
+		[REDProp("fxLightShaftInteriorNight")]
 		public SSimpleCurve FxLightShaftInteriorNight { get; set; }
 
-		[W3Type("fxLightShaftSpotlightNight")]
+		[REDProp("fxLightShaftSpotlightNight")]
 		public SSimpleCurve FxLightShaftSpotlightNight { get; set; }
 
-		[W3Type("fxLightShaftReflectionLightNight")]
+		[REDProp("fxLightShaftReflectionLightNight")]
 		public SSimpleCurve FxLightShaftReflectionLightNight { get; set; }
 
-		[W3Type("activatedCustom0")]
+		[REDProp("activatedCustom0")]
 		public bool ActivatedCustom0 { get; set; }
 
-		[W3Type("customGroup0")]
+		[REDProp("customGroup0")]
 		public SSimpleCurve CustomGroup0 { get; set; }
 
-		[W3Type("activatedCustom1")]
+		[REDProp("activatedCustom1")]
 		public bool ActivatedCustom1 { get; set; }
 
-		[W3Type("customGroup1")]
+		[REDProp("customGroup1")]
 		public SSimpleCurve CustomGroup1 { get; set; }
 
-		[W3Type("activatedCustom2")]
+		[REDProp("activatedCustom2")]
 		public bool ActivatedCustom2 { get; set; }
 
-		[W3Type("customGroup2")]
+		[REDProp("customGroup2")]
 		public SSimpleCurve CustomGroup2 { get; set; }
 
 	}

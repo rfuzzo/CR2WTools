@@ -6,19 +6,19 @@ namespace CR2W.Types.W3
 {
 	public class SGuiSceneDescription
 	{
-		[W3Type("enabled")]
+		[REDProp("enabled")]
 		public bool Enabled { get; set; }
 
-		[W3Type("worldClass")]
+		[REDProp("worldClass")]
 		public CName WorldClass { get; set; }
 
-		[W3Type("defaultEnvDef")]
+		[REDProp("defaultEnvDef")]
 		public Soft<CEnvironmentDefinition> DefaultEnvDef { get; set; }
 
-		[W3Type("defaultSunRotation")]
+		[REDProp("defaultSunRotation")]
 		public EulerAngles DefaultSunRotation { get; set; }
 
-		[W3Type("enablePhysics")]
+		[REDProp("enablePhysics")]
 		public bool EnablePhysics { get; set; }
 
 	}

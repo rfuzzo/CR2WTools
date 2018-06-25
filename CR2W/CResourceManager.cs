@@ -12,7 +12,7 @@ using System.Reflection;
 
 namespace CR2W
 {
-    public static class CR2WController
+    public static class CResourceManager
     {
         /// <summary>
         /// Load a CR2W file as a CResource

@@ -6,34 +6,34 @@ namespace CR2W.Types.W3
 {
 	public class CEnvDepthOfFieldParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("nearBlurDist")]
+		[REDProp("nearBlurDist")]
 		public SSimpleCurve NearBlurDist { get; set; }
 
-		[W3Type("nearFocusDist")]
+		[REDProp("nearFocusDist")]
 		public SSimpleCurve NearFocusDist { get; set; }
 
-		[W3Type("farFocusDist")]
+		[REDProp("farFocusDist")]
 		public SSimpleCurve FarFocusDist { get; set; }
 
-		[W3Type("farBlurDist")]
+		[REDProp("farBlurDist")]
 		public SSimpleCurve FarBlurDist { get; set; }
 
-		[W3Type("intensity")]
+		[REDProp("intensity")]
 		public SSimpleCurve Intensity { get; set; }
 
-		[W3Type("activatedSkyThreshold")]
+		[REDProp("activatedSkyThreshold")]
 		public bool ActivatedSkyThreshold { get; set; }
 
-		[W3Type("skyThreshold")]
+		[REDProp("skyThreshold")]
 		public float SkyThreshold { get; set; }
 
-		[W3Type("activatedSkyRange")]
+		[REDProp("activatedSkyRange")]
 		public bool ActivatedSkyRange { get; set; }
 
-		[W3Type("skyRange")]
+		[REDProp("skyRange")]
 		public float SkyRange { get; set; }
 
 	}

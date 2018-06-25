@@ -6,19 +6,19 @@ namespace CR2W.Types.W3
 {
 	public class CPopupResource : CResource, IGuiResource
 	{
-		[W3Type("resourceBlocks")]
+		[REDProp("resourceBlocks")]
 		public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
 
-		[W3Type("popupClass")]
+		[REDProp("popupClass")]
 		public CName PopupClass { get; set; }
 
-		[W3Type("popupFlashSwf")]
+		[REDProp("popupFlashSwf")]
 		public Soft<CSwfResource> PopupFlashSwf { get; set; }
 
-		[W3Type("layer")]
+		[REDProp("layer")]
 		public UInt32 Layer { get; set; }
 
-		[W3Type("popupDef")]
+		[REDProp("popupDef")]
 		public Ptr<CPopupDef> PopupDef { get; set; }
 
 	}

@@ -6,19 +6,19 @@ namespace CR2W.Types.W3
 {
 	public class CMenuResource : CResource, IGuiResource
 	{
-		[W3Type("resourceBlocks")]
+		[REDProp("resourceBlocks")]
 		public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
 
-		[W3Type("menuClass")]
+		[REDProp("menuClass")]
 		public CName MenuClass { get; set; }
 
-		[W3Type("menuFlashSwf")]
+		[REDProp("menuFlashSwf")]
 		public Soft<CSwfResource> MenuFlashSwf { get; set; }
 
-		[W3Type("layer")]
+		[REDProp("layer")]
 		public UInt32 Layer { get; set; }
 
-		[W3Type("menuDef")]
+		[REDProp("menuDef")]
 		public Ptr<CMenuDef> MenuDef { get; set; }
 
 	}

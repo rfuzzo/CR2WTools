@@ -6,19 +6,19 @@ namespace CR2W.Types.W3
 {
 	public class CEnvFlareColorGroupsParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("default")]
+		[REDProp("default")]
 		public CEnvFlareColorParameters Default { get; set; }
 
-		[W3Type("custom0")]
+		[REDProp("custom0")]
 		public CEnvFlareColorParameters Custom0 { get; set; }
 
-		[W3Type("custom1")]
+		[REDProp("custom1")]
 		public CEnvFlareColorParameters Custom1 { get; set; }
 
-		[W3Type("custom2")]
+		[REDProp("custom2")]
 		public CEnvFlareColorParameters Custom2 { get; set; }
 
 	}

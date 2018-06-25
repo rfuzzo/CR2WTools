@@ -6,37 +6,37 @@ namespace CR2W.Types.W3
 {
 	public class CEnvNVSSAOParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("radius")]
+		[REDProp("radius")]
 		public SSimpleCurve Radius { get; set; }
 
-		[W3Type("bias")]
+		[REDProp("bias")]
 		public SSimpleCurve Bias { get; set; }
 
-		[W3Type("detailStrength")]
+		[REDProp("detailStrength")]
 		public SSimpleCurve DetailStrength { get; set; }
 
-		[W3Type("coarseStrength")]
+		[REDProp("coarseStrength")]
 		public SSimpleCurve CoarseStrength { get; set; }
 
-		[W3Type("powerExponent")]
+		[REDProp("powerExponent")]
 		public SSimpleCurve PowerExponent { get; set; }
 
-		[W3Type("blurSharpness")]
+		[REDProp("blurSharpness")]
 		public SSimpleCurve BlurSharpness { get; set; }
 
-		[W3Type("valueClamp")]
+		[REDProp("valueClamp")]
 		public SSimpleCurve ValueClamp { get; set; }
 
-		[W3Type("ssaoColor")]
+		[REDProp("ssaoColor")]
 		public SSimpleCurve SsaoColor { get; set; }
 
-		[W3Type("nonAmbientInfluence")]
+		[REDProp("nonAmbientInfluence")]
 		public SSimpleCurve NonAmbientInfluence { get; set; }
 
-		[W3Type("translucencyInfluence")]
+		[REDProp("translucencyInfluence")]
 		public SSimpleCurve TranslucencyInfluence { get; set; }
 
 	}

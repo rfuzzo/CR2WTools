@@ -6,19 +6,19 @@ namespace CR2W.Types.W3
 {
 	public class CEnvGameplayEffectsParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("catEffectBrightnessMultiply")]
+		[REDProp("catEffectBrightnessMultiply")]
 		public SSimpleCurve CatEffectBrightnessMultiply { get; set; }
 
-		[W3Type("behaviorAnimationMultiplier")]
+		[REDProp("behaviorAnimationMultiplier")]
 		public SSimpleCurve BehaviorAnimationMultiplier { get; set; }
 
-		[W3Type("specularityMultiplier")]
+		[REDProp("specularityMultiplier")]
 		public SSimpleCurve SpecularityMultiplier { get; set; }
 
-		[W3Type("glossinessMultiplier")]
+		[REDProp("glossinessMultiplier")]
 		public SSimpleCurve GlossinessMultiplier { get; set; }
 
 	}

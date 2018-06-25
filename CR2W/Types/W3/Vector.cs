@@ -6,16 +6,16 @@ namespace CR2W.Types.W3
 {
 	public class Vector
 	{
-		[W3Type("X")]
+		[REDProp("X")]
 		public float X { get; set; }
 
-		[W3Type("Y")]
+		[REDProp("Y")]
 		public float Y { get; set; }
 
-		[W3Type("Z")]
+		[REDProp("Z")]
 		public float Z { get; set; }
 
-		[W3Type("W")]
+		[REDProp("W")]
 		public float W { get; set; }
 
 	}

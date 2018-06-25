@@ -6,37 +6,37 @@ namespace CR2W.Types.W3
 {
 	public class CEnvWaterParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("waterFlowIntensity")]
+		[REDProp("waterFlowIntensity")]
 		public SSimpleCurve WaterFlowIntensity { get; set; }
 
-		[W3Type("underwaterBrightness")]
+		[REDProp("underwaterBrightness")]
 		public SSimpleCurve UnderwaterBrightness { get; set; }
 
-		[W3Type("underWaterFogIntensity")]
+		[REDProp("underWaterFogIntensity")]
 		public SSimpleCurve UnderWaterFogIntensity { get; set; }
 
-		[W3Type("waterColor")]
+		[REDProp("waterColor")]
 		public SSimpleCurve WaterColor { get; set; }
 
-		[W3Type("underWaterColor")]
+		[REDProp("underWaterColor")]
 		public SSimpleCurve UnderWaterColor { get; set; }
 
-		[W3Type("waterFresnel")]
+		[REDProp("waterFresnel")]
 		public SSimpleCurve WaterFresnel { get; set; }
 
-		[W3Type("waterCaustics")]
+		[REDProp("waterCaustics")]
 		public SSimpleCurve WaterCaustics { get; set; }
 
-		[W3Type("waterFoamIntensity")]
+		[REDProp("waterFoamIntensity")]
 		public SSimpleCurve WaterFoamIntensity { get; set; }
 
-		[W3Type("waterAmbientScale")]
+		[REDProp("waterAmbientScale")]
 		public SSimpleCurve WaterAmbientScale { get; set; }
 
-		[W3Type("waterDiffuseScale")]
+		[REDProp("waterDiffuseScale")]
 		public SSimpleCurve WaterDiffuseScale { get; set; }
 
 	}

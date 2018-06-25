@@ -6,19 +6,19 @@ namespace CR2W.Types.W3
 {
 	public class SCurveDataEntry
 	{
-		[W3Type("me")]
+		[REDProp("me")]
 		public float Me { get; set; }
 
-		[W3Type("ntrolPoint")]
+		[REDProp("ntrolPoint")]
 		public Vector NtrolPoint { get; set; }
 
-		[W3Type("lue")]
+		[REDProp("lue")]
 		public float Lue { get; set; }
 
-		[W3Type("rveTypeL")]
+		[REDProp("rveTypeL")]
 		public UInt16 RveTypeL { get; set; }
 
-		[W3Type("rveTypeR")]
+		[REDProp("rveTypeR")]
 		public UInt16 RveTypeR { get; set; }
 
 	}

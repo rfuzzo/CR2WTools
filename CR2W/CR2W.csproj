@@ -45,31 +45,31 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\ResourceTypeAttribute.cs" />
-    <Compile Include="Attributes\W3ArrayFlagsAttribute.cs" />
-    <Compile Include="Attributes\W3TypeAttribute.cs" />
+    <Compile Include="Attributes\REDSizeAttribute.cs" />
+    <Compile Include="Attributes\REDPropAttribute.cs" />
     <Compile Include="FNV1a\FNV1A.cs" />
     <Compile Include="IO\SBuffer.cs" />
-    <Compile Include="CR2WController.cs" />
+    <Compile Include="CResourceManager.cs" />
     <Compile Include="CRC32\Crc32Algorithm.cs" />
     <Compile Include="CRC32\Crc32CAlgorithm.cs" />
     <Compile Include="CRC32\SafeProxy.cs" />
     <Compile Include="CRC32\SafeProxyC.cs" />
-    <Compile Include="Exceptions\MismatchCRC32Exception.cs" />
-    <Compile Include="Exceptions\InvalidCR2WFileException.cs" />
-    <Compile Include="Exceptions\UnknownObjectTypeException.cs" />
+    <Compile Include="IO\MismatchCRC32Exception.cs" />
+    <Compile Include="IO\InvalidCR2WFileException.cs" />
+    <Compile Include="IO\UnknownObjectTypeException.cs" />
     <Compile Include="IO\CR2WBinaryWriter.cs" />
     <Compile Include="IO\CR2WBinaryReader.cs" />
     <Compile Include="IO\SObject.cs" />
     <Compile Include="IO\SEmbedded.cs" />
     <Compile Include="IO\SResource.cs" />
     <Compile Include="IO\SHeader.cs" />
+    <Compile Include="REDReflection.cs" />
     <Compile Include="Resources\CResourceExt.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CResourceExt.resx</DependentUpon>
     </Compile>
-    <Compile Include="Testing\TestParser.cs" />
+    <Compile Include="Testing\CR2WTestReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\Array.cs" />
     <Compile Include="Types\CClipMapCookedData.cs" />

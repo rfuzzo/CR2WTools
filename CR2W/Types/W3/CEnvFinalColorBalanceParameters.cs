@@ -6,70 +6,70 @@ namespace CR2W.Types.W3
 {
 	public class CEnvFinalColorBalanceParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("activatedBalanceMap")]
+		[REDProp("activatedBalanceMap")]
 		public bool ActivatedBalanceMap { get; set; }
 
-		[W3Type("activatedParametricBalance")]
+		[REDProp("activatedParametricBalance")]
 		public bool ActivatedParametricBalance { get; set; }
 
-		[W3Type("vignetteWeights")]
+		[REDProp("vignetteWeights")]
 		public SSimpleCurve VignetteWeights { get; set; }
 
-		[W3Type("vignetteColor")]
+		[REDProp("vignetteColor")]
 		public SSimpleCurve VignetteColor { get; set; }
 
-		[W3Type("vignetteOpacity")]
+		[REDProp("vignetteOpacity")]
 		public SSimpleCurve VignetteOpacity { get; set; }
 
-		[W3Type("chromaticAberrationSize")]
+		[REDProp("chromaticAberrationSize")]
 		public SSimpleCurve ChromaticAberrationSize { get; set; }
 
-		[W3Type("balanceMapLerp")]
+		[REDProp("balanceMapLerp")]
 		public SSimpleCurve BalanceMapLerp { get; set; }
 
-		[W3Type("balanceMapAmount")]
+		[REDProp("balanceMapAmount")]
 		public SSimpleCurve BalanceMapAmount { get; set; }
 
-		[W3Type("balanceMap0")]
+		[REDProp("balanceMap0")]
 		public Soft<CBitmapTexture> BalanceMap0 { get; set; }
 
-		[W3Type("balanceMap1")]
+		[REDProp("balanceMap1")]
 		public Soft<CBitmapTexture> BalanceMap1 { get; set; }
 
-		[W3Type("balancePostBrightness")]
+		[REDProp("balancePostBrightness")]
 		public SSimpleCurve BalancePostBrightness { get; set; }
 
-		[W3Type("levelsShadows")]
+		[REDProp("levelsShadows")]
 		public SSimpleCurve LevelsShadows { get; set; }
 
-		[W3Type("levelsMidtones")]
+		[REDProp("levelsMidtones")]
 		public SSimpleCurve LevelsMidtones { get; set; }
 
-		[W3Type("levelsHighlights")]
+		[REDProp("levelsHighlights")]
 		public SSimpleCurve LevelsHighlights { get; set; }
 
-		[W3Type("midtoneRangeMin")]
+		[REDProp("midtoneRangeMin")]
 		public SSimpleCurve MidtoneRangeMin { get; set; }
 
-		[W3Type("midtoneRangeMax")]
+		[REDProp("midtoneRangeMax")]
 		public SSimpleCurve MidtoneRangeMax { get; set; }
 
-		[W3Type("midtoneMarginMin")]
+		[REDProp("midtoneMarginMin")]
 		public SSimpleCurve MidtoneMarginMin { get; set; }
 
-		[W3Type("midtoneMarginMax")]
+		[REDProp("midtoneMarginMax")]
 		public SSimpleCurve MidtoneMarginMax { get; set; }
 
-		[W3Type("parametricBalanceLow")]
+		[REDProp("parametricBalanceLow")]
 		public CEnvParametricBalanceParameters ParametricBalanceLow { get; set; }
 
-		[W3Type("parametricBalanceMid")]
+		[REDProp("parametricBalanceMid")]
 		public CEnvParametricBalanceParameters ParametricBalanceMid { get; set; }
 
-		[W3Type("parametricBalanceHigh")]
+		[REDProp("parametricBalanceHigh")]
 		public CEnvParametricBalanceParameters ParametricBalanceHigh { get; set; }
 
 	}

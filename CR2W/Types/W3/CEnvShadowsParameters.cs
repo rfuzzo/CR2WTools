@@ -6,25 +6,25 @@ namespace CR2W.Types.W3
 {
 	public class CEnvShadowsParameters
 	{
-		[W3Type("activatedAutoHide")]
+		[REDProp("activatedAutoHide")]
 		public bool ActivatedAutoHide { get; set; }
 
-		[W3Type("autoHideBoxSizeMin")]
+		[REDProp("autoHideBoxSizeMin")]
 		public SSimpleCurve AutoHideBoxSizeMin { get; set; }
 
-		[W3Type("autoHideBoxSizeMax")]
+		[REDProp("autoHideBoxSizeMax")]
 		public SSimpleCurve AutoHideBoxSizeMax { get; set; }
 
-		[W3Type("autoHideBoxCompMaxX")]
+		[REDProp("autoHideBoxCompMaxX")]
 		public SSimpleCurve AutoHideBoxCompMaxX { get; set; }
 
-		[W3Type("autoHideBoxCompMaxY")]
+		[REDProp("autoHideBoxCompMaxY")]
 		public SSimpleCurve AutoHideBoxCompMaxY { get; set; }
 
-		[W3Type("autoHideBoxCompMaxZ")]
+		[REDProp("autoHideBoxCompMaxZ")]
 		public SSimpleCurve AutoHideBoxCompMaxZ { get; set; }
 
-		[W3Type("autoHideDistScale")]
+		[REDProp("autoHideDistScale")]
 		public SSimpleCurve AutoHideDistScale { get; set; }
 
 	}

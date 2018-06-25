@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CR2W.Exceptions
+namespace CR2W.IO
 {
-    public class InvalidCR2WFileException : Exception
+    public class MismatchCRC32Exception : Exception
     {
-        public InvalidCR2WFileException(string message) : base(message)
+        public MismatchCRC32Exception(string message) : base(message)
         {
 
         }

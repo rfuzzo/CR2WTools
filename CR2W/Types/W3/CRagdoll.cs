@@ -12,25 +12,25 @@ namespace CR2W.Types.W3
 {
     public class CRagdoll : CResource
     {
-        [W3Type("windScaler")]
+        [REDProp("windScaler")]
         public float WindScaler { get; set; }
 
-        [W3Type("densityScaler")]
+        [REDProp("densityScaler")]
         public float DensityScaler { get; set; }
 
-        [W3Type("autoStopDelay")]
+        [REDProp("autoStopDelay")]
         public float AutoStopDelay { get; set; }
 
-        [W3Type("autoStopTime")]
+        [REDProp("autoStopTime")]
         public float AutoStopTime { get; set; }
 
-        [W3Type("autoStopSpeed")]
+        [REDProp("autoStopSpeed")]
         public float AutoStopSpeed { get; set; }
 
-        [W3Type("resetDampingAfterStop")]
+        [REDProp("resetDampingAfterStop")]
         public bool ResetDampingAfterStop { get; set; }
 
-        [W3Type("forceWakeUpOnAttach")]
+        [REDProp("forceWakeUpOnAttach")]
         public bool ForceWakeUpOnAttach { get; set; }
 
         //No idea about this type - rttidump does not have it.
@@ -38,31 +38,31 @@ namespace CR2W.Types.W3
         //[W3Type("customDynamicGroup")]
         //public CPhysicalCollision CustomDynamicGroup { get; set; }
 
-        [W3Type("disableConstrainsTwistAxis")]
+        [REDProp("disableConstrainsTwistAxis")]
         public bool DisableConstrainsTwistAxis { get; set; }
 
-        [W3Type("disableConstrainsSwing1Axis")]
+        [REDProp("disableConstrainsSwing1Axis")]
         public bool DisableConstrainsSwing1Axis { get; set; }
 
-        [W3Type("disableConstrainsSwing2Axis")]
+        [REDProp("disableConstrainsSwing2Axis")]
         public bool DisableConstrainsSwing2Axis { get; set; }
 
-        [W3Type("jointBounce")]
+        [REDProp("jointBounce")]
         public float JointBounce { get; set; }
 
-        [W3Type("modifyTwistLower")]
+        [REDProp("modifyTwistLower")]
         public float ModifyTwistLower { get; set; }
 
-        [W3Type("modifyTwistUpper")]
+        [REDProp("modifyTwistUpper")]
         public float ModifyTwistUpper { get; set; }
 
-        [W3Type("modifySwingY")]
+        [REDProp("modifySwingY")]
         public float ModifySwingY { get; set; }
 
-        [W3Type("modifySwingZ")]
+        [REDProp("modifySwingZ")]
         public float ModifySwingZ { get; set; }
 
-        [W3Type("projectionIterations")]
+        [REDProp("projectionIterations")]
         public Int32 ProjectionIterations { get; set; }
 
         public XmlDocument Data { get; set; }

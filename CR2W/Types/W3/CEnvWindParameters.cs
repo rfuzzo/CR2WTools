@@ -6,13 +6,13 @@ namespace CR2W.Types.W3
 {
 	public class CEnvWindParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("windStrengthOverride")]
+		[REDProp("windStrengthOverride")]
 		public SSimpleCurve WindStrengthOverride { get; set; }
 
-		[W3Type("cloudsVelocityOverride")]
+		[REDProp("cloudsVelocityOverride")]
 		public SSimpleCurve CloudsVelocityOverride { get; set; }
 
 	}

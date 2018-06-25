@@ -6,7 +6,7 @@ namespace CR2W.Types.W3
 {
 	public class CEnvironmentDefinition : CResource
 	{
-		[W3Type("envParams")]
+		[REDProp("envParams")]
 		public CAreaEnvironmentParams EnvParams { get; set; }
 
 	}

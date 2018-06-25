@@ -6,10 +6,10 @@ namespace CR2W.Types.W3
 {
 	public class CEnvMotionBlurParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("strength")]
+		[REDProp("strength")]
 		public SSimpleCurve Strength { get; set; }
 
 	}

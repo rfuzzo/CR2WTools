@@ -6,22 +6,22 @@ namespace CR2W.Types.W3
 {
 	public class CEnvAmbientProbesGenParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("colorAmbient")]
+		[REDProp("colorAmbient")]
 		public SSimpleCurve ColorAmbient { get; set; }
 
-		[W3Type("colorSceneAdd")]
+		[REDProp("colorSceneAdd")]
 		public SSimpleCurve ColorSceneAdd { get; set; }
 
-		[W3Type("colorSkyTop")]
+		[REDProp("colorSkyTop")]
 		public SSimpleCurve ColorSkyTop { get; set; }
 
-		[W3Type("colorSkyHorizon")]
+		[REDProp("colorSkyHorizon")]
 		public SSimpleCurve ColorSkyHorizon { get; set; }
 
-		[W3Type("skyShape")]
+		[REDProp("skyShape")]
 		public SSimpleCurve SkyShape { get; set; }
 
 	}

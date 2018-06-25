@@ -6,31 +6,31 @@ namespace CR2W.Types.W3
 {
 	public class CEnvSunAndMoonParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("sunSize")]
+		[REDProp("sunSize")]
 		public SSimpleCurve SunSize { get; set; }
 
-		[W3Type("sunColor")]
+		[REDProp("sunColor")]
 		public SSimpleCurve SunColor { get; set; }
 
-		[W3Type("sunFlareSize")]
+		[REDProp("sunFlareSize")]
 		public SSimpleCurve SunFlareSize { get; set; }
 
-		[W3Type("sunFlareColor")]
+		[REDProp("sunFlareColor")]
 		public CEnvFlareColorParameters SunFlareColor { get; set; }
 
-		[W3Type("moonSize")]
+		[REDProp("moonSize")]
 		public SSimpleCurve MoonSize { get; set; }
 
-		[W3Type("moonColor")]
+		[REDProp("moonColor")]
 		public SSimpleCurve MoonColor { get; set; }
 
-		[W3Type("moonFlareSize")]
+		[REDProp("moonFlareSize")]
 		public SSimpleCurve MoonFlareSize { get; set; }
 
-		[W3Type("moonFlareColor")]
+		[REDProp("moonFlareColor")]
 		public CEnvFlareColorParameters MoonFlareColor { get; set; }
 
 	}

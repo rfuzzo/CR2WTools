@@ -6,7 +6,7 @@ namespace CR2W.Types.W3
 {
     public class CSwfTexture : CBitmapTexture
     {
-        [W3Type("linkageName")]
+        [REDProp("linkageName")]
         public string LinkageName { get; set; }
     }
 }

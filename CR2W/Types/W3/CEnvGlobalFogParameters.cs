@@ -6,106 +6,106 @@ namespace CR2W.Types.W3
 {
 	public class CEnvGlobalFogParameters
 	{
-		[W3Type("fogActivated")]
+		[REDProp("fogActivated")]
 		public bool FogActivated { get; set; }
 
-		[W3Type("fogAppearDistance")]
+		[REDProp("fogAppearDistance")]
 		public SSimpleCurve FogAppearDistance { get; set; }
 
-		[W3Type("fogAppearRange")]
+		[REDProp("fogAppearRange")]
 		public SSimpleCurve FogAppearRange { get; set; }
 
-		[W3Type("fogColorFront")]
+		[REDProp("fogColorFront")]
 		public SSimpleCurve FogColorFront { get; set; }
 
-		[W3Type("fogColorMiddle")]
+		[REDProp("fogColorMiddle")]
 		public SSimpleCurve FogColorMiddle { get; set; }
 
-		[W3Type("fogColorBack")]
+		[REDProp("fogColorBack")]
 		public SSimpleCurve FogColorBack { get; set; }
 
-		[W3Type("fogDensity")]
+		[REDProp("fogDensity")]
 		public SSimpleCurve FogDensity { get; set; }
 
-		[W3Type("fogFinalExp")]
+		[REDProp("fogFinalExp")]
 		public SSimpleCurve FogFinalExp { get; set; }
 
-		[W3Type("fogDistClamp")]
+		[REDProp("fogDistClamp")]
 		public SSimpleCurve FogDistClamp { get; set; }
 
-		[W3Type("fogVertOffset")]
+		[REDProp("fogVertOffset")]
 		public SSimpleCurve FogVertOffset { get; set; }
 
-		[W3Type("fogVertDensity")]
+		[REDProp("fogVertDensity")]
 		public SSimpleCurve FogVertDensity { get; set; }
 
-		[W3Type("fogVertDensityLightFront")]
+		[REDProp("fogVertDensityLightFront")]
 		public SSimpleCurve FogVertDensityLightFront { get; set; }
 
-		[W3Type("fogVertDensityLightBack")]
+		[REDProp("fogVertDensityLightBack")]
 		public SSimpleCurve FogVertDensityLightBack { get; set; }
 
-		[W3Type("fogSkyDensityScale")]
+		[REDProp("fogSkyDensityScale")]
 		public SSimpleCurve FogSkyDensityScale { get; set; }
 
-		[W3Type("fogCloudsDensityScale")]
+		[REDProp("fogCloudsDensityScale")]
 		public SSimpleCurve FogCloudsDensityScale { get; set; }
 
-		[W3Type("fogSkyVertDensityLightFrontScale")]
+		[REDProp("fogSkyVertDensityLightFrontScale")]
 		public SSimpleCurve FogSkyVertDensityLightFrontScale { get; set; }
 
-		[W3Type("fogSkyVertDensityLightBackScale")]
+		[REDProp("fogSkyVertDensityLightBackScale")]
 		public SSimpleCurve FogSkyVertDensityLightBackScale { get; set; }
 
-		[W3Type("fogVertDensityRimRange")]
+		[REDProp("fogVertDensityRimRange")]
 		public SSimpleCurve FogVertDensityRimRange { get; set; }
 
-		[W3Type("fogCustomColor")]
+		[REDProp("fogCustomColor")]
 		public SSimpleCurve FogCustomColor { get; set; }
 
-		[W3Type("fogCustomColorStart")]
+		[REDProp("fogCustomColorStart")]
 		public SSimpleCurve FogCustomColorStart { get; set; }
 
-		[W3Type("fogCustomColorRange")]
+		[REDProp("fogCustomColorRange")]
 		public SSimpleCurve FogCustomColorRange { get; set; }
 
-		[W3Type("fogCustomAmountScale")]
+		[REDProp("fogCustomAmountScale")]
 		public SSimpleCurve FogCustomAmountScale { get; set; }
 
-		[W3Type("fogCustomAmountScaleStart")]
+		[REDProp("fogCustomAmountScaleStart")]
 		public SSimpleCurve FogCustomAmountScaleStart { get; set; }
 
-		[W3Type("fogCustomAmountScaleRange")]
+		[REDProp("fogCustomAmountScaleRange")]
 		public SSimpleCurve FogCustomAmountScaleRange { get; set; }
 
-		[W3Type("aerialColorFront")]
+		[REDProp("aerialColorFront")]
 		public SSimpleCurve AerialColorFront { get; set; }
 
-		[W3Type("aerialColorMiddle")]
+		[REDProp("aerialColorMiddle")]
 		public SSimpleCurve AerialColorMiddle { get; set; }
 
-		[W3Type("aerialColorBack")]
+		[REDProp("aerialColorBack")]
 		public SSimpleCurve AerialColorBack { get; set; }
 
-		[W3Type("aerialFinalExp")]
+		[REDProp("aerialFinalExp")]
 		public SSimpleCurve AerialFinalExp { get; set; }
 
-		[W3Type("ssaoImpactClamp")]
+		[REDProp("ssaoImpactClamp")]
 		public SSimpleCurve SsaoImpactClamp { get; set; }
 
-		[W3Type("ssaoImpactNearValue")]
+		[REDProp("ssaoImpactNearValue")]
 		public SSimpleCurve SsaoImpactNearValue { get; set; }
 
-		[W3Type("ssaoImpactFarValue")]
+		[REDProp("ssaoImpactFarValue")]
 		public SSimpleCurve SsaoImpactFarValue { get; set; }
 
-		[W3Type("ssaoImpactNearDistance")]
+		[REDProp("ssaoImpactNearDistance")]
 		public SSimpleCurve SsaoImpactNearDistance { get; set; }
 
-		[W3Type("ssaoImpactFarDistance")]
+		[REDProp("ssaoImpactFarDistance")]
 		public SSimpleCurve SsaoImpactFarDistance { get; set; }
 
-		[W3Type("distantLightsIntensityScale")]
+		[REDProp("distantLightsIntensityScale")]
 		public SSimpleCurve DistantLightsIntensityScale { get; set; }
 
 	}

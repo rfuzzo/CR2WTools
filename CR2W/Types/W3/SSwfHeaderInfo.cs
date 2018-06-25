@@ -5,28 +5,28 @@ namespace CR2W.Types.W3
 {
     public class SSwfHeaderInfo
     {
-        [W3Type("frameRate")]
+        [REDProp("frameRate")]
         public float FrameRate { get; set; }
 
-        [W3Type("frameHeight")]
+        [REDProp("frameHeight")]
         public float FrameHeight { get; set; }
 
-        [W3Type("frameWidth")]
+        [REDProp("frameWidth")]
         public float FrameWidth { get; set; }
 
-        [W3Type("frameCount")]
+        [REDProp("frameCount")]
         public uint FrameCount { get; set; }
 
-        [W3Type("height")]
+        [REDProp("height")]
         public float Height { get; set; }
 
-        [W3Type("width")]
+        [REDProp("width")]
         public float Width { get; set; }
 
-        [W3Type("version")]
+        [REDProp("version")]
         public uint Version { get; set; }
 
-        [W3Type("compressed")]
+        [REDProp("compressed")]
         public bool Compressed { get; set; }
     }
 }

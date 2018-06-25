@@ -6,19 +6,19 @@ namespace CR2W.Types.W3
 {
 	public class CEnvInteriorFallbackParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("colorAmbientMul")]
+		[REDProp("colorAmbientMul")]
 		public SSimpleCurve ColorAmbientMul { get; set; }
 
-		[W3Type("colorReflectionLow")]
+		[REDProp("colorReflectionLow")]
 		public SSimpleCurve ColorReflectionLow { get; set; }
 
-		[W3Type("colorReflectionMiddle")]
+		[REDProp("colorReflectionMiddle")]
 		public SSimpleCurve ColorReflectionMiddle { get; set; }
 
-		[W3Type("colorReflectionHigh")]
+		[REDProp("colorReflectionHigh")]
 		public SSimpleCurve ColorReflectionHigh { get; set; }
 
 	}

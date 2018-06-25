@@ -6,43 +6,43 @@ namespace CR2W.Types.W3
 {
 	public class CEnvCameraLightsSetupParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("gameplayLight0")]
+		[REDProp("gameplayLight0")]
 		public CEnvCameraLightParameters GameplayLight0 { get; set; }
 
-		[W3Type("gameplayLight1")]
+		[REDProp("gameplayLight1")]
 		public CEnvCameraLightParameters GameplayLight1 { get; set; }
 
-		[W3Type("sceneLight0")]
+		[REDProp("sceneLight0")]
 		public CEnvCameraLightParameters SceneLight0 { get; set; }
 
-		[W3Type("sceneLight1")]
+		[REDProp("sceneLight1")]
 		public CEnvCameraLightParameters SceneLight1 { get; set; }
 
-		[W3Type("dialogLight0")]
+		[REDProp("dialogLight0")]
 		public CEnvCameraLightParameters DialogLight0 { get; set; }
 
-		[W3Type("dialogLight1")]
+		[REDProp("dialogLight1")]
 		public CEnvCameraLightParameters DialogLight1 { get; set; }
 
-		[W3Type("interiorLight0")]
+		[REDProp("interiorLight0")]
 		public CEnvCameraLightParameters InteriorLight0 { get; set; }
 
-		[W3Type("interiorLight1")]
+		[REDProp("interiorLight1")]
 		public CEnvCameraLightParameters InteriorLight1 { get; set; }
 
-		[W3Type("playerInInteriorLightsScale")]
+		[REDProp("playerInInteriorLightsScale")]
 		public SSimpleCurve PlayerInInteriorLightsScale { get; set; }
 
-		[W3Type("sceneLightColorInterior0")]
+		[REDProp("sceneLightColorInterior0")]
 		public SSimpleCurve SceneLightColorInterior0 { get; set; }
 
-		[W3Type("sceneLightColorInterior1")]
+		[REDProp("sceneLightColorInterior1")]
 		public SSimpleCurve SceneLightColorInterior1 { get; set; }
 
-		[W3Type("cameraLightsNonCharacterScale")]
+		[REDProp("cameraLightsNonCharacterScale")]
 		public SSimpleCurve CameraLightsNonCharacterScale { get; set; }
 
 	}

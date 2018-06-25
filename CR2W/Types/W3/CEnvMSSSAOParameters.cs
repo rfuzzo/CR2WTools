@@ -6,37 +6,37 @@ namespace CR2W.Types.W3
 {
 	public class CEnvMSSSAOParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("noiseFilterTolerance")]
+		[REDProp("noiseFilterTolerance")]
 		public SSimpleCurve NoiseFilterTolerance { get; set; }
 
-		[W3Type("blurTolerance")]
+		[REDProp("blurTolerance")]
 		public SSimpleCurve BlurTolerance { get; set; }
 
-		[W3Type("upsampleTolerance")]
+		[REDProp("upsampleTolerance")]
 		public SSimpleCurve UpsampleTolerance { get; set; }
 
-		[W3Type("rejectionFalloff")]
+		[REDProp("rejectionFalloff")]
 		public SSimpleCurve RejectionFalloff { get; set; }
 
-		[W3Type("combineResolutionsBeforeBlur")]
+		[REDProp("combineResolutionsBeforeBlur")]
 		public bool CombineResolutionsBeforeBlur { get; set; }
 
-		[W3Type("combineResolutionsWithMul")]
+		[REDProp("combineResolutionsWithMul")]
 		public bool CombineResolutionsWithMul { get; set; }
 
-		[W3Type("hierarchyDepth")]
+		[REDProp("hierarchyDepth")]
 		public SSimpleCurve HierarchyDepth { get; set; }
 
-		[W3Type("normalAOMultiply")]
+		[REDProp("normalAOMultiply")]
 		public SSimpleCurve NormalAOMultiply { get; set; }
 
-		[W3Type("normalToDepthBrightnessEqualiser")]
+		[REDProp("normalToDepthBrightnessEqualiser")]
 		public SSimpleCurve NormalToDepthBrightnessEqualiser { get; set; }
 
-		[W3Type("normalBackProjectionTolerance")]
+		[REDProp("normalBackProjectionTolerance")]
 		public SSimpleCurve NormalBackProjectionTolerance { get; set; }
 
 	}

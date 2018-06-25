@@ -6,16 +6,16 @@ namespace CR2W.Types.W3
 {
 	public class CEnvDialogLightParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("lightColor")]
+		[REDProp("lightColor")]
 		public SSimpleCurve LightColor { get; set; }
 
-		[W3Type("lightColor2")]
+		[REDProp("lightColor2")]
 		public SSimpleCurve LightColor2 { get; set; }
 
-		[W3Type("lightColor3")]
+		[REDProp("lightColor3")]
 		public SSimpleCurve LightColor3 { get; set; }
 
 	}

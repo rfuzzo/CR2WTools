@@ -6,7 +6,6 @@ using System.IO;
 using CR2W.Types;
 using CR2W.CRC32;
 using CR2W.Types.W3;
-using CR2W.Exceptions;
 using CR2W.Attributes;
 using System.Xml;
 
@@ -51,9 +50,11 @@ namespace CR2W.IO
         public Dictionary<uint, string> strings;
         public string[]                 names;
         public SResource[]              resources;
-        public SObject[]                objects;
+        public SObject[]                sobjs;
         public SBuffer[]                buffers;
         public SEmbedded[]              embedded;
+
+        public CObject[]                objects;
 
         #endregion
 
@@ -267,7 +268,7 @@ namespace CR2W.IO
                 }
             }
 
-            objects = new SObject[size];
+            sobjs = new SObject[size];
             BaseStream.Seek(start, SeekOrigin.Begin);
             for (int i = 0; i < size; i++)
             {
@@ -292,7 +293,7 @@ namespace CR2W.IO
                     }
                     BaseStream.Seek(pos, SeekOrigin.Begin);
                 }
-                objects[i] = temp;
+                sobjs[i] = temp;
             }
         }
 
@@ -390,28 +391,41 @@ namespace CR2W.IO
         //TO BE IMPROVED
         public CResource CreateResource()
         {
-            var temp = objects[0];
-            var type = names[temp.typeID];
+            objects = new CObject[sobjs.Length];
+
+            for (int i = 0; i < sobjs.Length; i++)
+            {
+                objects[i] = CreateObject(sobjs[i]);
+            }
+
+            if(objects[0] is CResource res)
+            {
+                return res;
+            }
+
+            return null;
+        }
+
+        private CObject CreateObject(SObject obj)
+        {
+            var type = names[obj.typeID];
 
             Type resType = Type.GetType($"CR2W.Types.W3.{type}");
 
             if (resType == null)
-            {
-                throw new UnknownObjectTypeException($"[UNKOWN TYPE] {type} could not be found");
-            }
+                throw new UnknownObjectTypeException($"{type} could not be found");
 
-            if (!resType.IsSubclassOf(typeof(CResource)))
-            {
-                throw new InvalidOperationException($"[UNSUPPORTED TYPE] {type} is not a CResource");
-            }
+            if (!resType.IsSubclassOf(typeof(CObject)))
+                throw new InvalidOperationException($"{type} is not a CObject");
 
-            BaseStream.Seek(temp.offset, SeekOrigin.Begin);
+            BaseStream.Seek(obj.offset, SeekOrigin.Begin);
 
-            CResource resource = (CResource)Activator.CreateInstance(resType);
-            resource.Flags     = temp.flags;
-            resource.Template  = temp.template;
-            resource.ParseBytes(this, temp.size);
-            return resource;
+            CObject temp  = (CObject)Activator.CreateInstance(resType);
+            temp.Flags    = obj.flags;
+            temp.Template = obj.template;
+            temp.ParseBytes(this, obj.size);
+
+            return temp;
         }
 
         #endregion
@@ -542,19 +556,18 @@ namespace CR2W.IO
         /// <returns>CDatetime value</returns>
         public CDateTime ReadCDateTime()
         {
-            var date = ReadUInt32();
-            var year = date >> 20;
-            var month = date >> 15 & 0x1F;
-            var day = date >> 10 & 0x1F;
+            var date        = ReadInt32();
+            var time        = ReadInt32();
 
-            var time = ReadUInt32();
-            var hour = time >> 22;
-            var minute = time >> 16 & 0x3F;
-            var second = time >> 10 & 0x3F;
+            var year        = date >> 20;
+            var month       = date >> 15 & 0x1F;
+            var day         = date >> 10 & 0x1F;
+            var hour        = time >> 22;
+            var minute      = time >> 16 & 0x3F;
+            var second      = time >> 10 & 0x3F;
             var millisecond = time & 0b11_11111111;
-            return new CDateTime( new DateTime(
-                (int)year, (int)month, (int)day + 1,
-                (int)hour, (int)minute, (int)second, (int)millisecond));
+
+            return new CDateTime(new DateTime(year, month, day, hour, minute, second, millisecond));
         }
 
         /// <summary>
@@ -563,7 +576,7 @@ namespace CR2W.IO
         /// </summary>
         /// <param name="enumType"></param>
         /// <returns></returns>
-        public object ReadEnumarator( Type enumType )
+        public object ReadEnumerator( Type enumType )
         {
             if (enumType.IsDefined(typeof(FlagsAttribute), false))
             {

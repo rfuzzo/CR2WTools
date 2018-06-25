@@ -6,10 +6,10 @@ namespace CR2W.Types.W3
 {
 	public class SHudDescription
 	{
-		[W3Type("hudName")]
+		[REDProp("hudName")]
 		public CName HudName { get; set; }
 
-		[W3Type("hudResource")]
+		[REDProp("hudResource")]
 		public Soft<CHudResource> HudResource { get; set; }
 
 	}

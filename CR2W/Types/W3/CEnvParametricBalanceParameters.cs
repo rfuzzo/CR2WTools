@@ -6,10 +6,10 @@ namespace CR2W.Types.W3
 {
 	public class CEnvParametricBalanceParameters
 	{
-		[W3Type("saturation")]
+		[REDProp("saturation")]
 		public SSimpleCurve Saturation { get; set; }
 
-		[W3Type("color")]
+		[REDProp("color")]
 		public SSimpleCurve Color { get; set; }
 
 	}

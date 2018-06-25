@@ -5,19 +5,19 @@ namespace CR2W.Types.W3
 {
     public class CWizardQuestionNode : CWizardBaseNode
     {
-        [W3Type("uniqueName")]
+        [REDProp("uniqueName")]
         CName UniqueName { get; set; }
 
-        [W3Type("layoutTemplate")]
+        [REDProp("layoutTemplate")]
         string LayoutTemplate { get; set; }
 
-        [W3Type("text")]
+        [REDProp("text")]
         string Text { get; set; }
 
-        [W3Type("optional")]
+        [REDProp("optional")]
         bool Optional { get; set; }
 
-        [W3Type("endNode")]
+        [REDProp("endNode")]
         bool EndNode { get; set; }
     }
 }

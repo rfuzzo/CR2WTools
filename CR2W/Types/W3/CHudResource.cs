@@ -6,13 +6,13 @@ namespace CR2W.Types.W3
 {
 	public class CHudResource : CResource, IGuiResource
 	{
-		[W3Type("resourceBlocks")]
+		[REDProp("resourceBlocks")]
 		public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }
 
-		[W3Type("hudClass")]
+		[REDProp("hudClass")]
 		public CName HudClass { get; set; }
 
-		[W3Type("hudFlashSwf")]
+		[REDProp("hudFlashSwf")]
 		public Soft<CSwfResource> HudFlashSwf { get; set; }
 
 	}

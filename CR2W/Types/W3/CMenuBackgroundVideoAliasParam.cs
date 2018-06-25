@@ -6,7 +6,7 @@ namespace CR2W.Types.W3
 {
 	public class CMenuBackgroundVideoAliasParam : CObject, IMenuBackgroundVideoParam
 	{
-		[W3Type("videoAlias")]
+		[REDProp("videoAlias")]
 		public CName VideoAlias { get; set; }
 
 	}

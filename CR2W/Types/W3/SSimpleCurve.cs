@@ -6,20 +6,19 @@ namespace CR2W.Types.W3
 {
 	public class SSimpleCurve
 	{
-		[W3Type("CurveType")]
+		[REDProp("CurveType")]
 		public ESimpleCurveType CurveType { get; set; }
 
-		[W3Type("ScalarEditScale")]
+		[REDProp("ScalarEditScale")]
 		public float ScalarEditScale { get; set; }
 
-		[W3Type("ScalarEditOrigin")]
+		[REDProp("ScalarEditOrigin")]
 		public float ScalarEditOrigin { get; set; }
 
-		[W3Type("dataCurveValues")]
-        [W3ArrayFlags(142, 0)]
+		[REDProp("dataCurveValues", 142, 0)]
 		public Array<SCurveDataEntry> DataCurveValues { get; set; }
 
-		[W3Type("dataBaseType")]
+		[REDProp("dataBaseType")]
 		public ECurveBaseType DataBaseType { get; set; }
 
 	}

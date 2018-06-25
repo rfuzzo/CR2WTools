@@ -6,77 +6,77 @@ namespace CR2W.Types.W3
 {
 	public class CAreaEnvironmentParams
 	{
-		[W3Type("m_finalColorBalance")]
-		public CEnvFinalColorBalanceParameters M_finalColorBalance { get; set; }
+		[REDProp("m_finalColorBalance")]
+		public CEnvFinalColorBalanceParameters FinalColorBalance { get; set; }
 
-		[W3Type("m_sharpen")]
-		public CEnvSharpenParameters M_sharpen { get; set; }
+		[REDProp("m_sharpen")]
+		public CEnvSharpenParameters Sharpen { get; set; }
 
-		[W3Type("m_paintEffect")]
-		public CEnvPaintEffectParameters M_paintEffect { get; set; }
+		[REDProp("m_paintEffect")]
+		public CEnvPaintEffectParameters PaintEffect { get; set; }
 
-		[W3Type("m_ssaoNV")]
-		public CEnvNVSSAOParameters M_ssaoNV { get; set; }
+		[REDProp("m_ssaoNV")]
+		public CEnvNVSSAOParameters SSAONV { get; set; }
 
-		[W3Type("m_ssaoMS")]
-		public CEnvMSSSAOParameters M_ssaoMS { get; set; }
+		[REDProp("m_ssaoMS")]
+		public CEnvMSSSAOParameters SSAOMS { get; set; }
 
-		[W3Type("m_globalLight")]
-		public CEnvGlobalLightParameters M_globalLight { get; set; }
+		[REDProp("m_globalLight")]
+		public CEnvGlobalLightParameters GlobalLight { get; set; }
 
-		[W3Type("m_interiorFallback")]
-		public CEnvInteriorFallbackParameters M_interiorFallback { get; set; }
+		[REDProp("m_interiorFallback")]
+		public CEnvInteriorFallbackParameters InteriorFallback { get; set; }
 
-		[W3Type("m_speedTree")]
-		public CEnvSpeedTreeParameters M_speedTree { get; set; }
+		[REDProp("m_speedTree")]
+		public CEnvSpeedTreeParameters SpeedTree { get; set; }
 
-		[W3Type("m_toneMapping")]
-		public CEnvToneMappingParameters M_toneMapping { get; set; }
+		[REDProp("m_toneMapping")]
+		public CEnvToneMappingParameters ToneMapping { get; set; }
 
-		[W3Type("m_bloomNew")]
-		public CEnvBloomNewParameters M_bloomNew { get; set; }
+		[REDProp("m_bloomNew")]
+		public CEnvBloomNewParameters BloomNew { get; set; }
 
-		[W3Type("m_globalFog")]
-		public CEnvGlobalFogParameters M_globalFog { get; set; }
+		[REDProp("m_globalFog")]
+		public CEnvGlobalFogParameters GlobalFog { get; set; }
 
-		[W3Type("m_sky")]
-		public CEnvGlobalSkyParameters M_sky { get; set; }
+		[REDProp("m_sky")]
+		public CEnvGlobalSkyParameters Sky { get; set; }
 
-		[W3Type("m_depthOfField")]
-		public CEnvDepthOfFieldParameters M_depthOfField { get; set; }
+		[REDProp("m_depthOfField")]
+		public CEnvDepthOfFieldParameters DepthOfField { get; set; }
 
-		[W3Type("m_colorModTransparency")]
-		public CEnvColorModTransparencyParameters M_colorModTransparency { get; set; }
+		[REDProp("m_colorModTransparency")]
+		public CEnvColorModTransparencyParameters ColorModTransparency { get; set; }
 
-		[W3Type("m_shadows")]
-		public CEnvShadowsParameters M_shadows { get; set; }
+		[REDProp("m_shadows")]
+		public CEnvShadowsParameters Shadows { get; set; }
 
-		[W3Type("m_water")]
-		public CEnvWaterParameters M_water { get; set; }
+		[REDProp("m_water")]
+		public CEnvWaterParameters Water { get; set; }
 
-		[W3Type("m_colorGroups")]
-		public CEnvColorGroupsParameters M_colorGroups { get; set; }
+		[REDProp("m_colorGroups")]
+		public CEnvColorGroupsParameters ColorGroups { get; set; }
 
-		[W3Type("m_flareColorGroups")]
-		public CEnvFlareColorGroupsParameters M_flareColorGroups { get; set; }
+		[REDProp("m_flareColorGroups")]
+		public CEnvFlareColorGroupsParameters FlareColorGroups { get; set; }
 
-		[W3Type("m_sunAndMoonParams")]
-		public CEnvSunAndMoonParameters M_sunAndMoonParams { get; set; }
+		[REDProp("m_sunAndMoonParams")]
+		public CEnvSunAndMoonParameters SunAndMoonParams { get; set; }
 
-		[W3Type("m_windParams")]
-		public CEnvWindParameters M_windParams { get; set; }
+		[REDProp("m_windParams")]
+		public CEnvWindParameters WindParams { get; set; }
 
-		[W3Type("m_gameplayEffects")]
-		public CEnvGameplayEffectsParameters M_gameplayEffects { get; set; }
+		[REDProp("m_gameplayEffects")]
+		public CEnvGameplayEffectsParameters GameplayEffects { get; set; }
 
-		[W3Type("m_motionBlur")]
-		public CEnvMotionBlurParameters M_motionBlur { get; set; }
+		[REDProp("m_motionBlur")]
+		public CEnvMotionBlurParameters MotionBlur { get; set; }
 
-		[W3Type("m_cameraLightsSetup")]
-		public CEnvCameraLightsSetupParameters M_cameraLightsSetup { get; set; }
+		[REDProp("m_cameraLightsSetup")]
+		public CEnvCameraLightsSetupParameters CameraLightsSetup { get; set; }
 
-		[W3Type("m_dialogLightParams")]
-		public CEnvDialogLightParameters M_dialogLightParams { get; set; }
+		[REDProp("m_dialogLightParams")]
+		public CEnvDialogLightParameters DialogLightParams { get; set; }
 
 	}
 }

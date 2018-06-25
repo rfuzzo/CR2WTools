@@ -5,16 +5,16 @@ namespace CR2W.Types.W3
 {
     public class SSwfFontDesc
     {
-        [W3Type("fontName")]
+        [REDProp("fontName")]
         public string FontName { get; set; }
 
-        [W3Type("numGlyphs")]
+        [REDProp("numGlyphs")]
         public uint NumGlyphs { get; set; }
 
-        [W3Type("italic")]
+        [REDProp("italic")]
         public bool Italic { get; set; }
 
-        [W3Type("bold")]
+        [REDProp("bold")]
         public bool Bold { get; set; }
     }
 }

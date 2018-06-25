@@ -6,25 +6,25 @@ namespace CR2W.Types.W3
 {
 	public class CEnvSharpenParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("sharpenNear")]
+		[REDProp("sharpenNear")]
 		public SSimpleCurve SharpenNear { get; set; }
 
-		[W3Type("sharpenFar")]
+		[REDProp("sharpenFar")]
 		public SSimpleCurve SharpenFar { get; set; }
 
-		[W3Type("distanceNear")]
+		[REDProp("distanceNear")]
 		public SSimpleCurve DistanceNear { get; set; }
 
-		[W3Type("distanceFar")]
+		[REDProp("distanceFar")]
 		public SSimpleCurve DistanceFar { get; set; }
 
-		[W3Type("lumFilterOffset")]
+		[REDProp("lumFilterOffset")]
 		public SSimpleCurve LumFilterOffset { get; set; }
 
-		[W3Type("lumFilterRange")]
+		[REDProp("lumFilterRange")]
 		public SSimpleCurve LumFilterRange { get; set; }
 
 	}

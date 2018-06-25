@@ -6,13 +6,13 @@ namespace CR2W.Types.W3
 {
 	public class CEnvDistanceRangeParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("distance")]
+		[REDProp("distance")]
 		public SSimpleCurve Distance { get; set; }
 
-		[W3Type("range")]
+		[REDProp("range")]
 		public SSimpleCurve Range { get; set; }
 
 	}

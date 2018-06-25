@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -102,12 +103,37 @@ namespace CR2W.Types
             return false;
         }
 
-        public int CompareTo(object obj)
+        /// <summary>
+        /// Compares this instance to a specified object and returns an indication of their 
+        /// relative values.
+        /// </summary>
+        /// <param name="value">An object to compare, or null.</param>
+        /// <returns>
+        /// A signed number indicating the relative values of this instance and value.Return
+        /// value Description A negative integer This instance is less than value. Zero This
+        /// instance is equal to value. A positive integer This instance is greater than
+        /// value, or value is null.
+        /// </returns>
+        /// <exception cref="ArgumentException">value is not a CR2W.Types.CGUID.</exception>
+        public int CompareTo(object value)
         {
-            throw new NotImplementedException();
+            if(value is CGUID g)
+            {
+                return CompareTo(g);
+            }
+            throw new ArgumentException("Object must be of type CGUID.");
         }
 
-        public int CompareTo(CGUID other)
+        /// <summary>
+        /// Compares this instance to a specified System.Guid object and returns an indication
+        /// of their relative values.
+        /// </summary>
+        /// <param name="value">A signed number indicating the relative values of this instance and value.Return
+        /// value Description A negative integer This instance is less than value. Zero This
+        /// instance is equal to value. A positive integer This instance is greater than
+        /// value.</param>
+        /// <returns>An object to compare to this instance.</returns>
+        public int CompareTo(CGUID value)
         {
             throw new NotImplementedException();
         }
@@ -162,6 +188,7 @@ namespace CR2W.Types
         /// The value of this CR2W.Types.CGUID, represented as a series of lowercase hexadecimal
         /// digits in the specified format.
         /// </returns>
+        /// <exception cref="FormatException">The value of format is not null, an empty string (""), "N", "D", "B", "P", or "X".</exception>
         public string ToString(string format)
         {
             switch(format)
@@ -188,9 +215,31 @@ namespace CR2W.Types
             }
         }
 
-        public string ToString(string format, IFormatProvider formatProvider)
+        /// <summary>
+        /// Returns a string representation of the value of this instance of the System.Guid
+        /// class, according to the provided format specifier and culture-specific format
+        /// information.
+        /// </summary>
+        /// <param name="format">A single format specifier that indicates how to format the value of this System.Guid.
+        /// The format parameter can be "N", "D", "B", "P", or "X". If format is null or
+        /// an empty string (""), "D" is used.</param>
+        /// <param name="provider">(Reserved) An object that supplies culture-specific formatting information.</param>
+        /// <returns>
+        /// The value of this System.Guid, represented as a series of lowercase hexadecimal
+        /// digits in the specified format.
+        /// </returns>
+        /// <exception cref="FormatException">The value of format is not null, an empty string (""), "N", "D", "B", "P", or "X".</exception>
+        public string ToString(string format, IFormatProvider provider)
         {
-            throw new NotImplementedException();
+            if (provider == null)
+            {
+                provider = CultureInfo.CurrentCulture;
+            }
+            if (String.IsNullOrEmpty(format))
+            {
+                format = "D";
+            }
+            return String.Format(provider, ToString(format));
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ namespace CR2W.Types.W3
 {
 	public class CMenuBackgroundVideoFileParam : IMenuBackgroundVideoParam
 	{
-		[W3Type("videoFile")]
+		[REDProp("videoFile")]
 		public string VideoFile { get; set; }
 
 	}

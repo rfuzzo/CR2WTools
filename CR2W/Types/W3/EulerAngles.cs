@@ -6,13 +6,13 @@ namespace CR2W.Types.W3
 {
 	public class EulerAngles
 	{
-		[W3Type("Pitch")]
+		[REDProp("Pitch")]
 		public float Pitch { get; set; }
 
-		[W3Type("Yaw")]
+		[REDProp("Yaw")]
 		public float Yaw { get; set; }
 
-		[W3Type("Roll")]
+		[REDProp("Roll")]
 		public float Roll { get; set; }
 
 	}

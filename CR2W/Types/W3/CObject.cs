@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using CR2W.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using CR2W.Attributes;
-using CR2W.Exceptions;
 using System.Reflection;
 using System.Text;
 using System.Diagnostics;
@@ -20,14 +20,9 @@ namespace CR2W.Types.W3
         public uint Template { get; set; }
         public uint Flags { get; set; }
 
-        //Here will reside all the of the childern that this CObject instance is dependent on 
-        //This will be where all of the CObjects that any ptr or object handle refer to.
-        //atm its just a dictionary with a guid as the key.
-        public Dictionary<Guid, CObject> Children  { get; set; }
-
         public CObject()
         {
-            Children = new Dictionary<Guid, CObject>();
+            
         }
 
         /// <summary>
@@ -102,7 +97,13 @@ namespace CR2W.Types.W3
                 }
                 var typeId = br.ReadInt16();
                 var size = br.ReadUInt32() - 4;
-                var prop = GetPropertybyW3Name(br.names[nameId], instance.GetType());
+                var prop = instance.GetType().GetREDProperty(br.names[nameId], br.names[typeId]);
+                if(prop == null)
+                {
+                    Console.WriteLine("ERROR - Property {0} : {1} not found, skipping!", br.names[nameId], br.names[typeId]);
+                    br.BaseStream.Seek(size, SeekOrigin.Current);
+                    continue;
+                }
                 var value = ParseProperty(br, prop.PropertyType);
                 prop.SetValue(instance, value);
             }
@@ -137,7 +138,7 @@ namespace CR2W.Types.W3
             //Parse Enumarators
             if (proptype.IsEnum)
             {
-                return br.ReadEnumarator(proptype);
+                return br.ReadEnumerator(proptype);
             }
 
             //Parse Generic Types (Array, Soft, Ptr, Handle)
@@ -153,19 +154,28 @@ namespace CR2W.Types.W3
                         var value = ParseProperty(br, genprop);
                         proptype.GetMethod("Add").Invoke(instance, new[] { value });
                     }
-                    return instance;
                 }
                 else if(proptype.GetGenericTypeDefinition() == typeof(Soft<>))
                 {
                     var id = br.ReadUInt16() - 1;
                     if(br.resources[id].type != genprop.Name)
                     {
-                        throw new InvalidOperationException($"Soft type mistatch. Expected Type: {genprop.Name}. Type Read: {br.resources[id].type}.");
+                        throw new InvalidOperationException($"Soft type mismatch. Expected Type: {genprop.Name}. Type Read: {br.resources[id].type}.");
                     }
                     proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id].path);
                     proptype.GetProperty("Flags").SetValue(instance, br.resources[id].flags);
-                    return instance;
                 }
+                else if (proptype.GetGenericTypeDefinition() == typeof(Ptr<>))
+                {
+                    var id = br.ReadUInt16() - 1;
+                    CObject ptr = null; 
+                    if(id > 0)
+                    {
+                        ptr = br.objects[id];
+                    }
+                    proptype.GetProperty("Instance").SetValue(instance, ptr);
+                }
+                return instance;
             }
 
             //Parse classes
@@ -179,32 +189,6 @@ namespace CR2W.Types.W3
             //Any Unknown Type
             //Should be impossible to reach if all types get covered above.
             return null;
-        }
-
-        public static PropertyInfo GetPropertybyW3Name( string name, Type parent )
-        {
-            var props = parent.GetProperties().Where(prop =>
-            {
-                if(prop.IsDefined(typeof(W3TypeAttribute)))
-                {
-                    var attribute = (W3TypeAttribute)prop.GetCustomAttribute(typeof(W3TypeAttribute));
-                    return attribute.Name == name;
-                }
-                else
-                {
-                    return false;
-                }
-            });
-            if(props.Any())
-            {
-                return props.First();
-            }
-            return null;
-        }
-
-        public override string ToString()
-        {
-            return String.Format("[{0}] Template: {1} Flags: {2} Children: {3}", GetType().Name, Template, Flags, Children.Count);
         }
     }
 }

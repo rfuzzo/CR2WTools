@@ -6,43 +6,43 @@ namespace CR2W.Types.W3
 {
 	public class CEnvBloomNewParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("brightPassWeights")]
+		[REDProp("brightPassWeights")]
 		public SSimpleCurve BrightPassWeights { get; set; }
 
-		[W3Type("color")]
+		[REDProp("color")]
 		public SSimpleCurve Color { get; set; }
 
-		[W3Type("dirtColor")]
+		[REDProp("dirtColor")]
 		public SSimpleCurve DirtColor { get; set; }
 
-		[W3Type("threshold")]
+		[REDProp("threshold")]
 		public SSimpleCurve Threshold { get; set; }
 
-		[W3Type("thresholdRange")]
+		[REDProp("thresholdRange")]
 		public SSimpleCurve ThresholdRange { get; set; }
 
-		[W3Type("brightnessMax")]
+		[REDProp("brightnessMax")]
 		public SSimpleCurve BrightnessMax { get; set; }
 
-		[W3Type("shaftsColor")]
+		[REDProp("shaftsColor")]
 		public SSimpleCurve ShaftsColor { get; set; }
 
-		[W3Type("shaftsRadius")]
+		[REDProp("shaftsRadius")]
 		public SSimpleCurve ShaftsRadius { get; set; }
 
-		[W3Type("shaftsShapeExp")]
+		[REDProp("shaftsShapeExp")]
 		public SSimpleCurve ShaftsShapeExp { get; set; }
 
-		[W3Type("shaftsShapeInvSquare")]
+		[REDProp("shaftsShapeInvSquare")]
 		public SSimpleCurve ShaftsShapeInvSquare { get; set; }
 
-		[W3Type("shaftsThreshold")]
+		[REDProp("shaftsThreshold")]
 		public SSimpleCurve ShaftsThreshold { get; set; }
 
-		[W3Type("shaftsThresholdRange")]
+		[REDProp("shaftsThresholdRange")]
 		public SSimpleCurve ShaftsThresholdRange { get; set; }
 
 	}

@@ -6,31 +6,31 @@ namespace CR2W.Types.W3
 {
 	public class CEnvReflectionProbesGenParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("colorAmbient")]
+		[REDProp("colorAmbient")]
 		public SSimpleCurve ColorAmbient { get; set; }
 
-		[W3Type("colorSceneMul")]
+		[REDProp("colorSceneMul")]
 		public SSimpleCurve ColorSceneMul { get; set; }
 
-		[W3Type("colorSceneAdd")]
+		[REDProp("colorSceneAdd")]
 		public SSimpleCurve ColorSceneAdd { get; set; }
 
-		[W3Type("colorSkyMul")]
+		[REDProp("colorSkyMul")]
 		public SSimpleCurve ColorSkyMul { get; set; }
 
-		[W3Type("colorSkyAdd")]
+		[REDProp("colorSkyAdd")]
 		public SSimpleCurve ColorSkyAdd { get; set; }
 
-		[W3Type("remapOffset")]
+		[REDProp("remapOffset")]
 		public SSimpleCurve RemapOffset { get; set; }
 
-		[W3Type("remapStrength")]
+		[REDProp("remapStrength")]
 		public SSimpleCurve RemapStrength { get; set; }
 
-		[W3Type("remapClamp")]
+		[REDProp("remapClamp")]
 		public SSimpleCurve RemapClamp { get; set; }
 
 	}

@@ -6,10 +6,10 @@ namespace CR2W.Types.W3
 {
 	public class SPopupDescription
 	{
-		[W3Type("popupName")]
+		[REDProp("popupName")]
 		public CName PopupName { get; set; }
 
-		[W3Type("popupResource")]
+		[REDProp("popupResource")]
 		public Soft<CPopupResource> PopupResource { get; set; }
 
 	}

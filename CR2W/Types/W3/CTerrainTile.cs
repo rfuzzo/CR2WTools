@@ -6,16 +6,16 @@ namespace CR2W.Types.W3
 {
     class CTerrainTile : CResource
     {
-        [W3Type("tileFileVersion")]
+        [REDProp("tileFileVersion")]
         UInt32 TileFileVersion { get; set; }
 
-        [W3Type("collisionType")]
+        [REDProp("collisionType")]
         ETerrainTileCollision CollisionType { get; set; }
 
-        [W3Type("maxHeightValue")]
+        [REDProp("maxHeightValue")]
         UInt16 MaxHeightValue { get; set; }
 
-        [W3Type("minHeightValue")]
+        [REDProp("minHeightValue")]
         UInt16 MinHeightValue { get; set; }
 
         public override void ParseBytes(CR2WBinaryReader br, uint size)

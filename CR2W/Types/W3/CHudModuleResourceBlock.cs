@@ -6,10 +6,10 @@ namespace CR2W.Types.W3
 {
 	public class CHudModuleResourceBlock : CGraphBlock, IGuiResourceBlock
     {
-		[W3Type("moduleName")]
+		[REDProp("moduleName")]
 		public string ModuleName { get; set; }
 
-		[W3Type("moduleClass")]
+		[REDProp("moduleClass")]
 		public CName ModuleClass { get; set; }
 
 	}

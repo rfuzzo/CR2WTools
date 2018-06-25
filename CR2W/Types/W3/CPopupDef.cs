@@ -6,7 +6,7 @@ namespace CR2W.Types.W3
 {
 	public class CPopupDef : CObject
 	{
-		[W3Type("timeParam")]
+		[REDProp("timeParam")]
 		public Ptr<IPopupTimeParam> TimeParam { get; set; }
 
 	}

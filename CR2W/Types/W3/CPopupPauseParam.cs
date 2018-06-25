@@ -6,7 +6,7 @@ namespace CR2W.Types.W3
 {
 	public class CPopupPauseParam : CObject, IPopupTimeParam
 	{
-		[W3Type("pauseType")]
+		[REDProp("pauseType")]
 		public EPopupPauseType PauseType { get; set; }
 
 	}

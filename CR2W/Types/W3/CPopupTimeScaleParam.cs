@@ -6,10 +6,10 @@ namespace CR2W.Types.W3
 {
 	public class CPopupTimeScaleParam : CObject, IPopupTimeParam
 	{
-		[W3Type("timeScale")]
+		[REDProp("timeScale")]
 		public float TimeScale { get; set; }
 
-		[W3Type("multiplicative")]
+		[REDProp("multiplicative")]
 		public bool Multiplicative { get; set; }
 
 	}

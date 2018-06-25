@@ -5,6 +5,14 @@ using CR2W;
 using CR2W.Types.W3;
 using CR2W.Testing;
 using CR2W.Types;
+using System.IO;
+using System.Collections.Generic;
+using CR2W.Attributes;
+using System.Reflection;
+using System.Xml.Linq;
+using System.Threading;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CR2WConsole
 {
@@ -13,13 +21,26 @@ namespace CR2WConsole
         [STAThread]
         static void Main(string[] args)
         {
-            Console.Title = "CR2W Reader";
+            SelectFile();
+        }
+
+        static void SelectFile()
+        {
             using (var of = new OpenFileDialog())
             {
                 if (of.ShowDialog() == DialogResult.OK)
                 {
                     OpenFile(of.FileName);
+                    //TestFile(of.FileName);
                 }
+            }
+        }
+
+        static void TestFile(string path)
+        {
+            using (var br = new CR2WTestReader(path, Console.Out))
+            {
+                br.ReadAll();
             }
         }
 
@@ -32,7 +53,7 @@ namespace CR2WConsole
             sw.Start();
             try
             {
-                res = CR2WController.LoadResource(file);
+                res = CResourceManager.LoadResource(file);
             }
             catch (Exception e)
             {
@@ -42,12 +63,11 @@ namespace CR2WConsole
             }
             sw.Stop();
 
-            Console.WriteLine("Done, time taken: {0}", sw.ElapsedMilliseconds);
+            Console.WriteLine("Done, time taken: {0} milliseconds", sw.ElapsedMilliseconds);
             Console.WriteLine();
             Console.WriteLine("File:        {0}", file);
             Console.WriteLine("Type:        {0}", res.GetType().Name);
             Console.WriteLine("Flags:       {0}", res.Flags);
-            Console.WriteLine("Children:    {0}", res.Children.Count);
             Console.WriteLine("Template:    {0}", res.Template);
             Console.WriteLine();
             Console.WriteLine("Test Values:");
@@ -77,10 +97,10 @@ namespace CR2WConsole
             }
             else if(res is CEnvironmentDefinition env)
             {
-                Console.WriteLine("\t{0}", env.EnvParams.M_finalColorBalance.BalanceMap0.DepotPath);
-                Console.WriteLine("\t{0}", env.EnvParams.M_finalColorBalance.BalanceMap1.DepotPath);
-                Console.WriteLine("\t{0}", env.EnvParams.M_speedTree.BillboardsColor.CurveType);
-                Console.WriteLine("\t{0}", env.EnvParams.M_ssaoMS.HierarchyDepth.DataBaseType);
+                Console.WriteLine("\t{0}", env.EnvParams.FinalColorBalance.BalanceMap0.DepotPath);
+                Console.WriteLine("\t{0}", env.EnvParams.FinalColorBalance.BalanceMap1.DepotPath);
+                Console.WriteLine("\t{0}", env.EnvParams.SpeedTree.BillboardsColor.CurveType);
+                Console.WriteLine("\t{0}", env.EnvParams.SSAOMS.HierarchyDepth.DataBaseType);
             }
             else if(res is C2dArray arr)
             {
@@ -100,10 +120,20 @@ namespace CR2WConsole
             }
             else if(res is CBitmapTexture xbm)
             {
-                Console.WriteLine("\t{0}", xbm.Height);
                 Console.WriteLine("\t{0}", xbm.Width);
+                Console.WriteLine("\t{0}", xbm.Height);
                 Console.WriteLine("\t{0}", xbm.Format);
                 Console.WriteLine("\t{0}", xbm.Compression);
+                Console.WriteLine("\t{0}", xbm.TextureGroup);
+                Console.WriteLine("\t{0}", xbm.PCDownscaleBias);
+                Console.WriteLine("\t{0}", xbm.XBoneDownscaleBias);
+                Console.WriteLine("\t{0}", xbm.PS4DownscaleBias);
+                Console.WriteLine("\t{0}", xbm.TextureCacheKey);
+                Console.WriteLine("\t{0}", xbm.ResidentMipIndex);
+            }
+            else if(res is CRagdoll rag)
+            {
+                Console.WriteLine(XElement.Parse(rag.Data.OuterXml).ToString());
             }
             Console.WriteLine();
         }

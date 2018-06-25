@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CR2W.Exceptions
+namespace CR2W.IO
 {
-    public class MismatchCRC32Exception : Exception
+    class UnknownObjectTypeException : Exception
     {
-        public MismatchCRC32Exception(string message) : base(message)
+        public UnknownObjectTypeException(string message) : base(message)
         {
 
         }

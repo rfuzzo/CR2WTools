@@ -6,22 +6,22 @@ namespace CR2W.Types.W3
 {
 	public class CEnvToneMappingCurveParameters
 	{
-		[W3Type("shoulderStrength")]
+		[REDProp("shoulderStrength")]
 		public SSimpleCurve ShoulderStrength { get; set; }
 
-		[W3Type("linearStrength")]
+		[REDProp("linearStrength")]
 		public SSimpleCurve LinearStrength { get; set; }
 
-		[W3Type("linearAngle")]
+		[REDProp("linearAngle")]
 		public SSimpleCurve LinearAngle { get; set; }
 
-		[W3Type("toeStrength")]
+		[REDProp("toeStrength")]
 		public SSimpleCurve ToeStrength { get; set; }
 
-		[W3Type("toeNumerator")]
+		[REDProp("toeNumerator")]
 		public SSimpleCurve ToeNumerator { get; set; }
 
-		[W3Type("toeDenominator")]
+		[REDProp("toeDenominator")]
 		public SSimpleCurve ToeDenominator { get; set; }
 
 	}

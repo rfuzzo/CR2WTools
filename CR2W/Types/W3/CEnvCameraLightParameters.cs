@@ -6,25 +6,25 @@ namespace CR2W.Types.W3
 {
 	public class CEnvCameraLightParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("color")]
+		[REDProp("color")]
 		public SSimpleCurve Color { get; set; }
 
-		[W3Type("attenuation")]
+		[REDProp("attenuation")]
 		public SSimpleCurve Attenuation { get; set; }
 
-		[W3Type("radius")]
+		[REDProp("radius")]
 		public SSimpleCurve Radius { get; set; }
 
-		[W3Type("offsetFront")]
+		[REDProp("offsetFront")]
 		public SSimpleCurve OffsetFront { get; set; }
 
-		[W3Type("offsetRight")]
+		[REDProp("offsetRight")]
 		public SSimpleCurve OffsetRight { get; set; }
 
-		[W3Type("offsetUp")]
+		[REDProp("offsetUp")]
 		public SSimpleCurve OffsetUp { get; set; }
 
 	}

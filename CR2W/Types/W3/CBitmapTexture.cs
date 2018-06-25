@@ -6,40 +6,39 @@ using CR2W.Attributes;
 
 namespace CR2W.Types.W3
 {
-    [ResourceType("xbm", "Defines an X Bitmap Texture resoure")]
     public class CBitmapTexture : CResource, ITexture
     {
-        [W3Type("width")]
+        [REDProp("width")]
         public uint Width { get; set; }
 
-        [W3Type("height")]
+        [REDProp("height")]
         public uint Height { get; set; }
 
-        [W3Type("format")]
+        [REDProp("format")]
         public ETextureRawFormat Format { get; set; }
 
-        [W3Type("compression")]
+        [REDProp("compression")]
         public ETextureCompression Compression { get; set; }
 
-        [W3Type("sourceData")]
+        [REDProp("sourceData")]
         public Handle<CSourceTexture> SourceData { get; set; }
 
-        [W3Type("textureGroup")]
+        [REDProp("textureGroup")]
         public CName TextureGroup { get; set; }
 
-        [W3Type("pcDownscaleBias")]
+        [REDProp("pcDownscaleBias")]
         public int PCDownscaleBias { get; set; }
 
-        [W3Type("xboneDownscaleBias")]
+        [REDProp("xboneDownscaleBias")]
         public int XBoneDownscaleBias { get; set; }
 
-        [W3Type("ps4DownscaleBias")]
+        [REDProp("ps4DownscaleBias")]
         public int PS4DownscaleBias { get; set; }
 
-        [W3Type("residentMipIndex")]
+        [REDProp("residentMipIndex")]
         public byte ResidentMipIndex { get; set; }
 
-        [W3Type("textureCacheKey")]
+        [REDProp("textureCacheKey")]
         public uint TextureCacheKey { get; set; }
 
         public Bitmap TextureMap { get; set; }

@@ -6,43 +6,43 @@ namespace CR2W.Types.W3
 {
 	public class CEnvToneMappingParameters
 	{
-		[W3Type("activated")]
+		[REDProp("activated")]
 		public bool Activated { get; set; }
 
-		[W3Type("skyLuminanceCustomValue")]
+		[REDProp("skyLuminanceCustomValue")]
 		public SSimpleCurve SkyLuminanceCustomValue { get; set; }
 
-		[W3Type("skyLuminanceCustomAmount")]
+		[REDProp("skyLuminanceCustomAmount")]
 		public SSimpleCurve SkyLuminanceCustomAmount { get; set; }
 
-		[W3Type("luminanceLimitShape")]
+		[REDProp("luminanceLimitShape")]
 		public SSimpleCurve LuminanceLimitShape { get; set; }
 
-		[W3Type("luminanceLimitMin")]
+		[REDProp("luminanceLimitMin")]
 		public SSimpleCurve LuminanceLimitMin { get; set; }
 
-		[W3Type("luminanceLimitMax")]
+		[REDProp("luminanceLimitMax")]
 		public SSimpleCurve LuminanceLimitMax { get; set; }
 
-		[W3Type("rejectThreshold")]
+		[REDProp("rejectThreshold")]
 		public SSimpleCurve RejectThreshold { get; set; }
 
-		[W3Type("rejectSmoothExtent")]
+		[REDProp("rejectSmoothExtent")]
 		public SSimpleCurve RejectSmoothExtent { get; set; }
 
-		[W3Type("newToneMapCurveParameters")]
+		[REDProp("newToneMapCurveParameters")]
 		public CEnvToneMappingCurveParameters NewToneMapCurveParameters { get; set; }
 
-		[W3Type("newToneMapWhitepoint")]
+		[REDProp("newToneMapWhitepoint")]
 		public SSimpleCurve NewToneMapWhitepoint { get; set; }
 
-		[W3Type("newToneMapPostScale")]
+		[REDProp("newToneMapPostScale")]
 		public SSimpleCurve NewToneMapPostScale { get; set; }
 
-		[W3Type("exposureScale")]
+		[REDProp("exposureScale")]
 		public SSimpleCurve ExposureScale { get; set; }
 
-		[W3Type("postScale")]
+		[REDProp("postScale")]
 		public SSimpleCurve PostScale { get; set; }
 
 	}
