@@ -8,5 +8,8 @@ namespace CR2W.Types
 {
     public struct EntityHandle
     {
+        public byte Flag { get; set; }
+        public byte Type { get; set; }
+        public CGUID Value { get; set; }
     }
 }

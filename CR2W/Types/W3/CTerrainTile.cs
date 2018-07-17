@@ -1,22 +1,22 @@
 ﻿using System;
 using CR2W.IO;
-using CR2W.Attributes;
+
 
 namespace CR2W.Types.W3
 {
-    class CTerrainTile : CResource
+    public class CTerrainTile : CResource
     {
         [REDProp("tileFileVersion")]
-        UInt32 TileFileVersion { get; set; }
+        public UInt32 TileFileVersion { get; set; }
 
         [REDProp("collisionType")]
-        ETerrainTileCollision CollisionType { get; set; }
+        public ETerrainTileCollision CollisionType { get; set; }
 
         [REDProp("maxHeightValue")]
-        UInt16 MaxHeightValue { get; set; }
+        public UInt16 MaxHeightValue { get; set; }
 
         [REDProp("minHeightValue")]
-        UInt16 MinHeightValue { get; set; }
+        public UInt16 MinHeightValue { get; set; }
 
         public override void ParseBytes(CR2WBinaryReader br, uint size)
         {

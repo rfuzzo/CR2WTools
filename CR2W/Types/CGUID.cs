@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Numerics;
 
 namespace CR2W.Types
 {
@@ -12,10 +10,9 @@ namespace CR2W.Types
     /// </summary>
     public struct CGUID : IFormattable, IComparable, IComparable<CGUID>, IEquatable<CGUID>
     {
-        private uint A;
-        private uint B;
-        private uint C;
-        private uint D;
+        private static Random random = new Random();
+
+        private BigInteger _value;
 
         /// <summary>
         /// A read-only instance of the CR2W.Types.CGUID structure whose value is all zeros.
@@ -38,19 +35,7 @@ namespace CR2W.Types
             {
                 throw new ArgumentException("Byte array for CGUID must be exactly 16 bytes long.");
             }
-            A = BitConverter.ToUInt32(value, 0);
-            B = BitConverter.ToUInt32(value, 4);
-            C = BitConverter.ToUInt32(value, 8);
-            D = BitConverter.ToUInt32(value, 12);
-        }
-
-        public CGUID( string value )
-        {
-            var values = value.Split(new char[] { '-' });
-            A = Convert.ToUInt32(values[0], 16);
-            B = Convert.ToUInt32(values[1], 16);
-            C = Convert.ToUInt32(values[2], 16);
-            D = Convert.ToUInt32(values[3], 16);
+            this._value = new BigInteger(value);
         }
 
         /// <summary>
@@ -62,7 +47,8 @@ namespace CR2W.Types
         /// <param name="d">The last 4 bytes of the CGUID.</param>
         public CGUID( uint a, uint b, uint c, uint d )
         {
-            A = a; B = b; C = c; D = d;
+            var bytes = new []{ a, b, c, d }.SelectMany(BitConverter.GetBytes).ToArray();
+            _value = new BigInteger(bytes);
         }
 
         /// <summary>
@@ -71,12 +57,9 @@ namespace CR2W.Types
         /// <returns>A new CGUID object.</returns>
         public static CGUID NewCGUID()
         {
-            var rand = new Random();
-            var a = Convert.ToUInt32(rand.Next());
-            var b = Convert.ToUInt32(rand.Next());
-            var c = Convert.ToUInt32(rand.Next());
-            var d = Convert.ToUInt32(rand.Next());
-            return new CGUID(a, b, c, d);
+            byte[] bytes = new byte[16];
+            random.NextBytes(bytes);
+            return new CGUID(bytes);
         }
 
         /// <summary>
@@ -125,7 +108,7 @@ namespace CR2W.Types
         }
 
         /// <summary>
-        /// Compares this instance to a specified System.Guid object and returns an indication
+        /// Compares this instance to a specified CR2W.Types.CGUID object and returns an indication
         /// of their relative values.
         /// </summary>
         /// <param name="value">A signed number indicating the relative values of this instance and value.Return
@@ -135,7 +118,7 @@ namespace CR2W.Types
         /// <returns>An object to compare to this instance.</returns>
         public int CompareTo(CGUID value)
         {
-            throw new NotImplementedException();
+            return this._value.CompareTo(value._value);
         }
 
         /// <summary>
@@ -153,10 +136,9 @@ namespace CR2W.Types
         /// <returns>A 16-element byte array.</returns>
         public byte[] ToByteArray()
         {
-            return BitConverter.GetBytes(A).Concat(
-                BitConverter.GetBytes(B).Concat(
-                BitConverter.GetBytes(C).Concat(
-                BitConverter.GetBytes(D)))).ToArray();
+            var bytes = new byte[16];
+            this._value.ToByteArray().CopyTo(bytes, 0);
+            return bytes;
         }
 
         /// <summary>
@@ -191,6 +173,11 @@ namespace CR2W.Types
         /// <exception cref="FormatException">The value of format is not null, an empty string (""), "N", "D", "B", "P", or "X".</exception>
         public string ToString(string format)
         {
+            var bytes = ToByteArray();
+            var A = BitConverter.ToUInt32(bytes, 0);
+            var B = BitConverter.ToUInt32(bytes, 4);
+            var C = BitConverter.ToUInt32(bytes, 8);
+            var D = BitConverter.ToUInt32(bytes, 12);
             switch(format)
             {
                 case "n":

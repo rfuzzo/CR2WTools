@@ -1,5 +1,5 @@
 ﻿using System;
-using CR2W.Attributes;
+
 using CR2W.IO;
 
 namespace CR2W.Types.W3

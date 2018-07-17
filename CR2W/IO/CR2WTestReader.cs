@@ -4,37 +4,40 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using CR2W.Types;
+using CR2W.CRC32;
+using CR2W.FNV1A;
+using System.Collections;
 
 /*
  *      TEST PARSER
  *      This is just a test parser purley for experimentation
  * 
  *      Not to be used for any 'proper' use.
- *      Proper parser is in CR2W.IO
+ *      Proper parser is CR2WBinaryReader
  */
 
-namespace CR2W.Testing
+namespace CR2W.IO
 {
-    internal struct SHeader
+    internal struct TSHeader
     {
         public uint Offset;
         public uint Size;
         public uint CRC32;
     }
-    internal struct SName
+    internal struct TSName
     {
         public uint Offset;
-        public uint CRC32;
+        public uint Hash;
         public string Value;
     }
-    internal struct SResource
+    internal struct TSResource
     {
         public uint Offset;
         public string Type;
         public ushort Flags;
         public string Path;
     }
-    internal struct SObject
+    internal struct TSObject
     {
         public uint TypeID;
         public uint Flags;
@@ -44,7 +47,7 @@ namespace CR2W.Testing
         public uint Template;
         public uint CRC32;
     }
-    internal struct SBuffer
+    internal struct TSBuffer
     {
         public uint Flags;
         public uint ID;
@@ -53,7 +56,7 @@ namespace CR2W.Testing
         public uint MemSize;
         public uint CRC32;
     }
-    internal struct SEmbedded
+    internal struct TSEmbedded
     {
         public uint  Id;
         public uint  Path;
@@ -62,11 +65,40 @@ namespace CR2W.Testing
         public uint  Length;
     }
 
+    internal class CSectorData
+    {
+        public uint Unknown1;
+        public uint Unknown2;
+        public SSectorDataResource[] resources;
+        public SSectorDataObject[] objects;
+        public byte[] blockdata;
+    }
+    internal struct SSectorDataResource
+    {
+        public float box0;
+        public float box1;
+        public float box2;
+        public float box3;
+        public float box4;
+        public float box5;
+        public ulong patchHash;
+    }
+    internal struct SSectorDataObject
+    {
+        public byte type;
+        public byte flags;
+        public ushort radius;
+        public ulong offset;
+        public float positionX;
+        public float positionY;
+        public float positionZ;
+    }
+
     public sealed class CR2WTestReader : BinaryReader
     {
         public TextWriter Writer { get; set; }
 
-        public string   Path            { get; set; }
+        public string   FilePath            { get; set; }
         public uint     FileVersion     { get; set; }
         public uint     Flags           { get; set; }
         public DateTime TimeStamp       { get; set; }
@@ -76,14 +108,14 @@ namespace CR2W.Testing
         public uint     CRC32           { get; set; }
         public uint     NumChunks       { get; set; }
 
-        SHeader[] headers;
+        TSHeader[] headers;
 
-        Dictionary<uint, string>    strings;
-        List<SName>                 names;
-        List<SResource>             resources;
-        List<SObject>               objects;
-        List<SBuffer>               buffers;
-        List<SEmbedded>             embedded;
+        Dictionary<uint, string>     strings;
+        List<TSName>                 names;
+        List<TSResource>             resources;
+        List<TSObject>               objects;
+        List<TSBuffer>               buffers;
+        List<TSEmbedded>             embedded;
 
         readonly byte[] Magic = { 67, 82, 50, 87 };
 
@@ -91,7 +123,7 @@ namespace CR2W.Testing
             : base(new FileStream(path, FileMode.Open, FileAccess.Read), Encoding.ASCII, false)
         {
             BaseStream.Seek(0, SeekOrigin.Begin);
-            Path = path;
+            FilePath = path;
             Writer = writer;
         }
 
@@ -150,16 +182,17 @@ namespace CR2W.Testing
         }
         void GetHeaders()
         {
-            headers = new SHeader[10];
+            headers = new TSHeader[10];
             for (int i = 0; i < 10; i++)
             {
-                headers[i] = new SHeader()
+                headers[i] = new TSHeader()
                 {
                     Offset  = ReadUInt32(),
                     Size    = ReadUInt32(),
                     CRC32   = ReadUInt32(),
                 };
             }
+
             Writer.WriteLine("\n");
             Writer.WriteLine("\tHeaders");
             Writer.WriteLine("\n");
@@ -217,7 +250,7 @@ namespace CR2W.Testing
         }
         void GetNames()
         {
-            names = new List<SName>();
+            names = new List<TSName>();
 
             var start = headers[1].Offset;
             var size = headers[1].Size;
@@ -227,12 +260,12 @@ namespace CR2W.Testing
             for (int i = 0; i < size; i++)
             {
                 var o = ReadUInt32();
-                var c = ReadUInt32();
+                var h = ReadUInt32();
                 var v = strings[o];
-                names.Add(new SName()
+                names.Add(new TSName()
                 {
                     Offset = o,
-                    CRC32 = c,
+                    Hash = h,
                     Value = v,
                 });
             }
@@ -246,7 +279,7 @@ namespace CR2W.Testing
             Writer.WriteLine("|----------|---------------|---------------------------");
             foreach (var r in names)
             {
-                Writer.WriteLine("|{0}|{1}|{2}", Convert.ToString(r.Offset).PadRight(10), Convert.ToString(r.CRC32).PadRight(15), r.Value);
+                Writer.WriteLine("|{0}|{1}|{2}", Convert.ToString(r.Offset).PadRight(10), Convert.ToString(r.Hash).PadRight(15), r.Value);
             }
         }
         void GetResources()
@@ -257,7 +290,7 @@ namespace CR2W.Testing
             if (size == 0)
                 return;
 
-            resources = new List<SResource>();
+            resources = new List<TSResource>();
             BaseStream.Seek(start, SeekOrigin.Begin);
 
             for (int i = 0; i < size; i++)
@@ -266,7 +299,7 @@ namespace CR2W.Testing
                 var t = ReadUInt16();
                 var f = ReadUInt16();
 
-                resources.Add(new SResource()
+                resources.Add(new TSResource()
                 {
                     Offset = o,
                     Type = names[t].Value,
@@ -292,7 +325,7 @@ namespace CR2W.Testing
             var start = headers[4].Offset;
             var size = headers[4].Size;
 
-            objects = new List<SObject>();
+            objects = new List<TSObject>();
             BaseStream.Seek(start, SeekOrigin.Begin);
 
             Writer.WriteLine("\n");
@@ -303,7 +336,7 @@ namespace CR2W.Testing
 
             for (int i = 0; i < size; i++)
             {
-                objects.Add(new SObject()
+                objects.Add(new TSObject()
                 {
                     TypeID      = ReadUInt16(),
                     Flags       = ReadUInt16(),
@@ -314,8 +347,10 @@ namespace CR2W.Testing
                     CRC32       = ReadUInt32(),
                 });
 
-                Writer.WriteLine("Index     {0}", i);
-                Writer.WriteLine("TypeId    {0} - {1}", objects[i].TypeID, names[Convert.ToInt32(objects[i].TypeID)].Value);
+                var type = names[Convert.ToInt32(objects[i].TypeID)].Value;
+
+                Writer.WriteLine("Index     {0}", i+1);
+                Writer.WriteLine("TypeId    {0} - {1}", objects[i].TypeID, type);
                 Writer.WriteLine("Flags     {0}", objects[i].Flags);
                 Writer.WriteLine("Parent    {0}", objects[i].ParentID);
                 Writer.WriteLine("Size      {0}", objects[i].Size);
@@ -324,17 +359,47 @@ namespace CR2W.Testing
                 Writer.WriteLine("CRC32     {0}", objects[i].CRC32);
 
                 var pos = BaseStream.Position;
-                var end = pos + objects[i].Size;
+                var end = objects[i].Offset + objects[i].Size;
 
                 BaseStream.Seek(Convert.ToInt32(objects[i].Offset), SeekOrigin.Begin);
 
-                Writer.WriteLine("Data");
+                Writer.WriteLine("ObjectData");
                 Writer.WriteLine("{");
-                ReadVariable("\t");
+                switch (names[Convert.ToInt32(objects[i].TypeID)].Value)
+                {
+                    case "CSectorData":
+                        {
+                            var data = ReadCSectorData();
+                            PrintCSectorData(data);
+                        }
+                        break;
+                    default:
+                        {
+                            ReadVariable("\t");
+                        }
+                        break;
+                }
                 Writer.WriteLine("}");
 
                 if (end - BaseStream.Position > 0)
                 {
+                    switch(names[Convert.ToInt32(objects[i].TypeID)].Value)
+                    {
+                        case "CSwfResource":
+                            {
+                                var length = ReadInt32();
+                                var swf = ReadBytes(length);
+                                Writer.WriteLine("SWF Bytes: {0}", swf.Length);
+                            }
+                            break;
+                        case "CRagdoll":
+                            {
+                                var length = ReadInt32();
+                                var xmlstr = Encoding.UTF8.GetString(ReadBytes(length));
+                                Writer.WriteLine(xmlstr);
+                            }
+                            break;
+                    }
                     var unknown = ReadBytes(Convert.ToInt32(end - BaseStream.Position));
                     Writer.WriteLine("Unknown Bytes: {0}", unknown.Length);
                 }
@@ -354,7 +419,7 @@ namespace CR2W.Testing
             if (size == 0)
                 return;
 
-            buffers = new List<SBuffer>();
+            buffers = new List<TSBuffer>();
             BaseStream.Seek(start, SeekOrigin.Begin);
 
             Writer.WriteLine("\n");
@@ -365,7 +430,7 @@ namespace CR2W.Testing
 
             for (int i = 0; i < size; i++)
             {
-                buffers.Add(new SBuffer()
+                buffers.Add(new TSBuffer()
                 {
                     Flags    = ReadUInt32(),
                     ID       = ReadUInt32(),
@@ -396,7 +461,7 @@ namespace CR2W.Testing
             if (size == 0)
                 return;
 
-            embedded = new List<SEmbedded>();
+            embedded = new List<TSEmbedded>();
             BaseStream.Seek(start, SeekOrigin.Begin);
 
             Writer.WriteLine("\n");
@@ -407,7 +472,7 @@ namespace CR2W.Testing
 
             for (int i = 0; i < size; i++)
             {
-                embedded.Add(new SEmbedded()
+                embedded.Add(new TSEmbedded()
                 {
                     Id      = ReadUInt32(),
                     Path    = ReadUInt32(),
@@ -420,12 +485,12 @@ namespace CR2W.Testing
             if (size == 0)
                 return;
 
-            Writer.WriteLine("|Id   |Path                                                        |Hash                     |Offset         |Length");
-            Writer.WriteLine("|-----|------------------------------------------------------------|-------------------------|---------------|---------------");
+            Writer.WriteLine("|Id   |Path                                                                            |Hash                     |Offset         |Length");
+            Writer.WriteLine("|-----|--------------------------------------------------------------------------------|-------------------------|---------------|---------------");
             foreach (var e in embedded)
             {
                 Writer.WriteLine("|{0}|{1}|{2}|{3}|{4}", Convert.ToString(e.Id).PadRight(5),
-                                                  Convert.ToString(strings[e.Path]).PadRight(60),
+                                                  Convert.ToString(strings[e.Path]).PadRight(80),
                                                   Convert.ToString(e.Hash).PadRight(25),
                                                   Convert.ToString(e.Offset).PadRight(15),
                                                   Convert.ToString(e.Length));
@@ -447,15 +512,7 @@ namespace CR2W.Testing
                 var typeId = ReadInt16();
                 var size = ReadInt32() - 4;
                 Writer.Write("{0}{1} {2}", offset, names[nameId].Value, names[typeId].Value);
-
-                if(names[nameId].Value == "flatCompiledData")
-                {
-                    ParseVariale("FlatCompiledData", size, $"\t{offset}");
-                }
-                else
-                {
-                    ParseVariale(names[typeId].Value, size, $"\t{offset}");
-                }
+                ParseVariale(names[typeId].Value, size, $"\t{offset}");
             }
         }
         void ParseVariale(string type, int size, string offset )
@@ -515,21 +572,15 @@ namespace CR2W.Testing
                     return;
                 case "String":
                     {
-                        var end = BaseStream.Position + size;
-
-                        var b = ReadByte();
-                        var nxt = (b & (1 << 6)) != 0;
-                        var utf = (b & (1 << 7)) == 0;
-                        int len = b & ((1 << 6) - 1);
-                        if (nxt)
+                        var length = Read7BitFlaggedInt();
+                        if (length < 0)
                         {
-                            len += 64 * ReadByte();
+                            Writer.WriteLine(" {0}", Encoding.ASCII.GetString(ReadBytes(length * -1)));
                         }
-                        if (utf)
+                        else
                         {
-                            Writer.WriteLine(" {0}", Encoding.Unicode.GetString(ReadBytes(len * 2)));
+                            Writer.WriteLine(" {0}", Encoding.Unicode.GetString(ReadBytes(length * 2)));
                         }
-                        Writer.WriteLine(" {0}", Encoding.ASCII.GetString(ReadBytes(len)));
                     }
                     return;
                 case "StringAnsi":
@@ -570,7 +621,7 @@ namespace CR2W.Testing
                     return;
                 case "ptr":
                     {
-                        Writer.WriteLine(" Chunk {0}", ReadUInt32());
+                        Writer.WriteLine(" Object {0}", ReadUInt32());
                     }
                     return;
                 case "soft":
@@ -613,7 +664,7 @@ namespace CR2W.Testing
                         Writer.WriteLine("{0}{{", offset.Substring(1));
                         ReadVariable(offset);
                         var bytecount = ReadInt32();
-                        ReadBytes(bytecount - 4);
+                        var unknown = ReadBytes(bytecount - 4);
                         Writer.WriteLine("{0}Unknown Bytes: {1}", offset, bytecount - 4);
                         Writer.WriteLine("{0}}}", offset.Substring(1));
                     }
@@ -626,59 +677,38 @@ namespace CR2W.Testing
                     return;
                 case "EngineTransform":
                     {
-                        Writer.Write(" [");
+                        Writer.Write(" [ ");
                         var flags = ReadByte();
                         if ((flags & 1) == 1)
                         {
-                            Writer.Write(" PosX:{0}", ReadSingle());
-                            Writer.Write(", PosY:{0}", ReadSingle());
-                            Writer.Write(", PosZ:{0}", ReadSingle());
+                            Writer.Write("Posistion:{0},{1},{2} ", ReadSingle(), ReadSingle(), ReadSingle());
                         }
                         if ((flags & 2) == 2)
                         {
-                            if ((flags & 1) == 1)
-                            {
-                                Writer.Write(", ");
-                            }
-                            Writer.Write("RotX:{0}", ReadSingle());
-                            Writer.Write(", RotY:{0}", ReadSingle());
-                            Writer.Write(", RotZ:{0}", ReadSingle());
+                            Writer.Write("Rotation:{0},{1},{2} ", ReadSingle(), ReadSingle(), ReadSingle());
                         }
                         if ((flags & 4) == 4)
                         {
-                            if((flags & 4) == 4)
-                            {
-                                Writer.Write(", ");
-                            }
-                            Writer.Write(" ScaleX:{0}", ReadSingle());
-                            Writer.Write(", ScaleY:{0}", ReadSingle());
-                            Writer.Write(", ScaleZ:{0}", ReadSingle());
+                            Writer.Write("Scale:{0},{1},{2} ", ReadSingle(), ReadSingle(), ReadSingle());
                         }
                         Writer.WriteLine("]");
                     }
                     return;
                 case "EngineQsTransform":
                     {
-                        Writer.Write("[");
+                        Writer.Write("[ ");
                         var flags = ReadByte();
                         if ((flags & 1) == 1)
                         {
-                            Writer.Write("PosX:{0}", ReadSingle());
-                            Writer.Write(",PosY:{0}", ReadSingle());
-                            Writer.Write(",PosZ:{0}", ReadSingle());
+                            Writer.Write("Posistion:{0},{1},{2} ", ReadSingle(), ReadSingle(), ReadSingle());
                         }
                         if ((flags & 2) == 2)
                         {
-                            Writer.Write("RotX:{0}", ReadSingle());
-                            Writer.Write(",RotY:{0}", ReadSingle());
-                            Writer.Write(",RotZ:{0}", ReadSingle());
-                            Writer.Write(",RotW:{0}", ReadSingle());
+                            Writer.Write("Posistion:{0},{1},{2},{3} ", ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
                         }
                         if ((flags & 4) == 4)
                         {
-                            Writer.Write("ScaleX:{0}", ReadSingle());
-                            Writer.Write(",ScaleY:{0}", ReadSingle());
-                            Writer.Write(",ScaleZ:{0}", ReadSingle());
+                            Writer.Write("Posistion:{0},{1},{2} ", ReadSingle(), ReadSingle(), ReadSingle());
                         }
                         Writer.WriteLine("]");
                     }
@@ -691,23 +721,40 @@ namespace CR2W.Testing
                         {
                             tags[i] = names[ReadUInt16()].Value;
                         }
-                        Writer.WriteLine("[{0}]", string.Join(",", tags));
+                        Writer.WriteLine(" [{0}]", string.Join(",", tags));
                     }
                     return;
-                case "FlatCompiledData":
+                case "EntityHandle":
                     {
-                        var len = ReadInt32();
-                        Console.WriteLine(" |{0}|", Encoding.UTF8.GetString(ReadBytes(len)));
+                        Writer.WriteLine("[{0},{1},{2}]", ReadByte(), ReadByte(), new CGUID(ReadBytes(16)).ToString());
                     }
                     return;
                 case "static":
-                case "DeferredDataBuffer":
+                    {
+                        var length = ReadUInt32();
+                        arr = arr[1].Split(new char[] { ',' }, 2);
+                        Writer.WriteLine(" {0}", length);
+                        Writer.WriteLine("{0}{{", offset.Substring(1));
+                        for (uint i = 0; i < length; i++)
+                        {
+                            Writer.Write("{0}Id {1}:", offset, i);
+                            ParseVariale(arr[1], size, $"\t{offset}");
+                        }
+                        Writer.WriteLine("{0}}}", offset.Substring(1));
+                    }
+                    return;
                 case "SharedDataBuffer":
-                case "EntityHandle":
+                    {
+                        var datasize = ReadInt32();
+                        var bytes = ReadBytes(datasize);
+                        Writer.WriteLine(" {0} bytes", datasize);
+                    }
+                    return;
+                case "DeferredDataBuffer":
                 case "CClipMapCookedData":
                 case "DataBuffer":
                     {
-                        Writer.WriteLine(" {0} bytes", size);
+                        Writer.WriteLine(" Unknown {0} bytes", size);
                         BaseStream.Seek(size, SeekOrigin.Current);
                     }
                     return;
@@ -741,7 +788,9 @@ namespace CR2W.Testing
                     }
                     else
                     {
-                        Writer.WriteLine(" {0}", names[ReadUInt16()].Value);
+                        var value = names[ReadUInt16()].Value;
+
+                        Writer.WriteLine(" {0}", value);
                     }
                     return;
                 }
@@ -752,6 +801,201 @@ namespace CR2W.Testing
             ReadVariable(offset);
             Writer.WriteLine("{0}}}", offset.Substring(1));
         }
+        #endregion
+
+        #region Supporting Functions
+
+        /* - Format Info
+         * 
+        This is a format where each byte in the value is flagged.
+        The First Byte has 2 flags as the first 2 bits
+        The remaining bytes have only 1 flag as the first bit.
+
+        First byte:
+             01000111
+             ^^^^^^^^
+             |||____|_ 6 bit value
+             ||_______ flag: next byte required
+             |________ flag: signed value
+
+        Next bytes:
+             10000001
+             ^^^^^^^^
+             ||_____|_ 7 bit value
+             |________ flag: next byte required
+
+        --------------------------------------------------------------
+
+        Example1:
+        This example shows a 3 byte length value.
+
+             011001111000110100000001
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+             |      ||      ||______|_____ Third Byte (1 flag)
+             |      ||______|_____________ Second Byte (1 flag)
+             |______|_____________________ First Byte (2 flags)
+
+        The first byte is read. 
+        The two flags (first two bits) indicate if the 
+        final number will be positive or negative and if the a following byte needs to be read.
+
+        First Byte:
+             0      - Positive
+             1      - Next Needed
+             100111 - Value
+
+        A second byte is read as dictated from the last byte.
+        The flag here indicates that another byte needs to be read as well
+
+        Second Byte:
+             1       - Next Needed
+             0001101 - Value
+
+        A third byte is read as dictated from the last byte.
+        The flag here indicates that no more bytes need to be read.
+
+        Thrid Byte:
+             0       - Next Not Needed
+             0000001 - Value
+
+        The final value is a contatination of the values from each byte.
+        The 6 bit value from the first byte and the two 7 bit values from the next two bytes.
+        Each value is added onto the front of the final binary value.
+        The final value is this:
+
+        Value:
+             00000010001101100111 = 9063
+
+        --------------------------------------------------------------
+
+        Example2:
+             0111001000000111
+             ^^^^^^^^^^^^^^^^
+             |      ||______|____ Second Byte (1 flags)
+             |______|____________ First Byte (2 flags)
+
+        First Byte:
+             0      - Positive
+             1      - Next Needed
+             110010 - Value
+
+        Second Byte:
+             0       - Next Not Needed
+             0000111 - Value
+
+        Value:
+             0000111110010 = 498
+
+        */
+        public int Read7BitFlaggedInt()
+        {
+            var b1 = ReadByte();
+            var sign = (b1 & 128) == 128;
+            var next = (b1 & 64) == 64;
+            var size = b1 % 128 % 64;
+            var offset = 6;
+            while (next)
+            {
+                var b = ReadByte();
+                size = (b % 128) << offset | size;
+                next = (b & 128) == 128;
+                offset += 7;
+            }
+            size = sign ? size * -1 : size;
+            return size;
+        }
+
+        #endregion
+
+        #region Specific Parsers
+
+        private CSectorData ReadCSectorData()
+        {
+            var temp = new CSectorData()
+            {
+                Unknown1 = ReadUInt32(),
+                Unknown2 = ReadUInt32(),
+            };
+
+            var numresources = Read7BitFlaggedInt();
+            temp.resources = new SSectorDataResource[numresources];
+            for (int i = 0; i < numresources; i++)
+            {
+                temp.resources[i] = new SSectorDataResource()
+                {
+                    box0 = ReadSingle(),
+                    box1 = ReadSingle(),
+                    box2 = ReadSingle(),
+                    box3 = ReadSingle(),
+                    box4 = ReadSingle(),
+                    box5 = ReadSingle(),
+                    patchHash = ReadUInt64(),
+                };
+            }
+            
+            var numobjects = Read7BitFlaggedInt();
+            temp.objects = new SSectorDataObject[numobjects];
+            for (int i = 0; i < numobjects; i++)
+            {
+                temp.objects[i] = new SSectorDataObject()
+                {
+                    type = ReadByte(),
+                    flags = ReadByte(),
+                    radius = ReadUInt16(),
+                    offset = ReadUInt64(),
+                    positionX = ReadSingle(),
+                    positionY = ReadSingle(),
+                    positionZ = ReadSingle(),
+                };
+            }
+            
+            var datasize = Read7BitFlaggedInt();
+            temp.blockdata = ReadBytes(datasize);
+
+            return temp;
+        }
+
+        private void PrintCSectorData(CSectorData temp)
+        {
+            Writer.WriteLine("\tUnknown1   {0}", temp.Unknown1);
+            Writer.WriteLine("\tUnknown2   {0}", temp.Unknown2);
+            Writer.WriteLine("\tresources  {0}", temp.resources.Length);
+            Writer.WriteLine("\t{");
+            for (int i = 0; i < temp.resources.Length; i++)
+            {
+                Writer.WriteLine("\t\tId {0}:", i);
+                Writer.WriteLine("\t\t{");
+                Writer.WriteLine("\t\t\tBox0:      {0}", temp.resources[i].box0);
+                Writer.WriteLine("\t\t\tBox1:      {0}", temp.resources[i].box1);
+                Writer.WriteLine("\t\t\tBox2:      {0}", temp.resources[i].box2);
+                Writer.WriteLine("\t\t\tBox3:      {0}", temp.resources[i].box3);
+                Writer.WriteLine("\t\t\tBox4:      {0}", temp.resources[i].box4);
+                Writer.WriteLine("\t\t\tBox5:      {0}", temp.resources[i].box5);
+                Writer.WriteLine("\t\t\tPatchHash: {0}", temp.resources[i].patchHash);
+                Writer.WriteLine("\t\t}");
+            }
+            Writer.WriteLine("\t}");
+            Console.ReadKey();
+            Writer.WriteLine("\tobjects {0}", temp.objects.Length);
+            Writer.WriteLine("\t{");
+            for (int i = 0; i < temp.objects.Length; i++)
+            {
+                Console.ReadKey();
+                Writer.WriteLine("\t\tId {0}:", i);
+                Writer.WriteLine("\t\t{");
+                Writer.WriteLine("\t\t\tType:            {0}", temp.objects[i].type);
+                Writer.WriteLine("\t\t\tFlags:           {0}", temp.objects[i].flags);
+                Writer.WriteLine("\t\t\tRadius:          {0}", temp.objects[i].radius);
+                Writer.WriteLine("\t\t\tOffset:          {0}", temp.objects[i].offset);
+                Writer.WriteLine("\t\t\tPositionX:       {0}", temp.objects[i].positionX);
+                Writer.WriteLine("\t\t\tPositionY:       {0}", temp.objects[i].positionY);
+                Writer.WriteLine("\t\t\tPositionZ:       {0}", temp.objects[i].positionZ);
+                Writer.WriteLine("\t\t}");
+            }
+            Writer.WriteLine("\t}");
+            Writer.WriteLine("\tBlock Data: {0}", temp.blockdata.Length);
+        }
+
         #endregion
 
         protected override void Dispose(bool disposing)

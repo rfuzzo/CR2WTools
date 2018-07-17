@@ -15,5 +15,7 @@ namespace CR2W.IO
         public uint size;
         public uint offset;
         public uint template;
+        public uint crc32;
+        public byte[] data;
     }
 }

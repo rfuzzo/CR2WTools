@@ -1,87 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace CR2W.Fnv1a
+namespace CR2W.FNV1A
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
-    using System.Security.Cryptography;
 
-    /// <inheritdoc />
-    /// <summary>
-    /// Implements the FNV-1a 32-bit variant hashing algorithm.
-    /// </summary>
-    // ReSharper disable once InconsistentNaming
     public sealed class Fnv1a32 : HashAlgorithm
     {
-        /// <summary>
-        /// The prime.
-        /// </summary>
-        private const uint FnvPrime = 0x01000193;
+        public uint FnvPrime = unchecked(16777619);
 
-        /// <summary>
-        /// The non-zero offset basis.
-        /// </summary>
-        private const uint FnvOffsetBasis = 0x811C9DC5;
+        public uint FnvOffsetBasis = unchecked(2166136261);
 
-        /// <summary>
-        /// The hash.
-        /// </summary>
-        private uint _hash;
+        private uint hash;
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Fnv1a32"/> class.
-        /// </summary>
         public Fnv1a32()
         {
-            this.Initialize();
-            this.HashSizeValue = 32;
+            this.Reset();
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Initializes an implementation of the <see cref="T:System.Security.Cryptography.HashAlgorithm" /> class.
-        /// </summary>
-        public override void Initialize() => this._hash = FnvOffsetBasis;
+        public override void Initialize()
+        {
+            this.Reset();
+        }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// When overridden in a derived class, routes data written to the object into the hash algorithm for computing
-        /// the hash.
-        /// </summary>
-        /// <param name="array">The input to compute the hash code for.</param>
-        /// <param name="ibStart">The offset into the byte array from which to begin using data.</param>
-        /// <param name="cbSize">The number of bytes in the byte array to use as data.</param>
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1305:FieldNamesMustNotUseHungarianNotation", Justification = "Reviewed. Suppression is OK here.")]
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            if (array == null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            for (int i = ibStart; i < cbSize; i++)
+            for (var i = ibStart; i < cbSize; i++)
             {
                 unchecked
                 {
-                    this._hash ^= array[i];
-                    this._hash *= FnvPrime;
+                    this.hash ^= array[i];
+                    this.hash *= FnvPrime;
                 }
             }
         }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// When overridden in a derived class, finalizes the hash computation after the last data is processed by the
-        /// cryptographic stream object.
-        /// </summary>
-        /// <returns>
-        /// The computed hash code.
-        /// </returns>
-        protected override byte[] HashFinal() => BitConverter.GetBytes(this._hash);
+        public UInt32 ComputeHash(string value)
+        {
+            var hash = base.ComputeHash(Encoding.Default.GetBytes(value));
+            return BitConverter.ToUInt32(hash, 0);
+        }
+
+        protected override byte[] HashFinal()
+        {
+            return BitConverter.GetBytes(this.hash);
+        }
+
+        private void Reset()
+        {
+            this.hash = FnvOffsetBasis;
+        }
     }
 }

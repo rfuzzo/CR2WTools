@@ -22,21 +22,12 @@ namespace CR2W.Types
 
         public CName(string value)
         {
-            if (!IsCName(value))
-            {
-                throw new InvalidOperationException("CName can only contain numbers, digits, spaces, underscores and periods.");
-            }
             _value = value;
         }
 
         public int CompareTo(CName other)
         {
             return _value.CompareTo(other._value);
-        }
-
-        public static bool IsCName(string value)
-        {
-            return value.All(c => Char.IsLetterOrDigit(c) || c == '_' || c == ' ' || c == '.');
         }
 
         public override string ToString()

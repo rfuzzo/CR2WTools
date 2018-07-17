@@ -11,6 +11,8 @@ namespace CR2W.IO
         public uint importIndex;
         public uint path;
         public ulong pathHash;
+        public uint offset;
+        public uint length;
         public byte[] data;
     }
 }

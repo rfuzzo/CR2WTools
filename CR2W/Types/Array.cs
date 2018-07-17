@@ -12,6 +12,12 @@ namespace CR2W.Types
 {
     public class Array<T> : List<T>
     {
-        
+        public Type ArrayOf
+        {
+            get
+            {
+                return typeof(T);
+            }
+        }
     }
 }

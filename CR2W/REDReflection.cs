@@ -1,7 +1,7 @@
-﻿using CR2W.Attributes;
-using CR2W.Types;
+﻿using CR2W.Types;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace CR2W
 {
+    /// <summary>
+    /// Extenstion methods to inteface CR2W types.
+    /// </summary>
     public static class REDReflection
     {
         public static PropertyInfo GetREDProperty(this Type parent, string name, string type)
@@ -18,11 +21,11 @@ namespace CR2W
                 if (prop.IsDefined(typeof(REDPropAttribute)))
                 {
                     var attribute = (REDPropAttribute)prop.GetCustomAttribute(typeof(REDPropAttribute));
-                    var flags = new Stack<byte>(attribute.Flags.Reverse());
                     if(attribute.Name != name)
                     {
                         return false;
                     }
+                    var flags = new Stack<byte>(attribute.Flags.Reverse());
                     return prop.PropertyType.GetREDString(flags) == type;
                 }
                 else
@@ -35,6 +38,18 @@ namespace CR2W
                 return props.First();
             }
             return null;
+        }
+
+        public static PropertyInfo[] GetREDProperties(this Type type)
+        {
+            return type.GetProperties().Where(prop => prop.IsDefined(typeof(REDPropAttribute))).ToArray();
+        }
+
+        public static (string name, string type) GetREDTypeNamePair( this PropertyInfo prop )
+        {
+            var attribute = (REDPropAttribute)prop.GetCustomAttribute(typeof(REDPropAttribute));
+            var flags = new Stack<byte>(attribute.Flags.Reverse());
+            return (attribute.Name, GetREDString(prop.PropertyType, flags));
         }
 
         public static string GetREDString( this Type type, Stack<byte> flags)
@@ -56,17 +71,21 @@ namespace CR2W
                 {
                     return $"array:{flags.SafePop()},{flags.SafePop()},{GetREDString(genprop, flags)}";
                 }
-                if (type.GetGenericTypeDefinition() == typeof(Ptr<>))
+                else if (type.GetGenericTypeDefinition() == typeof(Ptr<>))
                 {
                     return $"ptr:{GetREDString(genprop, flags)}";
                 }
-                if (type.GetGenericTypeDefinition() == typeof(Soft<>))
+                else if (type.GetGenericTypeDefinition() == typeof(Soft<>))
                 {
                     return $"soft:{GetREDString(genprop, flags)}";
                 }
-                if (type.GetGenericTypeDefinition() == typeof(Handle<>))
+                else if (type.GetGenericTypeDefinition() == typeof(Handle<>))
                 {
                     return $"handle:{GetREDString(genprop, flags)}";
+                }
+                else if (type.GetGenericTypeDefinition() == typeof(Static<>))
+                {
+                    return $"static:{flags.SafePop()},{GetREDString(genprop, flags)}";
                 }
             }
             return type.Name;
@@ -79,6 +98,49 @@ namespace CR2W
                 return new T();
             }
             return value.Pop();
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = true)]
+    class REDClassAttribute : Attribute
+    {
+        public REDClassAttribute() { }
+    }
+
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    public class REDPropAttribute : Attribute
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public byte[] Flags { get; set; }
+
+        public REDPropAttribute(string name, params byte[] flags)
+        {
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException("[REDAttribute] Name property cannot be NULL or empty.");
+            }
+            Name = name;
+            Flags = flags;
+        }
+
+        public REDPropAttribute(string name, string description, params byte[] flags) : this(name, flags)
+        {
+            if (String.IsNullOrEmpty(description))
+            {
+                throw new ArgumentNullException("[REDAttribute] Description property cannot be NULL or empty.");
+            }
+            Description = description;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class REDSizeAttribute : Attribute
+    {
+        public byte Size { get; private set; }
+        public REDSizeAttribute(byte size)
+        {
+            this.Size = size;
         }
     }
 }

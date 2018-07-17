@@ -11,9 +11,18 @@ namespace CR2W.Types.W3
     /// </summary>
     public abstract class CResource : CObject
     {
+        public CDateTime TimeStamp{ get; private set; }
+
+        private string m_path;
+
         public string GetPath()
         {
-            throw new NotImplementedException();
+            return m_path;
+        }
+
+        public void SetPath( string path )
+        {
+            m_path = path;
         }
     }
 }

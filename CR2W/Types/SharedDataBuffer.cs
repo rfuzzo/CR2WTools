@@ -8,5 +8,6 @@ namespace CR2W.Types
 {
     public struct SharedDataBuffer
     {
+        public byte[] data;
     }
 }

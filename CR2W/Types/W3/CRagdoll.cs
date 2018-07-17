@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using CR2W.IO;
-using CR2W.Attributes;
+
 
 namespace CR2W.Types.W3
 {
@@ -69,11 +69,13 @@ namespace CR2W.Types.W3
 
         public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
-            //Parse the bytes at the beginning which will map the class structure
             base.ParseBytes(br, size);
 
-            //Now read the XML document at the end of the object data
-            Data = br.ReadXMLDocument();
+            var length = br.ReadInt32();
+            var xmlstr = Encoding.UTF8.GetString(br.ReadBytes(length));
+
+            Data = new XmlDocument();
+            Data.LoadXml(xmlstr);
         }
     }
 }

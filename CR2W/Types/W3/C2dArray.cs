@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CR2W.IO;
-using CR2W.Attributes;
+
 
 namespace CR2W.Types.W3
 {

@@ -1,11 +1,12 @@
 
 using System;
-using CR2W.Attributes;
+
 
 namespace CR2W.Types.W3
 {
-	public class Vector
-	{
+    [REDClass]
+    public struct Vector
+    {
 		[REDProp("X")]
 		public float X { get; set; }
 

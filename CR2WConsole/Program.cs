@@ -1,27 +1,33 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using CR2W;
-using CR2W.Types.W3;
-using CR2W.Testing;
-using CR2W.Types;
 using System.IO;
 using System.Collections.Generic;
-using CR2W.Attributes;
+using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Threading;
 using System.Text;
 using System.Threading.Tasks;
+using System.Numerics;
+using CR2W;
+using CR2W.IO;
+using CR2W.CRC32;
+using CR2W.FNV1A;
+using CR2W.Types;
+using CR2W.Types.W3;
+using System.Collections;
 
 namespace CR2WConsole
 {
-    class Program
+    public class Program
     {
         [STAThread]
         static void Main(string[] args)
         {
             SelectFile();
+            //ScallAll();
+            Console.ReadKey();
         }
 
         static void SelectFile()
@@ -31,14 +37,33 @@ namespace CR2WConsole
                 if (of.ShowDialog() == DialogResult.OK)
                 {
                     OpenFile(of.FileName);
-                    //TestFile(of.FileName);
+                    //TestFile(of.FileName, Console.Out);
                 }
             }
         }
 
-        static void TestFile(string path)
+        static void ScallAll()
         {
-            using (var br = new CR2WTestReader(path, Console.Out))
+            var dir = new DirectoryInfo(@"D:\ModKit\modkit_tools\r4data");
+            var files = dir.GetFiles("*.*", SearchOption.AllDirectories);
+
+            foreach (var file in files)
+            {
+                Console.Title = file.Name;
+                try
+                {
+                    TestFile(file.FullName, new DebugOut());
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+        }
+
+        static void TestFile(string path, TextWriter writer)
+        {
+            using (var br = new CR2WTestReader(path, writer))
             {
                 br.ReadAll();
             }
@@ -65,7 +90,7 @@ namespace CR2WConsole
 
             Console.WriteLine("Done, time taken: {0} milliseconds", sw.ElapsedMilliseconds);
             Console.WriteLine();
-            Console.WriteLine("File:        {0}", file);
+            Console.WriteLine("File:        {0}", res.GetPath());
             Console.WriteLine("Type:        {0}", res.GetType().Name);
             Console.WriteLine("Flags:       {0}", res.Flags);
             Console.WriteLine("Children:    {0}", res.Children.Count);
@@ -121,16 +146,16 @@ namespace CR2WConsole
             }
             else if(res is CBitmapTexture xbm)
             {
-                Console.WriteLine("\t{0}", xbm.Width);
-                Console.WriteLine("\t{0}", xbm.Height);
-                Console.WriteLine("\t{0}", xbm.Format);
-                Console.WriteLine("\t{0}", xbm.Compression);
-                Console.WriteLine("\t{0}", xbm.TextureGroup);
-                Console.WriteLine("\t{0}", xbm.PCDownscaleBias);
-                Console.WriteLine("\t{0}", xbm.XBoneDownscaleBias);
-                Console.WriteLine("\t{0}", xbm.PS4DownscaleBias);
-                Console.WriteLine("\t{0}", xbm.TextureCacheKey);
-                Console.WriteLine("\t{0}", xbm.ResidentMipIndex);
+                Console.WriteLine("\tWidth           {0}", xbm.Width);
+                Console.WriteLine("\tHeight          {0}", xbm.Height);
+                Console.WriteLine("\tFormat          {0}", xbm.Format);
+                Console.WriteLine("\tCompression     {0}", xbm.Compression);
+                Console.WriteLine("\tTextureGroup    {0}", xbm.TextureGroup);
+                Console.WriteLine("\tPCDownscaleBias {0}", xbm.PCDownscaleBias);
+                Console.WriteLine("\tXBDownscaleBias {0}", xbm.XBoneDownscaleBias);
+                Console.WriteLine("\tPSDownscaleBias {0}", xbm.PS4DownscaleBias);
+                Console.WriteLine("\tTextureCacheKey {0}", xbm.TextureCacheKey);
+                Console.WriteLine("\tResidentMipInex {0}", xbm.ResidentMipIndex);
             }
             else if(res is CRagdoll rag)
             {
@@ -151,15 +176,54 @@ namespace CR2WConsole
                     Console.WriteLine("\t{0}:", child.Key);
                     if (child.Value is CSwfTexture sbm)
                     {
-                        Console.WriteLine("\t\t{0}", sbm.LinkageName);
-                        Console.WriteLine("\t\t{0}", sbm.Height);
-                        Console.WriteLine("\t\t{0}", sbm.Width);
-                        Console.WriteLine("\t\t{0}", sbm.Compression);
-                        Console.WriteLine("\t\t{0}", sbm.Format);
+                        Console.WriteLine("\t\tName:        {0}", sbm.LinkageName);
+                        Console.WriteLine("\t\tHeight:      {0}", sbm.Height);
+                        Console.WriteLine("\t\tWidth:       {0}", sbm.Width);
+                        Console.WriteLine("\t\tCompression: {0}", sbm.Compression);
+                        Console.WriteLine("\t\tFormat:      {0}", sbm.Format);
+                    }
+                }
+            }
+            else if(res is CTerrainTile ter)
+            {
+                Console.WriteLine("\tMin Height: {0}", ter.MinHeightValue);
+                Console.WriteLine("\tMax Height: {0}", ter.MaxHeightValue);
+                Console.WriteLine("\tVersion:    {0}", ter.TileFileVersion);
+                Console.WriteLine("\tCollision:  {0}", ter.CollisionType);
+            }
+            else if(res is CHudResource hud)
+            {
+                Console.WriteLine("\tClass Name: {0}", hud.HudClass);
+                Console.WriteLine("\tDepot Path: {0}", hud.HudFlashSwf.DepotPath);
+                Console.Write("\tBlocks:    ");
+                foreach (var block in hud.ResourceBlocks)
+                {
+                    Console.Write(" {0}", block.Index);
+                }
+                Console.WriteLine();
+                Console.WriteLine("\tModules:");
+                foreach (var child in hud.Children)
+                {
+                    Console.WriteLine("\t{0}:", child.Key);
+                    if (child.Value is CHudModuleResourceBlock mod)
+                    {
+                        Console.WriteLine("\t\t{0}", mod.ModuleClass);
+                        Console.WriteLine("\t\t{0}", mod.ModuleName);
                     }
                 }
             }
             Console.WriteLine();
+        }
+
+        class DebugOut : TextWriter
+        {
+            public override Encoding Encoding
+            {
+                get
+                {
+                    return new System.Text.ASCIIEncoding();
+                }
+            }
         }
 
         /* - Class Types

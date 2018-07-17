@@ -1,11 +1,10 @@
-
 using System;
-using CR2W.Attributes;
 
 namespace CR2W.Types.W3
 {
-	public class SSimpleCurve
-	{
+    [REDClass]
+    public struct SSimpleCurve
+    {
 		[REDProp("CurveType")]
 		public ESimpleCurveType CurveType { get; set; }
 

@@ -14,5 +14,6 @@ namespace CR2W
         public uint diskSize;
         public uint memSize;
         public uint crc32;
+        public byte[] data;
     }
 }

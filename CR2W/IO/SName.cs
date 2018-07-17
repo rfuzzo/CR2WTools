@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace CR2W.IO
 {
-    public class MismatchCRC32Exception : Exception
+    public struct SName
     {
-        public MismatchCRC32Exception(string message) : base(message)
-        {
-
-        }
+        public uint offset;
+        public uint hash;
     }
 }

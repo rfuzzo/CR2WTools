@@ -1,9 +1,10 @@
 ﻿using System;
-using CR2W.Attributes;
+
 
 namespace CR2W.Types.W3
 {
-    public class SSwfFontDesc
+    [REDClass]
+    public struct SSwfFontDesc
     {
         [REDProp("fontName")]
         public string FontName { get; set; }

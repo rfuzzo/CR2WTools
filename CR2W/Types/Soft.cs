@@ -15,9 +15,12 @@ namespace CR2W.Types
         public string DepotPath { get; set; }
         public ushort Flags     { get; set; }
 
-        public Type GetSoftType()
+        public Type SoftOf
         {
-            return typeof(T);
+            get
+            {
+                return typeof(T);
+            }
         }
     }
 }

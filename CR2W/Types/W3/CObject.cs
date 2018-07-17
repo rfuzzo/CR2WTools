@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
-using CR2W.IO;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using CR2W.Attributes;
 using System.Reflection;
 using System.Text;
 using System.Diagnostics;
+using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
@@ -19,7 +18,7 @@ namespace CR2W.Types.W3
     {
         public Dictionary<uint, CObject> Children { get; set; }
         public uint Template { get; set; }
-        public uint Flags { get; set; }
+        public ushort Flags { get; set; }
 
         public CObject()
         {
@@ -49,11 +48,11 @@ namespace CR2W.Types.W3
         /// <summary>
         /// Check if this instance is refered to in another CObject
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="value"></param>
         /// <returns>Boolean if the CObject is in it</returns>
-        public bool IsIn( CObject check )
+        public bool IsIn( CObject value )
         {
-            throw new NotImplementedException();
+            return value.Children.ContainsValue(this);
         }
 
         public virtual void ParseBytes(CR2WBinaryReader br, uint size)
@@ -102,7 +101,7 @@ namespace CR2W.Types.W3
                 var prop = instance.GetType().GetREDProperty(br.names[nameId], br.names[typeId]);
                 if(prop == null)
                 {
-                    Console.WriteLine("ERROR - Property {0} : {1} not found, skipping!", br.names[nameId], br.names[typeId]);
+                    Console.WriteLine("ERROR - Property ({0} : {1}) not found in {2}, skipping!", br.names[nameId], br.names[typeId], instance.GetType().Name);
                     br.BaseStream.Seek(size, SeekOrigin.Current);
                     continue;
                 }
@@ -126,6 +125,7 @@ namespace CR2W.Types.W3
                 case "Int64":             return br.ReadInt64();
                 case "Boolean":           return br.ReadBoolean();
                 case "Single":            return br.ReadSingle();
+                case "String":            return br.ReadString();
                 case "Double":            return br.ReadDouble();
                 case "CName":             return br.ReadCName();
                 case "CGUID":             return br.ReadCGUID();
@@ -134,10 +134,9 @@ namespace CR2W.Types.W3
                 case "EngineTransform":   return br.ReadEngineTransform();
                 case "EngineQsTransform": return br.ReadEngineQsTransform();
                 case "CDateTime":         return br.ReadCDateTime();
-                case "String":            return br.ReadStringDefaultSingle();
             }
 
-            //Parse Enumarators
+            //Parse Enumerators
             if (proptype.IsEnum)
             {
                 return br.ReadEnumerator(proptype);
@@ -169,7 +168,7 @@ namespace CR2W.Types.W3
                 }
                 else if (proptype.GetGenericTypeDefinition() == typeof(Ptr<>))
                 {
-                    var id = br.ReadUInt16();
+                    var id = br.ReadUInt32();
                     proptype.GetProperty("Index").SetValue(instance, id);
                 }
                 else if (proptype.GetGenericTypeDefinition() == typeof(Handle<>))
@@ -177,13 +176,13 @@ namespace CR2W.Types.W3
                     var id = br.ReadInt32();
                     if (id >= 0)
                     {
-                        proptype.GetProperty("Type").SetValue(instance, EHandleType.ReferenceHandle);
+                        proptype.GetProperty("HandleType").SetValue(instance, EHandleType.ReferenceHandle);
                         proptype.GetProperty("Index").SetValue(instance, id);
                     }
                     else
                     {
                         id *= -1;
-                        proptype.GetProperty("Type").SetValue(instance, EHandleType.ResourceHandle);
+                        proptype.GetProperty("HandleType").SetValue(instance, EHandleType.ResourceHandle);
                         proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id-1].path);
                         proptype.GetProperty("Flags").SetValue(instance, br.resources[id-1].flags);
                     }
@@ -192,7 +191,7 @@ namespace CR2W.Types.W3
             }
 
             //Parse classes
-            if (proptype.IsClass)
+            if (proptype.IsClass || proptype.IsDefined(typeof(REDClassAttribute)))
             {
                 var instance = Activator.CreateInstance(proptype);
                 ParseClass(br, instance);

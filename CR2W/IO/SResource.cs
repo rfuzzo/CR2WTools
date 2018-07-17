@@ -8,15 +8,11 @@ namespace CR2W.IO
 {
     public struct SResource
     {
-        public string path;
-        public string type;
+        public uint offset;
+        public ushort typeid;
         public ushort flags;
 
-        public SResource(string p, string t, ushort f)
-        {
-            path = p;
-            type = t;
-            flags = f;
-        }
+        public string path;
+        public string type;
     }
 }

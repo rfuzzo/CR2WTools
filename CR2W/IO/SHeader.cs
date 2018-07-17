@@ -11,12 +11,6 @@ namespace CR2W.IO
         public uint offset;
         public uint size;
         public uint crc32;
-
-        public SHeader(uint o, uint s, uint c)
-        {
-            offset = 0;
-            size = s;
-            crc32 = c;
-        }
+        public byte[] data;
     }
 }

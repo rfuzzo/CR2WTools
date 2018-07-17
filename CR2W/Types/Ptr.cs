@@ -11,6 +11,16 @@ namespace CR2W.Types
 {
     public struct Ptr<T>
     {
-        public int Index { get; set; }
+        public uint Index { get; set; }
+
+        public Type PtrOf
+        {
+            get
+            {
+                return typeof(T);
+            }
+        }
+
+        
     }
 }

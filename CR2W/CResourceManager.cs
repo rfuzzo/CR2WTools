@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CR2W.Types.W3;
 using CR2W.Types;
 using CR2W.IO;
-using CR2W.Attributes;
+
 using System.IO;
 using System.Reflection;
 
@@ -14,6 +14,11 @@ namespace CR2W
 {
     public static class CResourceManager
     {
+        /// <summary>
+        /// List of all currently loaded resources.
+        /// </summary>
+        public static List<CResource> LoadedResources { get; set; } = new List<CResource>();
+
         /// <summary>
         /// Load a CR2W file as a CResource
         /// </summary>
@@ -28,7 +33,8 @@ namespace CR2W
             }
             using (var br = new CR2WBinaryReader(resource, false))
             {
-                return br.CreateResource();
+                LoadedResources.Add(br.CreateResource());
+                return LoadedResources.Last();
             }
         }
 
@@ -43,7 +49,11 @@ namespace CR2W
             return await Task.Run(() => LoadResource(resource, isDepotPath));
         }
 
-
+        /// <summary>
+        /// Load a text .csv file as a C2dArray Resource
+        /// </summary>
+        /// <param name="resource">The .csv file to read</param>
+        /// <returns>C2dArray object</returns>
         public static C2dArray LoadCSV( string resource )
         {
             if(!File.Exists(resource))

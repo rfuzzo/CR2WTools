@@ -13,7 +13,7 @@ namespace CR2W.Types
     public enum EHandleType
     {
         /// <summary>
-        /// The handle is a reference type and points to a CResoure object within the same file.
+        /// The handle is a reference type and points to a CResource object within the same file.
         /// </summary>
         ReferenceHandle,
         /// <summary>
@@ -24,9 +24,19 @@ namespace CR2W.Types
 
     public struct Handle<T>
     {
-        public EHandleType Type { get; set; }
-        public int   Index { get; set; }
+        public EHandleType HandleType { get; set; }
+
+        public int Index { get; set; }
+
         public string DepotPath { get; set; }
         public ushort Flags { get; set; }
+
+        public Type HandleOf
+        {
+            get
+            {
+                return typeof(T);
+            }
+        }
     }
 }

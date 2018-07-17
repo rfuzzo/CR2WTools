@@ -9,6 +9,7 @@ namespace CR2W.Types
 {
     public struct TagList
     {
-
+        public string[] tags;
     }
 }
+

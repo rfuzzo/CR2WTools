@@ -37,6 +37,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,17 +47,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\REDSizeAttribute.cs" />
-    <Compile Include="Attributes\REDPropAttribute.cs" />
+    <Compile Include="DDS\DDS.cs" />
+    <Compile Include="DDS\DDSImage.cs" />
+    <Compile Include="DDS\Decompressor.cs" />
+    <Compile Include="DDS\Utils.cs" />
     <Compile Include="FNV1a\FNV1A.cs" />
+    <Compile Include="IO\CObjectBinaryReader.cs" />
     <Compile Include="IO\SBuffer.cs" />
     <Compile Include="CResourceManager.cs" />
     <Compile Include="CRC32\Crc32Algorithm.cs" />
     <Compile Include="CRC32\Crc32CAlgorithm.cs" />
     <Compile Include="CRC32\SafeProxy.cs" />
     <Compile Include="CRC32\SafeProxyC.cs" />
-    <Compile Include="IO\MismatchCRC32Exception.cs" />
+    <Compile Include="CRC32\MismatchCRC32Exception.cs" />
     <Compile Include="IO\InvalidCR2WFileException.cs" />
+    <Compile Include="IO\SCR2WFile.cs" />
+    <Compile Include="IO\SName.cs" />
+    <Compile Include="IO\SString.cs" />
+    <Compile Include="IO\STable4Item.cs" />
     <Compile Include="IO\UnknownObjectTypeException.cs" />
     <Compile Include="IO\CR2WBinaryWriter.cs" />
     <Compile Include="IO\CR2WBinaryReader.cs" />
@@ -69,7 +78,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CResourceExt.resx</DependentUpon>
     </Compile>
-    <Compile Include="Testing\CR2WTestReader.cs" />
+    <Compile Include="IO\CR2WTestReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\Array.cs" />
     <Compile Include="Types\CClipMapCookedData.cs" />
@@ -84,7 +93,9 @@
     <Compile Include="Types\EngineTransform.cs" />
     <Compile Include="Types\EntityHandle.cs" />
     <Compile Include="Types\IdTag.cs" />
+    <Compile Include="Types\Static.cs" />
     <Compile Include="Types\W3\CAreaEnvironmentParams.cs" />
+    <Compile Include="Types\W3\CEntity.cs" />
     <Compile Include="Types\W3\CEnvAmbientProbesGenParameters.cs" />
     <Compile Include="Types\W3\CEnvBloomNewParameters.cs" />
     <Compile Include="Types\W3\CEnvCameraLightParameters.cs" />
@@ -123,18 +134,21 @@
     <Compile Include="Types\W3\CGuiConfigResource.cs" />
     <Compile Include="Types\W3\CHudModuleResourceBlock.cs" />
     <Compile Include="Types\W3\CHudResource.cs" />
+    <Compile Include="Types\W3\CLayer.cs" />
     <Compile Include="Types\W3\CMenuBackgroundVideoAliasParam.cs" />
     <Compile Include="Types\W3\CMenuBackgroundVideoFileParam.cs" />
     <Compile Include="Types\W3\CMenuClearBackgroundVideoParam.cs" />
     <Compile Include="Types\W3\CMenuDef.cs" />
     <Compile Include="Types\W3\CMenuInheritBackgroundVideoParam.cs" />
     <Compile Include="Types\W3\CMenuPauseParam.cs" />
+    <Compile Include="Types\W3\CMenuRenderBackgroundParam.cs" />
     <Compile Include="Types\W3\CMenuResource.cs" />
     <Compile Include="Types\W3\CMenuTimeScaleParam.cs" />
     <Compile Include="Types\W3\CPopupDef.cs" />
     <Compile Include="Types\W3\CPopupPauseParam.cs" />
     <Compile Include="Types\W3\CPopupResource.cs" />
     <Compile Include="Types\W3\CPopupTimeScaleParam.cs" />
+    <Compile Include="Types\W3\CSectorData.cs" />
     <Compile Include="Types\W3\CSwfResource.cs" />
     <Compile Include="Types\W3\EulerAngles.cs" />
     <Compile Include="Types\W3\IGuiResource.cs" />
@@ -169,6 +183,8 @@
     <Compile Include="Types\W3\SHudDescription.cs" />
     <Compile Include="Types\W3\SMenuDescription.cs" />
     <Compile Include="Types\W3\SPopupDescription.cs" />
+    <Compile Include="Types\W3\SSectorDataObject.cs" />
+    <Compile Include="Types\W3\SSectorDataResource.cs" />
     <Compile Include="Types\W3\SSimpleCurve.cs" />
     <Compile Include="Types\W3\SSwfFontDesc.cs" />
     <Compile Include="Types\W3\SSwfHeaderInfo.cs" />

@@ -6,8 +6,8 @@ using System.IO;
 using CR2W.Types;
 using CR2W.CRC32;
 using CR2W.Types.W3;
-using CR2W.Attributes;
 using System.Xml;
+using System.Reflection;
 
 namespace CR2W.IO
 {
@@ -35,6 +35,9 @@ namespace CR2W.IO
 
         //Magic Identifier 'CR2W' in byte[].
         private readonly byte[] Magic = { 67, 82, 50, 87 };
+
+        //Table Item Sizes
+        private readonly byte[] TableSize = { 1, 8, 8, 16, 24, 24, 24, 0, 0, 0 };
 
         //Basic file details.
         public uint Flags;
@@ -197,9 +200,6 @@ namespace CR2W.IO
                 var o = ReadUInt32();
                 var u = ReadUInt32();
                 names[i] = strings[o];
-
-                //'u' is a hash of the name.
-                //without the algorithm that was used to hash it the value is basically useless. 
             }
         }
 
@@ -211,7 +211,6 @@ namespace CR2W.IO
             var start = headers[2].offset;
             var size = headers[2].size;
             var crc = headers[2].crc32;
-
             if (!IgnoreCRC)
             {
                 BaseStream.Seek(start, SeekOrigin.Begin);
@@ -220,20 +219,15 @@ namespace CR2W.IO
                     throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 3 - Handles");
                 }
             }
-
             resources = new SResource[size];
             BaseStream.Seek(start, SeekOrigin.Begin);
             for (int i = 0; i < size; i++)
             {
-                var o = ReadUInt32();
-                var t = ReadUInt16();
-                var f = ReadUInt16();
-
                 resources[i] = new SResource()
                 {
-                    type = names[t],
-                    flags = f,
-                    path = strings[o],
+                    path    = strings[ReadUInt32()],
+                    type    = names[ReadUInt16()],
+                    flags   = ReadUInt16(),
                 };
             }
         }
@@ -264,7 +258,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 5 - Chunks");
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 5 - CObjects");
                 }
             }
 
@@ -272,29 +266,17 @@ namespace CR2W.IO
             BaseStream.Seek(start, SeekOrigin.Begin);
             for (uint i = 0; i < size; i++)
             {
-                var temp = new SObject()
+                sobjs[i] = new SObject()
                 {
-                    index = i + 1,
-                    typeID = ReadUInt16(),
-                    flags = ReadUInt16(),
-                    parentID = ReadUInt32(),
-                    size = ReadUInt32(),
-                    offset = ReadUInt32(),
-                    template = ReadUInt32(),
+                    index       = i + 1,
+                    typeID      = ReadUInt16(),
+                    flags       = ReadUInt16(),
+                    parentID    = ReadUInt32(),
+                    size        = ReadUInt32(),
+                    offset      = ReadUInt32(),
+                    template    = ReadUInt32(),
+                    crc32       = ReadUInt32(),
                 };
-                var crc32 = ReadUInt32();
-
-                if (!IgnoreCRC)
-                {
-                    var pos = BaseStream.Position;
-                    BaseStream.Seek(Convert.ToInt32(temp.offset), SeekOrigin.Begin);
-                    if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(temp.size))) != crc32)
-                    {
-                        throw new MismatchCRC32Exception($"CRC32 Checksum failed for object {i+1} ({names[temp.typeID]})");
-                    }
-                    BaseStream.Seek(pos, SeekOrigin.Begin);
-                }
-                sobjs[i] = temp;
             }
         }
 
@@ -359,22 +341,20 @@ namespace CR2W.IO
                     importIndex = ReadUInt32(),
                     path        = ReadUInt32(),
                     pathHash    = ReadUInt64(),
+                    offset      = ReadUInt32(),
+                    length      = ReadUInt32(),
                 };
-                var offset    = ReadUInt32();
-                var len       = ReadUInt32();
 
                 var pos = BaseStream.Position;
-
-                BaseStream.Seek(offset, SeekOrigin.Begin);
-                temp.data = ReadBytes(Convert.ToInt32(len));
+                BaseStream.Seek(temp.offset, SeekOrigin.Begin);
+                temp.data = ReadBytes(Convert.ToInt32(temp.length));
                 embedded[i] = temp;
-
                 BaseStream.Seek( pos, SeekOrigin.Begin );
             }
         }
         #endregion
 
-        #region Resource
+        #region CObject Data
         /* - Info
          *      Region for creating the finished CResource
          *      from the data held in the buffers that tables 5 and 7 point to.
@@ -388,7 +368,7 @@ namespace CR2W.IO
          *          Option 3: Do not parse but just hold as a byte array until the user needs to change stuff.
          *          Option 4: Export as a new CR2W physical file that can be later parsed.
          */
-        
+
         //TO BE IMPROVED
         public CResource CreateResource()
         {
@@ -401,6 +381,7 @@ namespace CR2W.IO
 
             if(objects[0] is CResource res)
             {
+                res.SetPath(FilePath);
                 return res;
             }
 
@@ -410,7 +391,6 @@ namespace CR2W.IO
         private CObject CreateObject(SObject obj)
         {
             var type = names[obj.typeID];
-
             Type resType = Type.GetType($"CR2W.Types.W3.{type}");
 
             if (resType == null)
@@ -434,6 +414,22 @@ namespace CR2W.IO
 
             return temp;
         }
+
+        #endregion
+
+        #region Buffer Data
+
+        private void LoadBuffers()
+        {
+            for (int i = 0; i < buffers.Length; i++)
+            {
+                var path = $"{FilePath}.{i}.buffer";
+            }
+        }
+
+        #endregion
+
+        #region Embedded Data
 
         #endregion
 
@@ -464,7 +460,7 @@ namespace CR2W.IO
         /// Read a single string from the current stream, where the first bytes indicate the length.
         /// </summary>
         /// <returns>string value read</returns>
-        public string ReadStringDefaultSingle()
+        public override string ReadString()
         {
             var b = ReadByte();
             var nxt = (b & (1 << 6)) != 0;
@@ -479,37 +475,6 @@ namespace CR2W.IO
                 return Encoding.Unicode.GetString(ReadBytes(len * 2));
             }
             return Encoding.ASCII.GetString(ReadBytes(len));
-        }
-
-        /// <summary>
-        /// Read a group of strings from the current stream where the first bytes of any string is the legnth of the string to read.
-        /// </summary>
-        /// <param name="size">The byte length of the whole group</param>
-        /// <returns>An array of strings</returns>
-        public string[] ReadStringDefaultGroup(uint size)
-        {
-            var strs = new List<string>();
-            var start = BaseStream.Position;
-            while (BaseStream.Position < start + size)
-            {
-                var b = ReadByte();
-                var nxt = (b & (1 << 6)) != 0;
-                var utf = (b & (1 << 7)) == 0;
-                int len = b & ((1 << 6) - 1);
-                if (nxt)
-                {
-                    len += 64 * ReadByte();
-                }
-                if (utf)
-                {
-                    strs.Add(Encoding.Unicode.GetString(ReadBytes(len * 2)));
-                }
-                else
-                {
-                    strs.Add(Encoding.ASCII.GetString(ReadBytes(len)));
-                }
-            }
-            return strs.ToArray();
         }
 
         /// <summary>
@@ -545,20 +510,7 @@ namespace CR2W.IO
         }
 
         /// <summary>
-        /// Read an embedded UTF-8 encoded XML document where the beginning 4 bytes indicate the bytes to read.
-        /// </summary>
-        /// <returns>XML document object</returns>
-        public XmlDocument ReadXMLDocument()
-        {
-            var length = ReadInt32();
-            var xmlstr = Encoding.UTF8.GetString(ReadBytes(length));
-            var doc = new XmlDocument();
-            doc.LoadXml(xmlstr);
-            return doc;
-        }
-
-        /// <summary>
-        /// Read a 8 byte CDateTime value from the current stream.
+        /// Read an 8 byte CDateTime value from the current stream.
         /// </summary>
         /// <returns>CDatetime value</returns>
         public CDateTime ReadCDateTime()
@@ -697,6 +649,50 @@ namespace CR2W.IO
                 ID = ReadCGUID()
             };
         }
+
+        /// <summary>
+        /// Read an 18 byte long EntityHandle struct from the current stream.
+        /// </summary>
+        /// <returns>EntityHandle Struct</returns>
+        public EntityHandle ReadEntityHandle()
+        {
+            return new EntityHandle()
+            {
+                Flag = ReadByte(),
+                Type = ReadByte(),
+                Value = ReadCGUID(),
+            };
+        }
+
+        #endregion
+
+        #region Supporting Functions
+
+        /// <summary>
+        /// Read a variable length quantity value from the current stream where the 
+        /// first byte stores 6 bits of the final value, 
+        /// and remaining bytes contain 7 bits of the value.
+        /// </summary>
+        /// <returns>
+        /// Int32 of the final value. 
+        /// </returns>
+        public int ReadVLQInt32()
+        {
+            var b1 = ReadByte();
+            var sign = (b1 & 128) == 128;
+            var next = (b1 & 64) == 64;
+            var size = b1 % 128 % 64;
+            var offset = 6;
+            while (next)
+            {
+                var b = ReadByte();
+                size = (b % 128) << offset | size;
+                next = (b & 128) == 128;
+                offset += 7;
+            }
+            return sign ? size * -1 : size;
+        }
+
         #endregion
 
         #region Cleaning Up

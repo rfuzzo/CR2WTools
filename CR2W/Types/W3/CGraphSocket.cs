@@ -1,10 +1,12 @@
 
 using System;
-using CR2W.Attributes;
+using System.IO;
+
+using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
-	public class CGraphSocket : ISerializable
+	public class CGraphSocket
 	{
 		[REDProp("block")]
 		public Ptr<CGraphBlock> Block { get; set; }
@@ -14,6 +16,5 @@ namespace CR2W.Types.W3
 
 		[REDProp("connections")]
 		public Array<Ptr<CGraphConnection>> Connections { get; set; }
-
-	}
+    }
 }
