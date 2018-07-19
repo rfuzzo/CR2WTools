@@ -6,9 +6,23 @@ using CR2W.DDS.Utils;
 using CR2W.DDS;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.Linq;
 
 namespace CR2W.Types.W3
 {
+    struct SBitmapTextureDataHeader
+    {
+        public uint unknown1;
+        public uint unknown2;
+        public uint width;
+        public uint height;
+        public uint unknown5;
+        public uint sizeorpitch;
+        public uint unknown7;
+    }
+
     public class CBitmapTexture : CResource, ITexture
     {
         [REDProp("width")]
@@ -46,25 +60,53 @@ namespace CR2W.Types.W3
 
         public Bitmap TextureMap { get; set; }
 
+
         public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
             var pos = br.BaseStream.Position;
             base.ParseBytes(br, size);
 
-            var header = new DDSStruct();
+            /*
+             *  This is a temporary solution for reading the contents of a CBitmapTexture
+             *  What this does is contruct a dds header object and parse it and the raw bytes 
+             *  using the dds library.
+             *  
+             *  The bitmap bytes from the cr2w has a header 28 bytes long, containing data about the 
+             *  image such as size and height etc...
+             *  There are 4 unknown ones.
+             *  
+             *  This class should in the end support reading all xbm files with means supporting not just 
+             *  dds but tga, bmp, png, and jpg.
+             * 
+             */
 
-            var unknown1        = br.ReadUInt32();
-            var unknown2        = br.ReadUInt32();
-            header.width        = br.ReadUInt32();
-            header.height       = br.ReadUInt32();
-            var unknown5        = br.ReadUInt32();
-            header.sizeorpitch  = br.ReadUInt32();
-            var unknown7        = br.ReadUInt32();
+            var cbmheader = new SBitmapTextureDataHeader()
+            {
+                unknown1    = br.ReadUInt32(),
+                unknown2    = br.ReadUInt32(),
+                width       = br.ReadUInt32(),
+                height      = br.ReadUInt32(),
+                unknown5    = br.ReadUInt32(),
+                sizeorpitch = br.ReadUInt32(),
+                unknown7    = br.ReadUInt32(),
+            };
 
-            header.size = 124;
-            header.depth = 1;
+            var ddsheader = new DDSStruct
+            {
+                size            = 124,
+                flags           = 659463,
+                width           = cbmheader.width,
+                height          = cbmheader.height,
+                sizeorpitch     = cbmheader.sizeorpitch,
+                depth           = 1,
+                mipmapcount     = 1,
+                reserved        = new uint[10],
+            };
+            ddsheader.ddscaps.caps1 = 4096;
+            ddsheader.pixelformat.flags = 4;
+            ddsheader.pixelformat.size = 32;
 
-            switch(Compression)
+            switch (Compression)
             {
                 case ETextureCompression.TCM_DXTAlpha:
                 case ETextureCompression.TCM_DXTAlphaLinear:
@@ -75,24 +117,17 @@ namespace CR2W.Types.W3
                 case ETextureCompression.TCM_QualityR:
                 case ETextureCompression.TCM_QualityRG:
                 case ETextureCompression.TCM_RGBE:
-                    header.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT5;
+                case ETextureCompression.TCM_QualityColor:
+                    ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT5;
                     break;
                 case ETextureCompression.TCM_DXTNoAlpha:
-                    header.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT1;
+                    ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT1;
                     break;
             }
 
-            header.ddscaps.caps1 = 4096;
-            header.mipmapcount = 1;
-            header.pixelformat.flags = 4;
-            header.pixelformat.size = 32;
-            header.reserved = new uint[10];
-            header.flags = 659463;
-
             var rawsize = Convert.ToInt32(pos + size - br.BaseStream.Position);
             var raw = br.ReadBytes(rawsize);
-
-            var dds = new DDSImage(raw, header, true);
+            var dds = new DDSImage(raw, ddsheader, true);
 
             Form form = new Form
             {
@@ -101,8 +136,8 @@ namespace CR2W.Types.W3
             PictureBox pictureBox = new PictureBox
             {
                 Image = dds.BitmapImage,
-                Width = (int)header.width,
-                Height = (int)header.height
+                Width = (int)ddsheader.width,
+                Height = (int)ddsheader.height
             };
             form.Controls.Add(pictureBox);
             var t = new Task(() => 
@@ -111,5 +146,69 @@ namespace CR2W.Types.W3
             });
             t.Start();
         }
+
+        public List<TexEncodePair> TEX_ENCODE_PAIRS = new List<TexEncodePair>()
+        {
+            new TexEncodePair(){code = 0x3FD, format = ETextureFormat.TEXFMT_R8G8B8A8},
+            new TexEncodePair(){code = 0x407, format = ETextureFormat.TEXFMT_BC1},
+            new TexEncodePair(){code = 0x408, format = ETextureFormat.TEXFMT_BC3},
+            new TexEncodePair(){code = 0x409, format = ETextureFormat.TEXFMT_BC6H},
+            new TexEncodePair(){code = 0x40A, format = ETextureFormat.TEXFMT_BC7},
+            new TexEncodePair(){code = 0x40B, format = ETextureFormat.TEXFMT_Float_R16G16B16A16},
+            new TexEncodePair(){code = 0x40C, format = ETextureFormat.TEXFMT_Float_R32G32B32A32},
+            new TexEncodePair(){code = 0x40D, format = ETextureFormat.TEXFMT_BC2},
+            new TexEncodePair(){code = 0x40E, format = ETextureFormat.TEXFMT_BC4},
+            new TexEncodePair(){code = 0x40F, format = ETextureFormat.TEXFMT_BC5}
+        };
+
+        ETextureFormat DecodeTextureFormat(Int16 encoded)
+        {
+            return TEX_ENCODE_PAIRS.First(t => t.code == encoded).format;
+        }
+
+        public struct TexEncodePair
+        {
+            public UInt16 code;
+            public ETextureFormat format;
+        };
+
+        public enum ETextureFormat
+        {
+            TEXFMT_A8 = 0x0,
+            TEXFMT_A8_Scaleform = 0x1,
+            TEXFMT_L8 = 0x2,
+            TEXFMT_R8G8B8X8 = 0x3,
+            TEXFMT_R8G8B8A8 = 0x4,
+            TEXFMT_A8L8 = 0x5,
+            TEXFMT_Uint_16_norm = 0x6,
+            TEXFMT_Uint_16 = 0x7,
+            TEXFMT_Uint_32 = 0x8,
+            TEXFMT_R32G32_Uint = 0x9,
+            TEXFMT_R16G16_Uint = 0xA,
+            TEXFMT_Float_R10G10B10A2 = 0xB,
+            TEXFMT_Float_R16G16B16A16 = 0xC,
+            TEXFMT_Float_R11G11B10 = 0xD,
+            TEXFMT_Float_R16G16 = 0xE,
+            TEXFMT_Float_R32G32 = 0xF,
+            TEXFMT_Float_R32G32B32A32 = 0x10,
+            TEXFMT_Float_R32 = 0x11,
+            TEXFMT_Float_R16 = 0x12,
+            TEXFMT_D24S8 = 0x13,
+            TEXFMT_D24FS8 = 0x14,
+            TEXFMT_D32F = 0x15,
+            TEXFMT_D16U = 0x16,
+            TEXFMT_BC1 = 0x17,
+            TEXFMT_BC2 = 0x18,
+            TEXFMT_BC3 = 0x19,
+            TEXFMT_BC4 = 0x1A,
+            TEXFMT_BC5 = 0x1B,
+            TEXFMT_BC6H = 0x1C,
+            TEXFMT_BC7 = 0x1D,
+            TEXFMT_R8_Uint = 0x1E,
+            TEXFMT_NULL = 0x1F,
+            TEXFMT_Max = 0x20,
+        };
     }
+
+
 }

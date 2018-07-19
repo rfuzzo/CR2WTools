@@ -1234,16 +1234,17 @@ namespace CR2W.Types.W3
     }
     public enum ETextureCompression
     {
-        TCM_None,
-        TCM_DXTNoAlpha,
-        TCM_DXTAlpha,
-        TCM_RGBE,
-        TCM_Normals,
-        TCM_NormalsHigh,
-        TCM_NormalsGloss,
-        TCM_DXTAlphaLinear,
-        TCM_QualityR,
-        TCM_QualityRG
+        TCM_None = 0,
+        TCM_DXTNoAlpha = 1,
+        TCM_DXTAlpha = 2,
+        TCM_RGBE = 3,
+        TCM_Normals = 4,
+        TCM_NormalsHigh = 5,
+        TCM_NormalsGloss = 6,
+        TCM_DXTAlphaLinear = 8,
+        TCM_QualityR = 9,
+        TCM_QualityRG = 10,
+        TCM_QualityColor = 11,
     }
     public enum ETextureCategory
     {
@@ -1255,11 +1256,11 @@ namespace CR2W.Types.W3
     }
     public enum ETextureRawFormat
     {
-        TRF_TrueColor,
-        TRF_Grayscale,
-        TRF_HDR,
-        TRF_AlphaGrayscale,
-        TRF_HDRGrayscale
+        TRF_TrueColor = 0,
+        TRF_Grayscale = 1,
+        TRF_HDR = 2,
+        TRF_AlphaGrayscale = 3,
+        TRF_HDRGrayscale = 4,
     }
     public enum EEnvColorGroup
     {

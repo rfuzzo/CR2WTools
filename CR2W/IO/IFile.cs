@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace CR2W.IO
 {
-    public struct SName
+    public interface IFile
     {
-        public uint offset;
-        public uint hash;
+
     }
 }

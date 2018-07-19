@@ -1,4 +1,4 @@
-﻿using CR2W.Types;
+﻿ using CR2W.Types;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

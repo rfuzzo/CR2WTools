@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace CR2W.IO
 {
-    public struct SHeader
+    public class REDEventArgs : EventArgs
     {
-        public uint offset;
-        public uint size;
-        public uint crc32;
-        public byte[] data;
+        
     }
 }

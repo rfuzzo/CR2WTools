@@ -108,8 +108,6 @@ namespace CR2W.DDS
             Utils.PixelFormat pixelFormat = Utils.PixelFormat.UNKNOWN;
             byte[] data = null;
 
-            PrintHeader(header);
-
             using (var mem = new MemoryStream(raw))
             {
                 using (var reader = new BinaryReader(mem))
@@ -246,42 +244,8 @@ namespace CR2W.DDS
 			header.ddscaps.caps4 = reader.ReadUInt32();
 			header.texturestage = reader.ReadUInt32();
 
-            PrintHeader(header);
-
 			return true;
 		}
-
-        static void PrintHeader(DDSStruct header)
-        {
-            Console.WriteLine("header.");
-            Console.WriteLine("\tsize             {0}", header.size);
-            Console.WriteLine("\tflags            {0}", header.flags);
-            Console.WriteLine("\twidth            {0}", header.width);
-            Console.WriteLine("\theight           {0}", header.height);
-            Console.WriteLine("\tsizeorpitch      {0}", header.sizeorpitch);
-            Console.WriteLine("\tdepth            {0}", header.depth);
-            Console.WriteLine("\tmipmapcount      {0}", header.mipmapcount);
-            Console.WriteLine("\talphabitdepth    {0}", header.alphabitdepth);
-            for (int i = 0; i < header.reserved.Length; i++)
-            {
-                Console.WriteLine("\treserved[{0}]      {1}", i, header.reserved[i]);
-            }
-            Console.WriteLine("header.pixelformat");
-            Console.WriteLine("\tsize             {0}", header.pixelformat.size);
-            Console.WriteLine("\tflags            {0}", header.pixelformat.flags);
-            Console.WriteLine("\tfourcc           {0}", header.pixelformat.fourcc);
-            Console.WriteLine("\trgbbitcount      {0}", header.pixelformat.rgbbitcount);
-            Console.WriteLine("\trbitmask         {0}", header.pixelformat.rbitmask);
-            Console.WriteLine("\tgbitmask         {0}", header.pixelformat.gbitmask);
-            Console.WriteLine("\tbbitmask         {0}", header.pixelformat.bbitmask);
-            Console.WriteLine("\talphabitmask     {0}", header.pixelformat.alphabitmask);
-            Console.WriteLine("header.ddscaps");
-            Console.WriteLine("\tcaps1            {0}", header.ddscaps.caps1);
-            Console.WriteLine("\tcaps2            {0}", header.ddscaps.caps2);
-            Console.WriteLine("\tcaps3            {0}", header.ddscaps.caps3);
-            Console.WriteLine("\tcaps4            {0}", header.ddscaps.caps4);
-            Console.WriteLine();
-        }
 
         private Utils.PixelFormat GetFormat(DDSStruct header, ref uint blocksize)
 		{
@@ -401,9 +365,6 @@ namespace CR2W.DDS
 
 				blocksize = (header.width * header.height * header.depth * (header.pixelformat.rgbbitcount >> 3));
 			}
-
-            Console.WriteLine("Format Read as: {0}", format);
-
             return format;
 		}
 	}

@@ -6,9 +6,12 @@ using System.Linq;
 using System.Text;
 using CR2W.CRC32;
 using CR2W.Types;
+using CR2W.FNV1A;
 
 namespace CR2W.IO
 {
+    //WIP
+
     public sealed class CR2WBinaryWriter : BinaryWriter
     {
         public SHeader[]                headers;
@@ -19,7 +22,7 @@ namespace CR2W.IO
         public List<SBuffer>            buffers;
         public List<SEmbedded>          embedded;
 
-        public CR2WBinaryWriter() : base(new MemoryStream(), Encoding.ASCII, false)
+        public CR2WBinaryWriter(Stream stream) : base(stream, Encoding.ASCII, false)
         {
             headers     = new SHeader[10];
             strings     = new Dictionary<uint, string>();
@@ -29,7 +32,12 @@ namespace CR2W.IO
             buffers     = new List<SBuffer>();
             embedded    = new List<SEmbedded>();
 
-            AddName("");
+            for (int i = 0; i < 10; i++)
+            {
+                headers[i] = new SHeader();
+            }
+
+            names.Add(new SName() { value = "", hash = 0 });
         }
 
         public void Create( CResource resource )
@@ -37,19 +45,24 @@ namespace CR2W.IO
 
         }
 
+        #region Table Construction
+
         /// <summary>
         /// Add a string value to Table 1. If that value already exists this will retun the offset of the existing one.
         /// </summary>
         /// <param name="value">String value to add to the table</param>
         /// <returns>uint value of the offset that string has in the table</returns>
-        public uint AddString( string value )
+        private uint AddString( string value )
         {
             if(strings.ContainsValue(value))
-            {
                 return strings.First(x => x.Value == value).Key;
+
+            uint offset = 0;
+            if(strings.Any())
+            {
+                var last = strings.Last();
+                offset = Convert.ToUInt32(last.Key + last.Value.Length + 1);
             }
-            var last = strings.Last();
-            var offset = Convert.ToUInt32(last.Key + last.Value.Length + 1);
             strings.Add( offset, value );
             return offset;
         }
@@ -61,18 +74,15 @@ namespace CR2W.IO
         /// <returns>Index of the name in table 2</returns>
         public ushort AddName( string value )
         {
-            //TODO! - Calculate Hash Here!
-            uint h = 0;
-            uint of = AddString(value);
-
-            if (names.Where(n => n.offset == of).Any())
+            if (names.Where(n => n.value == value).Any())
             {
-                return Convert.ToUInt16(names.IndexOf(names.First(n => n.offset == of)));
+                return Convert.ToUInt16(names.IndexOf(names.First(n => n.value == value)));
             }
+            uint h = FNV1A32HashAlgorithm.Compute(value);
             names.Add(new SName()
             {
                 hash = h,
-                offset = of,
+                value = value,
             });
             return Convert.ToUInt16(names.Count - 1);
         }
@@ -82,43 +92,147 @@ namespace CR2W.IO
         /// </summary>
         /// <param name="type">Resource type class name</param>
         /// <param name="path">Depot path of the resource</param>
-        /// <param name="f">Resource flags</param>
+        /// <param name="flags">Resource flags</param>
         /// <returns>The index of the item in table 3</returns>
-        public ushort AddResource( string type, string path, ushort f )
+        public ushort AddResource( string type, string path, ushort flags )
         {
-            var id = AddName(type);
-            var of = AddString(path);
-
-            if(resources.Where(r => r.offset == of && r.typeid == id && r.flags == f).Any())
+            if(resources.Where(r => r.type == type && r.path == path && r.flags == flags).Any())
             {
-                return Convert.ToUInt16( resources.IndexOf(resources.First(r => r.offset == of && r.typeid == id && r.flags == f)));
+                return Convert.ToUInt16( resources.IndexOf(resources.First(r => r.type == type && r.path == path && r.flags == flags)));
             }
             resources.Add(new SResource()
             {
-                typeid = id,
-                offset = of,
-                flags = f,
+                type = type,
+                path = path,
+                flags = flags,
             });
             return Convert.ToUInt16(resources.Count - 1);
         }
 
-        public uint AddObject(SObject value)
+        /// <summary>
+        /// Format the data in Tables 2, and 3 into the data needed 
+        /// for table 1 and set the values to be written to the file
+        /// </summary>
+        public void PrepareTables()
         {
-            var bytes = ((MemoryStream)BaseStream).ToArray();
-
-            value.crc32 = Crc32Algorithm.Compute(bytes);
-            value.size = Convert.ToUInt32(bytes.Length);
-            value.data = bytes;
-            objects.Add(value);
-
-            BaseStream.SetLength(0);
-            return Convert.ToUInt32(objects.Count);
+            for (int i = 0; i < names.Count; i++)
+            {
+                names[i].offset = AddString(names[i].value);
+            }
+            for (int i = 0; i < resources.Count; i++)
+            {
+                resources[i].typeid = AddName(resources[i].type);
+                names[resources[i].typeid].offset = AddString(resources[i].type);
+                resources[i].offset = AddString(resources[i].path);
+            }
         }
 
+        /// <summary>
+        /// Serialize the data in all the tables into byte array form 
+        /// and save within their header object ready for writing, along 
+        /// with calculated offsets, size and crc32 checksum.
+        /// </summary>
+        public void SerializeTables()
+        {
+            PrepareTables();
+
+            uint shift = 160;
+            byte[] data = null;
+
+            #region Table 1 - Strings
+            var table1 = new List<byte>();
+            foreach (var s in strings)
+            {
+                table1.AddRange(Encoding.ASCII.GetBytes(s.Value));
+                table1.Add(0);
+            }
+            data = table1.ToArray();
+            headers[0].data = data;
+            headers[0].size = Convert.ToUInt32(data.Length);
+            headers[0].crc32 = Crc32Algorithm.Compute(data);
+            headers[0].offset = shift;
+            shift += Convert.ToUInt32(data.Length);
+            #endregion
+
+            #region Table 2 - Names
+            var table2 = new List<byte>();
+            foreach (var n in names)
+            {
+                table2.AddRange(BitConverter.GetBytes(n.offset));
+                table2.AddRange(BitConverter.GetBytes(n.hash));
+            }
+            data = table2.ToArray();
+            headers[1].data = data;
+            headers[1].size = Convert.ToUInt32(names.Count);
+            headers[1].crc32 = Crc32Algorithm.Compute(data);
+            headers[1].offset = shift;
+            shift += Convert.ToUInt32(data.Length);
+            #endregion
+
+            #region Table 3 - Resources
+            var table3 = new List<byte>();
+            foreach (var r in resources)
+            {
+                table3.AddRange(BitConverter.GetBytes(r.offset));
+                table3.AddRange(BitConverter.GetBytes(r.typeid));
+                table3.AddRange(BitConverter.GetBytes(r.flags));
+            }
+            data = table3.ToArray();
+            headers[2].data = data;
+            headers[2].size = Convert.ToUInt32(resources.Count);
+            headers[2].crc32 = Crc32Algorithm.Compute(data);
+            headers[2].offset = shift;
+            shift += Convert.ToUInt32(data.Length);
+            #endregion
+
+            #region Table 4 - Nothing
+            //This could be skipped.
+            //ToDo: Check to see if this can be removed without an error in-game.
+            headers[3].data = new byte[16];
+            headers[3].size = 1;
+            headers[3].crc32 = 0xecbb4b55;
+            headers[3].offset = shift;
+            shift += 16;
+            #endregion
 
 
+        }
 
+        #endregion
 
+        public void WriteAll()
+        {
+            SerializeTables();
+            BaseStream.Seek(0, SeekOrigin.Begin);
+
+            //File Header
+            Write(0x57325243);  //CR2W
+            Write(163);         //Version
+            Write(0);           //Flags
+            WriteDateTime();    //DateTime
+            Write(0);           //Build
+            Write(0);           //FileSize
+            Write(0);           //BufferSize
+            Write(0);           //CRC32
+            Write(6);           //NumChunks
+
+            // 10 Table Headers
+            foreach (var h in headers)
+            {
+                Write(h.offset);
+                Write(h.size);
+                Write(h.crc32);
+            }
+
+            // Table Data
+            foreach (var h in headers)
+            {
+                if(h.data != null)
+                {
+                    Write(h.data);
+                }
+            }
+        }
 
         #region Supporting Functions
 
@@ -149,6 +263,20 @@ namespace CR2W.IO
                 }
                 Write(b);
             }
+        }
+
+        public void WriteDateTime()
+        {
+            var d = DateTime.Now;
+
+            Write(((((UInt32)(d.Year)) & 0b1111_1111_1111) << 20
+                        | (((UInt32)(d.Month) & 0b1_1111) << 15)
+                        | ((((UInt32)(d.Day))) & 0b1_1111) << 10));
+
+            Write((((UInt32)(d.Hour)) & 0b11_1111_1111) << 22
+                       | ((((UInt32)d.Minute)) & 0b11_1111) << 16
+                       | ((((UInt32)d.Second)) & 0b11_1111) << 10
+                       | (((UInt32)(d.Millisecond)) & 0b11_11111111));
         }
 
         #endregion

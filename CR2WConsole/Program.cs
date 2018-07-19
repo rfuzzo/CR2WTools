@@ -25,8 +25,9 @@ namespace CR2WConsole
         [STAThread]
         static void Main(string[] args)
         {
-            SelectFile();
+            //SelectFile();
             //ScallAll();
+            WriterTesting.Test();
             Console.ReadKey();
         }
 
@@ -36,8 +37,9 @@ namespace CR2WConsole
             {
                 if (of.ShowDialog() == DialogResult.OK)
                 {
-                    OpenFile(of.FileName);
-                    //TestFile(of.FileName, Console.Out);
+                    //OpenFile(of.FileName);
+                    TestFile(of.FileName, Console.Out);
+                    //LegacyFile(of.FileName);
                 }
             }
         }
@@ -64,6 +66,14 @@ namespace CR2WConsole
         static void TestFile(string path, TextWriter writer)
         {
             using (var br = new CR2WTestReader(path, writer))
+            {
+                br.ReadAll();
+            }
+        }
+
+        static void LegacyFile(string path)
+        {
+            using (var br = new CR2WLegacyReader(path))
             {
                 br.ReadAll();
             }
@@ -217,12 +227,56 @@ namespace CR2WConsole
 
         class DebugOut : TextWriter
         {
+            public StreamWriter _file { get; set; }
+
+            public DebugOut()
+            {
+                _file = new StreamWriter(@"D:\ModKit\Workspace\envout.txt")
+                {
+                    AutoFlush = true
+                };
+            }
+
             public override Encoding Encoding
             {
                 get
                 {
                     return new System.Text.ASCIIEncoding();
                 }
+            }
+
+            public override void WriteLine(string value)
+            {
+                _file.WriteLine(value);
+            }
+            public override void WriteLine(string format, object arg0)
+            {
+                _file.WriteLine(format, arg0);
+            }
+            public override void WriteLine(string format, object arg0, object arg1)
+            {
+                _file.WriteLine(format, arg0, arg1);
+            }
+            public override void WriteLine(string format, object arg0, object arg1, object arg2)
+            {
+                _file.WriteLine(format, arg0, arg1, arg2);
+            }
+
+            public override void Write(string value)
+            {
+                _file.Write(value);
+            }
+            public override void Write(string format, object arg0)
+            {
+                _file.Write(format, arg0);
+            }
+            public override void Write(string format, object arg0, object arg1)
+            {
+                _file.Write(format, arg0, arg1);
+            }
+            public override void Write(string format, object arg0, object arg1, object arg2)
+            {
+                _file.Write(format, arg0, arg1, arg2);
             }
         }
 

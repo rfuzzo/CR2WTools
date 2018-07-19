@@ -7,6 +7,9 @@ using CR2W.Types;
 using CR2W.CRC32;
 using CR2W.FNV1A;
 using System.Collections;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Threading.Tasks;
 
 /*
  *      TEST PARSER
@@ -98,7 +101,7 @@ namespace CR2W.IO
     {
         public TextWriter Writer { get; set; }
 
-        public string   FilePath            { get; set; }
+        public string   FilePath        { get; set; }
         public uint     FileVersion     { get; set; }
         public uint     Flags           { get; set; }
         public DateTime TimeStamp       { get; set; }
@@ -117,6 +120,18 @@ namespace CR2W.IO
         List<TSBuffer>               buffers;
         List<TSEmbedded>             embedded;
 
+        TSName GetName(int id)
+        {
+            Console.WriteLine($"bw.AddName(\"{names[id].Value}\");");
+            return names[id];
+        }
+
+        TSResource GetResource(int id)
+        {
+            Console.WriteLine($"bw.AddResource(\"{resources[id].Type}\", \"{resources[id].Path}\", \"{resources[id].Flags}\");");
+            return resources[id];
+        }
+
         readonly byte[] Magic = { 67, 82, 50, 87 };
 
         public CR2WTestReader(string path, TextWriter writer) 
@@ -124,6 +139,13 @@ namespace CR2W.IO
         {
             BaseStream.Seek(0, SeekOrigin.Begin);
             FilePath = path;
+            Writer = writer;
+        }
+
+        public CR2WTestReader(byte[] data, TextWriter writer)
+            : base(new MemoryStream(data), Encoding.ASCII, false)
+        {
+            BaseStream.Seek(0, SeekOrigin.Begin);
             Writer = writer;
         }
 
@@ -143,20 +165,7 @@ namespace CR2W.IO
             }
 
             Flags           = ReadUInt32();
-            {
-                var date    = ReadInt32();
-                var time    = ReadInt32();
-
-                var year    = date >> 20;
-                var month   = date >> 15 & 0x1F;
-                var day     = date >> 10 & 0x1F;
-                var hour    = time >> 22;
-                var minute  = time >> 16 & 0x3F;
-                var second  = time >> 10 & 0x3F;
-                var millisecond = time & 0b11_11111111;
-
-                TimeStamp = new DateTime(year, month, day, hour, minute, second, millisecond);
-            }
+            TimeStamp       = ReadDateTime();
             BuildVersion    = ReadUInt32();
             CR2WSize        = ReadUInt32();
             BufferSize      = ReadUInt32();
@@ -275,11 +284,11 @@ namespace CR2W.IO
             Writer.WriteLine("\tSize   {0}", size);
             Writer.WriteLine("\tOffset {0}", start);
             Writer.WriteLine("\n");
-            Writer.WriteLine("|Offset    |Hash           |Value");
-            Writer.WriteLine("|----------|---------------|---------------------------");
+            Writer.WriteLine("|Offset    |Hash           |Computed       |Value");
+            Writer.WriteLine("|----------|---------------|---------------|---------------------------");
             foreach (var r in names)
             {
-                Writer.WriteLine("|{0}|{1}|{2}", Convert.ToString(r.Offset).PadRight(10), Convert.ToString(r.Hash).PadRight(15), r.Value);
+                Writer.WriteLine("|{0}|{1}|{2}|{3}", Convert.ToString(r.Offset).PadRight(10), Convert.ToString(r.Hash).PadRight(15), Convert.ToString(FNV1A32HashAlgorithm.Compute(r.Value)).PadRight(15), r.Value);
             }
         }
         void GetResources()
@@ -511,7 +520,7 @@ namespace CR2W.IO
                 }
                 var typeId = ReadInt16();
                 var size = ReadInt32() - 4;
-                Writer.Write("{0}{1} {2}", offset, names[nameId].Value, names[typeId].Value);
+                Writer.Write("{0}{1} {2}", offset, GetName(nameId).Value, GetName(typeId).Value);
                 ParseVariale(names[typeId].Value, size, $"\t{offset}");
             }
         }
@@ -572,7 +581,7 @@ namespace CR2W.IO
                     return;
                 case "String":
                     {
-                        var length = Read7BitFlaggedInt();
+                        var length = ReadVLQInt32();
                         if (length < 0)
                         {
                             Writer.WriteLine(" {0}", Encoding.ASCII.GetString(ReadBytes(length * -1)));
@@ -606,7 +615,7 @@ namespace CR2W.IO
                     return;
                 case "CName":
                     {
-                        Writer.WriteLine(" {0}", names[ReadUInt16()].Value);
+                        Writer.WriteLine(" {0}", GetName(ReadUInt16()).Value);
                     }
                     return;
                 case "CGUID":
@@ -626,8 +635,8 @@ namespace CR2W.IO
                     return;
                 case "soft":
                     {
-                        var Id = ReadUInt16();
-                        Writer.WriteLine(" {0} {1} ({2})", resources[Id - 1].Type, resources[Id - 1].Path, resources[Id - 1].Flags);
+                        var res = GetResource(ReadUInt16() - 1);
+                        Writer.WriteLine(" {0} {1} ({2})", res.Type, res.Path, res.Flags);
                     }
                     return;
                 case "array":
@@ -654,7 +663,8 @@ namespace CR2W.IO
                         else
                         {
                             id *= -1;
-                            Writer.WriteLine(" {0} {1} ({2})", resources[id - 1].Type, resources[id - 1].Path, resources[id - 1].Flags);
+                            var res = GetResource(id - 1);
+                            Writer.WriteLine(" {0} {1} ({2})", res.Type, res.Path, res.Flags);
                         }
                     }
                     return;
@@ -719,7 +729,7 @@ namespace CR2W.IO
                         var tags = new string[count];
                         for (var i = 0; i < count; i++)
                         {
-                            tags[i] = names[ReadUInt16()].Value;
+                            tags[i] = GetName(ReadUInt16()).Value;
                         }
                         Writer.WriteLine(" [{0}]", string.Join(",", tags));
                     }
@@ -775,7 +785,7 @@ namespace CR2W.IO
                             {
                                 break;
                             }
-                            values.Add(names[flag].Value);
+                            values.Add(GetName(flag).Value);
                         }
                         if(values.Count != 0)
                         {
@@ -788,8 +798,7 @@ namespace CR2W.IO
                     }
                     else
                     {
-                        var value = names[ReadUInt16()].Value;
-
+                        var value = GetName(ReadUInt16()).Value;
                         Writer.WriteLine(" {0}", value);
                     }
                     return;
@@ -804,7 +813,6 @@ namespace CR2W.IO
         #endregion
 
         #region Supporting Functions
-
         /* - Format Info
          * 
         This is a format where each byte in the value is flagged.
@@ -887,7 +895,7 @@ namespace CR2W.IO
              0000111110010 = 498
 
         */
-        public int Read7BitFlaggedInt()
+        public int ReadVLQInt32()
         {
             var b1 = ReadByte();
             var sign = (b1 & 128) == 128;
@@ -904,11 +912,24 @@ namespace CR2W.IO
             size = sign ? size * -1 : size;
             return size;
         }
+        public DateTime ReadDateTime()
+        {
+            var date = ReadInt32();
+            var time = ReadInt32();
 
+            var year = date >> 20;
+            var month = date >> 15 & 0x1F;
+            var day = date >> 10 & 0x1F;
+            var hour = time >> 22;
+            var minute = time >> 16 & 0x3F;
+            var second = time >> 10 & 0x3F;
+            var millisecond = time & 0b11_11111111;
+
+            return new DateTime(year, month, day, hour, minute, second, millisecond);
+        }
         #endregion
 
         #region Specific Parsers
-
         private CSectorData ReadCSectorData()
         {
             var temp = new CSectorData()
@@ -917,7 +938,7 @@ namespace CR2W.IO
                 Unknown2 = ReadUInt32(),
             };
 
-            var numresources = Read7BitFlaggedInt();
+            var numresources = ReadVLQInt32();
             temp.resources = new SSectorDataResource[numresources];
             for (int i = 0; i < numresources; i++)
             {
@@ -933,7 +954,7 @@ namespace CR2W.IO
                 };
             }
             
-            var numobjects = Read7BitFlaggedInt();
+            var numobjects = ReadVLQInt32();
             temp.objects = new SSectorDataObject[numobjects];
             for (int i = 0; i < numobjects; i++)
             {
@@ -949,12 +970,11 @@ namespace CR2W.IO
                 };
             }
             
-            var datasize = Read7BitFlaggedInt();
+            var datasize = ReadVLQInt32();
             temp.blockdata = ReadBytes(datasize);
 
             return temp;
         }
-
         private void PrintCSectorData(CSectorData temp)
         {
             Writer.WriteLine("\tUnknown1   {0}", temp.Unknown1);
@@ -995,7 +1015,6 @@ namespace CR2W.IO
             Writer.WriteLine("\t}");
             Writer.WriteLine("\tBlock Data: {0}", temp.blockdata.Length);
         }
-
         #endregion
 
         protected override void Dispose(bool disposing)

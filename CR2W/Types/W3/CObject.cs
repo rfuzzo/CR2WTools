@@ -55,6 +55,7 @@ namespace CR2W.Types.W3
             return value.Children.ContainsValue(this);
         }
 
+        #region DeSerializing
         public virtual void ParseBytes(CR2WBinaryReader br, uint size)
         {
             ParseClass(br, this);
@@ -202,5 +203,12 @@ namespace CR2W.Types.W3
             //Should be impossible to reach if all types get covered above.
             return null;
         }
+        #endregion
+
+        #region Serializing
+
+
+
+        #endregion
     }
 }

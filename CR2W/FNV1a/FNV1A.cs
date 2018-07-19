@@ -4,51 +4,30 @@ using System.Text;
 
 namespace CR2W.FNV1A
 {
-
-    public sealed class Fnv1a32 : HashAlgorithm
+    public sealed class FNV1A32HashAlgorithm
     {
-        public uint FnvPrime = unchecked(16777619);
+        private const uint FnvHashInitial = 0x811C9DC5;
+        private const int FnvHashPrime = 0x1000193;
 
-        public uint FnvOffsetBasis = unchecked(2166136261);
-
-        private uint hash;
-
-        public Fnv1a32()
+        public static uint Compute(string input)
         {
-            this.Reset();
-        }
+            uint fnvHash = FnvHashInitial;
+            byte[] data = Encoding.ASCII.GetBytes(input);
 
-        public override void Initialize()
-        {
-            this.Reset();
-        }
+            // Return 0 on an empty string, otherwise a hash of the 
+            // initial * prime is returned.
+            if(data.Length == 0)
+                return 0;
 
-        protected override void HashCore(byte[] array, int ibStart, int cbSize)
-        {
-            for (var i = ibStart; i < cbSize; i++)
+            for (int i = 0; i < data.Length; i++)
             {
-                unchecked
-                {
-                    this.hash ^= array[i];
-                    this.hash *= FnvPrime;
-                }
+                fnvHash ^= data[i];
+                fnvHash *= FnvHashPrime;
             }
-        }
 
-        public UInt32 ComputeHash(string value)
-        {
-            var hash = base.ComputeHash(Encoding.Default.GetBytes(value));
-            return BitConverter.ToUInt32(hash, 0);
-        }
-
-        protected override byte[] HashFinal()
-        {
-            return BitConverter.GetBytes(this.hash);
-        }
-
-        private void Reset()
-        {
-            this.hash = FnvOffsetBasis;
+            // This is required because strings aren't null terminated
+            fnvHash *= FnvHashPrime;
+            return fnvHash;
         }
     }
 }

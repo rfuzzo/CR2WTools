@@ -203,7 +203,7 @@ namespace CR2W.Types
         }
 
         /// <summary>
-        /// Returns a string representation of the value of this instance of the System.Guid
+        /// Returns a string representation of the value of this instance of the CR2W.Types.CGUID
         /// class, according to the provided format specifier and culture-specific format
         /// information.
         /// </summary>
