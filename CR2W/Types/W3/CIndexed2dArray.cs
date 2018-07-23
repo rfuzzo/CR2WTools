@@ -22,7 +22,7 @@ namespace CR2W.Types.W3
             /* - Info Parsing Extra Bytes
              *   Specifically to sound_info.redicsv
              *   
-             *   1st byte gives the lenght of the Array of Headers
+             *   1st byte gives the length of the Array of Headers
              *   Read off that many strings using br.ReadStringDefaultSingle()
              *   
              *   Next byte is the size of of the array of data.

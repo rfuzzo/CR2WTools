@@ -1,6 +1,4 @@
-
 using System;
-
 
 namespace CR2W.Types.W3
 {

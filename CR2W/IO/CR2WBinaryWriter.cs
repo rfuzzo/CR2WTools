@@ -14,7 +14,42 @@ namespace CR2W.IO
 
     public sealed class CR2WBinaryWriter : BinaryWriter
     {
-        public SHeader[]                headers;
+        public const uint MAGIC = 0x57325243;
+        public const uint VERSION = 0xA3;
+        public const uint FLAGS = 0x0;
+        public const uint BUILD = 0x12E9CE;
+        public const uint DEADBEEF = 0xDEADBEEF;
+        public const uint CHUNKS = 0x6;
+
+        //Build versions
+        //894871
+        //941235
+        //981372
+        //988299
+        //1007547
+        //1088431
+        //1101707
+        //1133885
+        //1150341
+        //1162672
+        //1163393
+        //1168504
+        //1239502
+
+        //CR2W versions
+        //127
+        //136
+        //134
+        //137
+        //152
+        //156
+        //157
+        //159
+        //161
+        //162
+        //163
+
+        public STableHeader[]           headers;
         public Dictionary<uint, string> strings;
         public List<SName>              names;
         public List<SResource>          resources;
@@ -24,7 +59,7 @@ namespace CR2W.IO
 
         public CR2WBinaryWriter(Stream stream) : base(stream, Encoding.ASCII, false)
         {
-            headers     = new SHeader[10];
+            headers     = new STableHeader[10];
             strings     = new Dictionary<uint, string>();
             names       = new List<SName>();
             resources   = new List<SResource>();
@@ -34,7 +69,7 @@ namespace CR2W.IO
 
             for (int i = 0; i < 10; i++)
             {
-                headers[i] = new SHeader();
+                headers[i] = new STableHeader();
             }
 
             names.Add(new SName() { value = "", hash = 0 });
@@ -48,7 +83,7 @@ namespace CR2W.IO
         #region Table Construction
 
         /// <summary>
-        /// Add a string value to Table 1. If that value already exists this will retun the offset of the existing one.
+        /// Add a string value to Table 1. If that value already exists this will return the offset of the existing one.
         /// </summary>
         /// <param name="value">String value to add to the table</param>
         /// <returns>uint value of the offset that string has in the table</returns>
@@ -206,15 +241,15 @@ namespace CR2W.IO
             BaseStream.Seek(0, SeekOrigin.Begin);
 
             //File Header
-            Write(0x57325243);  //CR2W
-            Write(163);         //Version
-            Write(0);           //Flags
+            Write(MAGIC);       //CR2W
+            Write(VERSION);     //Version
+            Write(FLAGS);       //Flags
             WriteDateTime();    //DateTime
-            Write(0);           //Build
-            Write(0);           //FileSize
-            Write(0);           //BufferSize
-            Write(0);           //CRC32
-            Write(6);           //NumChunks
+            Write(BUILD);       //Build
+            Write(0);           //Disksize
+            Write(0);           //MemSize
+            Write(DEADBEEF);    //CRC32
+            Write(CHUNKS);      //NumChunks
 
             // 10 Table Headers
             foreach (var h in headers)

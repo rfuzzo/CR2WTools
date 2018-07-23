@@ -8,29 +8,31 @@ namespace CR2W.IO
 {
     public class CR2WFile : IFile
     {
-        public string        path;
-
-        public uint          verion;
-        public uint          flags;
-        public ulong         timeStamp;
-        public uint          buildVersion;
-        public uint          disksize;
-        public uint          memsize;
-        public uint          crc32;
-        public uint          numchunks;
-
-        public SHeader[]     headers;
-
-        public SString[]     strings;
-        public SName[]       names;
-        public SResource[]   resources;
+        public string path;
+        public SFileHeader fileheader;
+        public STableHeader[] tableheaders;
+        public SString[] strings;
+        public SName[] names;
+        public SResource[] resources;
         public STable4Item[] table4;
-        public SObject[]     objects;
-        public SBuffer[]     buffers;
-        public SEmbedded[]   embedded;
+        public SObject[] objects;
+        public SBuffer[] buffers;
+        public SEmbedded[] embedded;
     }
 
-    public class SHeader
+    public class SFileHeader
+    {
+        public uint verion;
+        public uint flags;
+        public ulong timeStamp;
+        public uint buildVersion;
+        public uint disksize;
+        public uint memsize;
+        public uint crc32;
+        public uint numchunks;
+    }
+
+    public class STableHeader
     {
         public uint offset;
         public uint size;

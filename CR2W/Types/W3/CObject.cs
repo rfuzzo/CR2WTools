@@ -16,8 +16,19 @@ namespace CR2W.Types.W3
     /// </summary>
     public abstract class CObject : ISerializable, IReferencable, IScriptable
     {
+        [REDProp("importFile")]
+        public string ImportFile { get; set; }
+
+        [REDProp("importFileTimeStamp")]
+        public CDateTime ImportFileTimeStamp { get; set; }
+
+        [REDProp("authorName")]
+        public string AuthorName { get; set; } 
+
         public Dictionary<uint, CObject> Children { get; set; }
+
         public uint Template { get; set; }
+
         public ushort Flags { get; set; }
 
         public CObject()

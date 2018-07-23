@@ -9,9 +9,6 @@ using System.Threading.Tasks;
 
 namespace CR2W
 {
-    /// <summary>
-    /// Extenstion methods to inteface CR2W types.
-    /// </summary>
     public static class REDReflection
     {
         public static PropertyInfo GetREDProperty(this Type parent, string name, string type)

@@ -25,9 +25,9 @@ namespace CR2WConsole
         [STAThread]
         static void Main(string[] args)
         {
-            //SelectFile();
+            SelectFile();
             //ScallAll();
-            WriterTesting.Test();
+            //WriterTesting.Test();
             Console.ReadKey();
         }
 
@@ -56,7 +56,7 @@ namespace CR2WConsole
                 {
                     TestFile(file.FullName, new DebugOut());
                 }
-                catch
+                catch(Exception e)
                 {
                     continue;
                 }
@@ -227,16 +227,6 @@ namespace CR2WConsole
 
         class DebugOut : TextWriter
         {
-            public StreamWriter _file { get; set; }
-
-            public DebugOut()
-            {
-                _file = new StreamWriter(@"D:\ModKit\Workspace\envout.txt")
-                {
-                    AutoFlush = true
-                };
-            }
-
             public override Encoding Encoding
             {
                 get
@@ -244,41 +234,33 @@ namespace CR2WConsole
                     return new System.Text.ASCIIEncoding();
                 }
             }
-
-            public override void WriteLine(string value)
-            {
-                _file.WriteLine(value);
-            }
-            public override void WriteLine(string format, object arg0)
-            {
-                _file.WriteLine(format, arg0);
-            }
-            public override void WriteLine(string format, object arg0, object arg1)
-            {
-                _file.WriteLine(format, arg0, arg1);
-            }
-            public override void WriteLine(string format, object arg0, object arg1, object arg2)
-            {
-                _file.WriteLine(format, arg0, arg1, arg2);
-            }
-
-            public override void Write(string value)
-            {
-                _file.Write(value);
-            }
-            public override void Write(string format, object arg0)
-            {
-                _file.Write(format, arg0);
-            }
-            public override void Write(string format, object arg0, object arg1)
-            {
-                _file.Write(format, arg0, arg1);
-            }
-            public override void Write(string format, object arg0, object arg1, object arg2)
-            {
-                _file.Write(format, arg0, arg1, arg2);
-            }
         }
+
+        /*  - Brute Force crc32 checksum finder
+         * 
+         *  BaseStream.Seek(32, SeekOrigin.Begin);
+         *  var crc1 = ReadUInt32();
+         *  BaseStream.Seek(0, SeekOrigin.Begin);
+         *  for (int i = 0; i <= BaseStream.Length; i++)
+         *  {
+         *      for (int j = i; j <= BaseStream.Length; j++)
+         *      {
+         *          BaseStream.Seek(i, SeekOrigin.Begin);
+         *  
+         *          if (j - i == 0)
+         *              continue;
+         *  
+         *          var data = ReadBytes(j - i);
+         *          var crc2 = Crc32Algorithm.Compute(data);
+         *          if (crc1 == crc2)
+         *          {
+         *              Console.WriteLine("Found! start = {0} length = {1}", i, j - i);
+         *              Console.ReadKey();
+         *          }
+         *      }
+         *  }
+         * 
+         */
 
         /* - Class Types
          *      ClassTypes: Dumped from all CR2W files, and are all the different chunk types.

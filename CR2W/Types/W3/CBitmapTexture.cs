@@ -91,6 +91,8 @@ namespace CR2W.Types.W3
                 unknown7    = br.ReadUInt32(),
             };
 
+
+
             var ddsheader = new DDSStruct
             {
                 size            = 124,
@@ -103,27 +105,28 @@ namespace CR2W.Types.W3
                 reserved        = new uint[10],
             };
             ddsheader.ddscaps.caps1 = 4096;
-            ddsheader.pixelformat.flags = 4;
+            ddsheader.pixelformat.flags = 5;
             ddsheader.pixelformat.size = 32;
+            ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT5;
 
-            switch (Compression)
-            {
-                case ETextureCompression.TCM_DXTAlpha:
-                case ETextureCompression.TCM_DXTAlphaLinear:
-                case ETextureCompression.TCM_None:
-                case ETextureCompression.TCM_Normals:
-                case ETextureCompression.TCM_NormalsGloss:
-                case ETextureCompression.TCM_NormalsHigh:
-                case ETextureCompression.TCM_QualityR:
-                case ETextureCompression.TCM_QualityRG:
-                case ETextureCompression.TCM_RGBE:
-                case ETextureCompression.TCM_QualityColor:
-                    ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT5;
-                    break;
-                case ETextureCompression.TCM_DXTNoAlpha:
-                    ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT1;
-                    break;
-            }
+            //switch (Compression)
+            //{
+            //    case ETextureCompression.TCM_DXTAlpha:
+            //    case ETextureCompression.TCM_DXTAlphaLinear:
+            //    case ETextureCompression.TCM_None:
+            //    case ETextureCompression.TCM_Normals:
+            //    case ETextureCompression.TCM_NormalsGloss:
+            //    case ETextureCompression.TCM_NormalsHigh:
+            //    case ETextureCompression.TCM_QualityR:
+            //    case ETextureCompression.TCM_QualityRG:
+            //    case ETextureCompression.TCM_RGBE:
+            //    case ETextureCompression.TCM_QualityColor:
+            //        ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT5;
+            //        break;
+            //    case ETextureCompression.TCM_DXTNoAlpha:
+            //        ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT1;
+            //        break;
+            //}
 
             var rawsize = Convert.ToInt32(pos + size - br.BaseStream.Position);
             var raw = br.ReadBytes(rawsize);

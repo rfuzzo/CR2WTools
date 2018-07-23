@@ -33,8 +33,8 @@ namespace CR2W.IO
         //File path of the CR2W file
         public string FilePath { get; private set; } = "";
 
-        //Magic Identifier 'CR2W' in byte[].
-        private readonly byte[] Magic = { 67, 82, 50, 87 };
+        //Magic Identifier 'CR2W' in uint.
+        private readonly uint Magic = 0x57325243;
 
         //Table Item Sizes
         private readonly byte[] TableSize = { 1, 8, 8, 16, 24, 24, 24, 0, 0, 0 };
@@ -49,7 +49,7 @@ namespace CR2W.IO
         public uint NumChunks;
 
         //Tables
-        public SHeader[]                headers;
+        public STableHeader[]                headers;
         public Dictionary<uint, string> strings;
         public string[]                 names;
         public SResource[]              resources;
@@ -70,7 +70,7 @@ namespace CR2W.IO
         {
             BaseStream.Seek(0, SeekOrigin.Begin);
 
-            if (!Magic.SequenceEqual(ReadBytes(4)))
+            if (ReadUInt32() != Magic)
             {
                 throw new InvalidCR2WFileException("Not a CR2W file - Missing 'CR2W' magic header.");
             }
@@ -108,10 +108,10 @@ namespace CR2W.IO
         /// </summary>
         private void ReadTableHeaders()
         {
-            headers = new SHeader[10];
+            headers = new STableHeader[10];
             for (int i = 0; i < 10; i++)
             {
-                headers[i] = new SHeader()
+                headers[i] = new STableHeader()
                 {
                     offset = ReadUInt32(),
                     size   = ReadUInt32(),
@@ -148,8 +148,12 @@ namespace CR2W.IO
 
             if(!IgnoreCRC)
             {
+                var hash = new Crc32Algorithm(false);
+
+                var compute = BitConverter.ToUInt32(hash.ComputeHash(ReadBytes(Convert.ToInt32(size))), 0);
+
                 BaseStream.Seek(start, SeekOrigin.Begin);
-                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size))) != crc)
+                if (compute != crc)
                 {
                     throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 1 - Strings");
                 }
@@ -457,24 +461,17 @@ namespace CR2W.IO
         }
 
         /// <summary>
-        /// Read a single string from the current stream, where the first bytes indicate the length.
+        /// Read a single string from the current stream, prefixed with a VQLvariable indicating the length.
         /// </summary>
         /// <returns>string value read</returns>
         public override string ReadString()
         {
-            var b = ReadByte();
-            var nxt = (b & (1 << 6)) != 0;
-            var utf = (b & (1 << 7)) == 0;
-            int len = b & ((1 << 6) - 1);
-            if (nxt)
+            var length = ReadVLQInt32();
+            if (length < 0)
             {
-                len += 64 * ReadByte();
+                return Encoding.ASCII.GetString(ReadBytes(length * -1));
             }
-            if (utf)
-            {
-                return Encoding.Unicode.GetString(ReadBytes(len * 2));
-            }
-            return Encoding.ASCII.GetString(ReadBytes(len));
+            return Encoding.Unicode.GetString(ReadBytes(length * 2));
         }
 
         /// <summary>
