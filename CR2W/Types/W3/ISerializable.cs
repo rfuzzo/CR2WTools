@@ -8,8 +8,12 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types.W3
 {
+    public delegate void SerializeEventHandler(IFile sender, REDEventArgs e);
+    public delegate void DeSerializeEventHandler(IFile sender, REDEventArgs e);
+
     public interface ISerializable
     {
-        
+        event SerializeEventHandler Serialize;
+        event DeSerializeEventHandler DeSerialize;
     }
 }

@@ -18,6 +18,9 @@ namespace CR2W.Types.W3
 
         public byte[] blockdata;
 
+        public event SerializeEventHandler Serialize;
+        public event DeSerializeEventHandler DeSerialize;
+
         public void ParseBytes(CR2WBinaryReader br, uint size)
         {
             throw new NotImplementedException();

@@ -49,7 +49,7 @@ namespace CR2W
             return (attribute.Name, GetREDString(prop.PropertyType, flags));
         }
 
-        public static string GetREDString( this Type type, Stack<byte> flags)
+        public static string GetREDString(this Type type, Stack<byte> flags)
         {
             switch (type.Name)
             {
@@ -107,9 +107,9 @@ namespace CR2W
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class REDPropAttribute : Attribute
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public byte[] Flags { get; set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public byte[] Flags { get; private set; }
 
         public REDPropAttribute(string name, params byte[] flags)
         {

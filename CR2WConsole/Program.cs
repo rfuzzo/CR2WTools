@@ -2,21 +2,11 @@
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Xml.Linq;
-using System.Threading;
 using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
 using CR2W;
 using CR2W.IO;
-using CR2W.CRC32;
-using CR2W.FNV1A;
-using CR2W.Types;
 using CR2W.Types.W3;
-using System.Collections;
 
 namespace CR2WConsole
 {
@@ -28,7 +18,7 @@ namespace CR2WConsole
             SelectFile();
             //ScallAll();
             //WriterTesting.Test();
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
         static void SelectFile()
@@ -47,7 +37,7 @@ namespace CR2WConsole
         static void ScallAll()
         {
             var dir = new DirectoryInfo(@"D:\ModKit\modkit_tools\r4data");
-            var files = dir.GetFiles("*.*", SearchOption.AllDirectories);
+            var files = dir.GetFiles("*.w2ent", SearchOption.AllDirectories);
 
             foreach (var file in files)
             {
@@ -235,32 +225,6 @@ namespace CR2WConsole
                 }
             }
         }
-
-        /*  - Brute Force crc32 checksum finder
-         * 
-         *  BaseStream.Seek(32, SeekOrigin.Begin);
-         *  var crc1 = ReadUInt32();
-         *  BaseStream.Seek(0, SeekOrigin.Begin);
-         *  for (int i = 0; i <= BaseStream.Length; i++)
-         *  {
-         *      for (int j = i; j <= BaseStream.Length; j++)
-         *      {
-         *          BaseStream.Seek(i, SeekOrigin.Begin);
-         *  
-         *          if (j - i == 0)
-         *              continue;
-         *  
-         *          var data = ReadBytes(j - i);
-         *          var crc2 = Crc32Algorithm.Compute(data);
-         *          if (crc1 == crc2)
-         *          {
-         *              Console.WriteLine("Found! start = {0} length = {1}", i, j - i);
-         *              Console.ReadKey();
-         *          }
-         *      }
-         *  }
-         * 
-         */
 
         /* - Class Types
          *      ClassTypes: Dumped from all CR2W files, and are all the different chunk types.

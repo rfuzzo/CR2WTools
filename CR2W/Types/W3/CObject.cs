@@ -14,6 +14,7 @@ namespace CR2W.Types.W3
     /// Represnts a Witcher 3 object that can be read by the RedEngine3.
     /// This is the base class of all RedEngine3 serializable types.
     /// </summary>
+    [REDClass]
     public abstract class CObject : ISerializable, IReferencable, IScriptable
     {
         [REDProp("importFile")]
@@ -36,6 +37,9 @@ namespace CR2W.Types.W3
             Children = new Dictionary<uint, CObject>();
             Console.WriteLine($"CObject created: {this.GetType().Name}");
         }
+
+        public event SerializeEventHandler Serialize;
+        public event DeSerializeEventHandler DeSerialize;
 
         /// <summary>
         /// Get the CObject parent for this instance 
@@ -67,6 +71,7 @@ namespace CR2W.Types.W3
         }
 
         #region DeSerializing
+
         public virtual void ParseBytes(CR2WBinaryReader br, uint size)
         {
             ParseClass(br, this);
@@ -220,6 +225,16 @@ namespace CR2W.Types.W3
 
 
 
+        public virtual void OnSerialize(IFile source, REDEventArgs e)
+        {
+            Serialize?.Invoke(source, e);
+        }
+
+
+
         #endregion
+
+
+
     }
 }

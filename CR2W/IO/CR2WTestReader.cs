@@ -203,6 +203,8 @@ namespace CR2W.IO
             GetObjects();
             GetBuffers();
             GetEmbedded();
+
+            ReadObjectData();
         }
 
         private uint CalculateHeaderCRC32(TSFileHeader fileheader)
@@ -359,11 +361,11 @@ namespace CR2W.IO
             Writer.WriteLine("\tOffset {0}", start);
             Writer.WriteLine("\n");
 
-            Writer.WriteLine("|Type                |Path                                                             |Flags");
-            Writer.WriteLine("|--------------------|-----------------------------------------------------------------|--------");
+            Writer.WriteLine("|Type                     |Path                                                                                                |Flags");
+            Writer.WriteLine("|-------------------------|----------------------------------------------------------------------------------------------------|--------");
             foreach (var h in resources)
             {
-                Writer.WriteLine("|{0}|{1}|{2}", h.Type.PadRight(20), h.Path.PadRight(65), h.Flags);
+                Writer.WriteLine("|{0}|{1}|{2}", h.Type.PadRight(25), h.Path.PadRight(100), h.Flags);
             }
         }
         void GetObjects()
@@ -373,12 +375,6 @@ namespace CR2W.IO
 
             objects = new List<TSObject>();
             BaseStream.Seek(start, SeekOrigin.Begin);
-
-            Writer.WriteLine("\n");
-            Writer.WriteLine("\tTable  5");
-            Writer.WriteLine("\tSize   {0}", size);
-            Writer.WriteLine("\tOffset {0}", start);
-            Writer.WriteLine("\n");
 
             for (int i = 0; i < size; i++)
             {
@@ -392,75 +388,26 @@ namespace CR2W.IO
                     Template    = ReadUInt32(),
                     CRC32       = ReadUInt32(),
                 });
+            }
 
-                var type = names[Convert.ToInt32(objects[i].TypeID)].Value;
+            Writer.WriteLine("\n");
+            Writer.WriteLine("\tTable  5");
+            Writer.WriteLine("\tSize   {0}", size);
+            Writer.WriteLine("\tOffset {0}", start);
+            Writer.WriteLine("\n");
+            Writer.WriteLine("|Type                          |Flags     |Parent    |Size      |Offset    |Template  |CRC32");
+            Writer.WriteLine("|------------------------------|----------|----------|----------|----------|----------|----------");
+            foreach (var o in objects)
+            {
+                Writer.WriteLine("|{0}|{1}|{2}|{3}|{4}|{5}|{6}", 
+                    GetName(Convert.ToInt32(o.TypeID)).Value.PadRight(30),
+                    Convert.ToString(o.Flags).PadRight(10),
+                    Convert.ToString(o.ParentID).PadRight(10),
+                    Convert.ToString(o.Size).PadRight(10),
+                    Convert.ToString(o.Offset).PadRight(10),
+                    Convert.ToString(o.Template).PadRight(10),
+                    Convert.ToString(o.CRC32));
 
-                Writer.WriteLine("Index     {0}", i+1);
-                Writer.WriteLine("TypeId    {0} - {1}", objects[i].TypeID, type);
-                Writer.WriteLine("Flags     {0}", objects[i].Flags);
-                Writer.WriteLine("Parent    {0}", objects[i].ParentID);
-                Writer.WriteLine("Size      {0}", objects[i].Size);
-                Writer.WriteLine("Offset    {0}", objects[i].Offset);
-                Writer.WriteLine("Template  {0}", objects[i].Template);
-                Writer.WriteLine("CRC32     {0}", objects[i].CRC32);
-
-                var pos = BaseStream.Position;
-                var end = objects[i].Offset + objects[i].Size;
-
-                BaseStream.Seek(Convert.ToInt32(objects[i].Offset), SeekOrigin.Begin);
-
-                Writer.WriteLine("ObjectData");
-                Writer.WriteLine("{");
-                switch (names[Convert.ToInt32(objects[i].TypeID)].Value)
-                {
-                    case "CSectorData":
-                        {
-                            var data = ReadCSectorData();
-                            PrintCSectorData(data);
-                        }
-                        break;
-                    case "CClipMapCookedData":
-                        {
-                            Console.WriteLine("\tBytes: {0}", end - BaseStream.Position);
-                            BaseStream.Seek(end, SeekOrigin.Begin);
-                        }
-                        break;
-                    default:
-                        {
-                            ReadVariable("\t");
-                        }
-                        break;
-                }
-                Writer.WriteLine("}");
-
-                if (end - BaseStream.Position > 0)
-                {
-                    switch(names[Convert.ToInt32(objects[i].TypeID)].Value)
-                    {
-                        case "CSwfResource":
-                            {
-                                var length = ReadInt32();
-                                var swf = ReadBytes(length);
-                                Writer.WriteLine("SWF Bytes: {0}", swf.Length);
-                            }
-                            break;
-                        case "CRagdoll":
-                            {
-                                var length = ReadInt32();
-                                var xmlstr = Encoding.UTF8.GetString(ReadBytes(length));
-                                Writer.WriteLine(xmlstr);
-                            }
-                            break;
-                    }
-                    var unknown = ReadBytes(Convert.ToInt32(end - BaseStream.Position));
-                    Writer.WriteLine("Unknown Bytes: {0}", unknown.Length);
-                }
-                else
-                {
-                    Writer.WriteLine("Unknown Bytes: 0");
-                }
-                Writer.WriteLine();
-                BaseStream.Seek(pos, SeekOrigin.Begin);
             }
         }
         void GetBuffers()
@@ -537,17 +484,97 @@ namespace CR2W.IO
             if (size == 0)
                 return;
 
-            Writer.WriteLine("|Id   |Path                                                                            |Hash                     |Offset         |Length");
-            Writer.WriteLine("|-----|--------------------------------------------------------------------------------|-------------------------|---------------|---------------");
+            Writer.WriteLine("|Id   |Path                                                                                                |Hash                     |Offset         |Length");
+            Writer.WriteLine("|-----|----------------------------------------------------------------------------------------------------|-------------------------|---------------|---------------");
             foreach (var e in embedded)
             {
                 Writer.WriteLine("|{0}|{1}|{2}|{3}|{4}", Convert.ToString(e.Id).PadRight(5),
-                                                  Convert.ToString(strings[e.Path]).PadRight(80),
+                                                  Convert.ToString(strings[e.Path]).PadRight(100),
                                                   Convert.ToString(e.Hash).PadRight(25),
                                                   Convert.ToString(e.Offset).PadRight(15),
                                                   Convert.ToString(e.Length));
             }
         }
+        #endregion
+
+        #region Data
+
+        private void ReadObjectData()
+        {
+            Writer.WriteLine("\n");
+            Writer.WriteLine("\tObject Data");
+            Writer.WriteLine("\n");
+
+            foreach (var obj in objects)
+            {
+                BaseStream.Seek(obj.Offset, SeekOrigin.Begin);
+                var end = obj.Offset + obj.Size;
+                var type = GetName(Convert.ToInt32(obj.TypeID)).Value;
+
+                Writer.WriteLine(type);
+                Writer.WriteLine("{");
+                switch (type)
+                {
+                    case "CSectorData":
+                        {
+                            var data = ReadCSectorData();
+                            PrintCSectorData(data);
+                        }
+                        break;
+                    case "CClipMapCookedData":
+                        {
+                            Console.WriteLine("\tBytes: {0}", obj.Size);
+                            BaseStream.Seek(obj.Size, SeekOrigin.Current);
+                        }
+                        break;
+                    default:
+                        {
+                            ReadVariable("\t");
+                        }
+                        break;
+                }
+                Writer.WriteLine("}");
+
+                if (end - BaseStream.Position > 0)
+                {
+                    switch (type)
+                    {
+                        case "CSwfResource":
+                            {
+                                var length = ReadInt32();
+                                var swf = ReadBytes(length);
+                                Writer.WriteLine("SWF Bytes: {0}", swf.Length);
+                            }
+                            break;
+                        case "CRagdoll":
+                            {
+                                var length = ReadInt32();
+                                var xmlstr = Encoding.UTF8.GetString(ReadBytes(length));
+                                Writer.WriteLine(xmlstr);
+                            }
+                            break;
+                    }
+                    var unknown = ReadBytes(Convert.ToInt32(end - BaseStream.Position));
+                    Writer.WriteLine("Unknown Bytes: {0}", unknown.Length);
+                }
+                else
+                {
+                    Writer.WriteLine("Unknown Bytes: 0");
+                }
+                Writer.WriteLine();
+            }
+        }
+
+        private void ReadBufferData()
+        {
+
+        }
+
+        private void ReadEmbeddedData()
+        {
+
+        }
+
         #endregion
 
         #region Variables
@@ -720,13 +747,17 @@ namespace CR2W.IO
                         var unknown = ReadBytes(bytecount - 4);
                         Writer.WriteLine("{0}Unknown Bytes: {1}", offset, bytecount - 4);
                         Writer.WriteLine("{0}}}", offset.Substring(1));
-                        Console.ReadKey();
                     }
                     return;
                 case "IdTag":
                     {
-                        Writer.Write(" {0}", ReadByte());
-                        Writer.WriteLine(" - {0}", new CGUID(ReadBytes(16)).ToString());
+                        var tagtype = ReadByte();
+                        var guid = new CGUID(ReadBytes(16));
+                        switch (tagtype)
+                        {
+                            case 0: Writer.WriteLine(" [Static: {0}]", guid.ToString()); break;
+                            case 1: Writer.WriteLine(" [Dynamic: {0}]", guid.ToString()); break;
+                        }
                     }
                     return;
                 case "EngineTransform":
@@ -758,11 +789,11 @@ namespace CR2W.IO
                         }
                         if ((flags & 2) == 2)
                         {
-                            Writer.Write("Posistion:{0},{1},{2},{3} ", ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
+                            Writer.Write("Rotation:{0},{1},{2},{3} ", ReadSingle(), ReadSingle(), ReadSingle(), ReadSingle());
                         }
                         if ((flags & 4) == 4)
                         {
-                            Writer.Write("Posistion:{0},{1},{2} ", ReadSingle(), ReadSingle(), ReadSingle());
+                            Writer.Write("Scale:{0},{1},{2} ", ReadSingle(), ReadSingle(), ReadSingle());
                         }
                         Writer.WriteLine("]");
                     }
@@ -780,7 +811,43 @@ namespace CR2W.IO
                     return;
                 case "EntityHandle":
                     {
-                        Writer.WriteLine("[{0},{1},{2}]", ReadByte(), ReadByte(), new CGUID(ReadBytes(16)).ToString());
+                        /*
+                         *  Read the first byte which will tell you what type of entity handle it is.
+                         *  Values:
+                         *      0 - None - 0 bytes
+                         *      1 - Entity Guid - 32 bytes
+                         *      2 - IdTag - 17 bytes
+                         *      
+                         *      Then read off that variable type.
+                         *      
+                         *      IdTag:
+                         *          1 Byte - 0 = Static, 1 = Dynamic
+                         *          16 Bytes - Guid Value
+                         *      Entity:
+                         *          16 Bytes - Guid Value
+                         *          16 Bytes - Unknown
+                         *      
+                         */
+                        var handletype = ReadByte();
+                        switch (handletype)
+                        {
+                            //Entity
+                            case 1:
+                                var eguid = new CGUID(ReadBytes(16));
+                                var unkn = ReadBytes(16);
+                                Writer.WriteLine(" [Entity - {0}]", eguid.ToString());
+                                break;
+                            //IdTag
+                            case 2:
+                                var tagtype = ReadByte();
+                                var idguid = new CGUID(ReadBytes(16));
+                                switch (tagtype)
+                                {
+                                    case 0: Writer.WriteLine(" [IdTag - Static: {0}]", idguid.ToString()); break;
+                                    case 1: Writer.WriteLine(" [IdTag - Dynamic: {0}]", idguid.ToString()); break;
+                                }
+                                break;
+                        }
                     }
                     return;
                 case "static":
@@ -799,45 +866,8 @@ namespace CR2W.IO
                     return;
                 case "CDateTime":
                     {
-                        #region Comments
-                        /*  - CDateTime Format 
-                         *  
-                         *  DateTime is stored as a 64 bit number with a structure as follows:
-                         *  
-                         *  0000001101101111010111001001011001111101101000000110010000000000
-                         *  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                         *  |        ||    ||    ||        ||         ||    ||   ||________|__ Empty
-                         *  |        ||    ||    ||        ||         ||    ||___|____________ Day - 1
-                         *  |        ||    ||    ||        ||         ||____|_________________ Month - 1
-                         *  |        ||    ||    ||        ||_________|_______________________ Year
-                         *  |        ||    ||    ||________|__________________________________ Milisecond
-                         *  |        ||    ||____|____________________________________________ Second
-                         *  |        ||____|__________________________________________________ Minuite
-                         *  |________|________________________________________________________ Hour
-                         *    
-                         *  In this case the date would be:
-                         *  
-                         *  0000001101101111010111001001011001111101101000000110010000000000
-                         *  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                         *  |13      ||47  ||23  ||150     ||2010     ||0   ||25 ||0       |
-                         *  
-                         *  26/01/2010 13:47:23:150
-                         *
-                         */
-                        #endregion
-
-                        var date = ReadInt32();
-                        var time = ReadInt32();
-
-                        var year = date >> 20;
-                        var month = date >> 15 & 0x1F;
-                        var day = date >> 10 & 0x1F;
-                        var hour = time >> 21;
-                        var minute = time >> 16 & 0x3F;
-                        var second = time >> 10 & 0x3F;
-                        var millisecond = time & 0b11_11111111;
-                        
-                        Writer.WriteLine($" {day + 1}/{month + 1}/{year} {hour}:{minute}:{second}");
+                        var datetime = ReadDateTime();
+                        Writer.WriteLine(" {0}", datetime.ToString());
                     }
                     return;
                 case "SharedDataBuffer":
@@ -854,11 +884,9 @@ namespace CR2W.IO
                         Writer.WriteLine(" {0} bytes", datasize);
                     }
                     return;
-                // Types still unknown
                 case "DeferredDataBuffer":
                     {
-                        Writer.WriteLine(" Unknown {0} bytes", size);
-                        BaseStream.Seek(size, SeekOrigin.Current);
+                        Writer.WriteLine(" {0}", ReadUInt16());
                     }
                     return;
             }
@@ -902,123 +930,6 @@ namespace CR2W.IO
             Writer.WriteLine("{0}{{", offset.Substring(1));
             ReadVariable(offset);
             Writer.WriteLine("{0}}}", offset.Substring(1));
-        }
-        #endregion
-
-        #region Supporting Functions
-        /* - Format Info
-         * 
-        This is a format where each byte in the value is flagged.
-        The First Byte has 2 flags as the first 2 bits
-        The remaining bytes have only 1 flag as the first bit.
-
-        First byte:
-             01000111
-             ^^^^^^^^
-             |||____|_ 6 bit value
-             ||_______ flag: next byte required
-             |________ flag: signed value
-
-        Next bytes:
-             10000001
-             ^^^^^^^^
-             ||_____|_ 7 bit value
-             |________ flag: next byte required
-
-        --------------------------------------------------------------
-
-        Example1:
-        This example shows a 3 byte length value.
-
-             011001111000110100000001
-             ^^^^^^^^^^^^^^^^^^^^^^^^
-             |      ||      ||______|_____ Third Byte (1 flag)
-             |      ||______|_____________ Second Byte (1 flag)
-             |______|_____________________ First Byte (2 flags)
-
-        The first byte is read. 
-        The two flags (first two bits) indicate if the 
-        final number will be positive or negative and if the a following byte needs to be read.
-
-        First Byte:
-             0      - Positive
-             1      - Next Needed
-             100111 - Value
-
-        A second byte is read as dictated from the last byte.
-        The flag here indicates that another byte needs to be read as well
-
-        Second Byte:
-             1       - Next Needed
-             0001101 - Value
-
-        A third byte is read as dictated from the last byte.
-        The flag here indicates that no more bytes need to be read.
-
-        Thrid Byte:
-             0       - Next Not Needed
-             0000001 - Value
-
-        The final value is a contatination of the values from each byte.
-        The 6 bit value from the first byte and the two 7 bit values from the next two bytes.
-        Each value is added onto the front of the final binary value.
-        The final value is this:
-
-        Value:
-             00000010001101100111 = 9063
-
-        --------------------------------------------------------------
-
-        Example2:
-             0111001000000111
-             ^^^^^^^^^^^^^^^^
-             |      ||______|____ Second Byte (1 flags)
-             |______|____________ First Byte (2 flags)
-
-        First Byte:
-             0      - Positive
-             1      - Next Needed
-             110010 - Value
-
-        Second Byte:
-             0       - Next Not Needed
-             0000111 - Value
-
-        Value:
-             0000111110010 = 498
-
-        */
-        public int ReadVLQInt32()
-        {
-            var b1 = ReadByte();
-            var sign = (b1 & 128) == 128;
-            var next = (b1 & 64) == 64;
-            var size = b1 % 128 % 64;
-            var offset = 6;
-            while (next)
-            {
-                var b = ReadByte();
-                size = (b % 128) << offset | size;
-                next = (b & 128) == 128;
-                offset += 7;
-            }
-            size = sign ? size * -1 : size;
-            return size;
-        }
-        public DateTime ReadDateTime()
-        {
-            var date = ReadInt32();
-            var time = ReadInt32();
-
-            var year = date >> 20;
-            var month = date >> 15 & 0x1F;
-            var day = date >> 10 & 0x1F;
-            var hour = time >> 22;
-            var minute = time >> 16 & 0x3F;
-            var second = time >> 10 & 0x3F;
-            var millisecond = time & 0b11_11111111;
-
-            return new DateTime(year, month, day, hour, minute, second, millisecond);
         }
         #endregion
 
@@ -1088,12 +999,10 @@ namespace CR2W.IO
                 Writer.WriteLine("\t\t}");
             }
             Writer.WriteLine("\t}");
-            Console.ReadKey();
             Writer.WriteLine("\tobjects {0}", temp.objects.Length);
             Writer.WriteLine("\t{");
             for (int i = 0; i < temp.objects.Length; i++)
             {
-                Console.ReadKey();
                 Writer.WriteLine("\t\tId {0}:", i);
                 Writer.WriteLine("\t\t{");
                 Writer.WriteLine("\t\t\tType:            {0}", temp.objects[i].type);
@@ -1107,6 +1016,162 @@ namespace CR2W.IO
             }
             Writer.WriteLine("\t}");
             Writer.WriteLine("\tBlock Data: {0}", temp.blockdata.Length);
+        }
+        #endregion
+
+        #region Supporting Functions
+        /* - Format Info
+         * 
+         *  This is a format where each byte in the value is flagged.
+         *  The First Byte has 2 flags as the first 2 bits
+         *  The remaining bytes have only 1 flag as the first bit.
+         *  
+         *  First byte:
+         *       01000111
+         *       ^^^^^^^^
+         *       |||____|_ 6 bit value
+         *       ||_______ flag: next byte required
+         *       |________ flag: signed value
+         *  
+         *  Next bytes:
+         *       10000001
+         *       ^^^^^^^^
+         *       ||_____|_ 7 bit value
+         *       |________ flag: next byte required
+         *  
+         *  --------------------------------------------------------------
+         *  
+         *  Example1:
+         *  This example shows a 3 byte length value.
+         *  
+         *       011001111000110100000001
+         *       ^^^^^^^^^^^^^^^^^^^^^^^^
+         *       |      ||      ||______|_____ Third Byte (1 flag)
+         *       |      ||______|_____________ Second Byte (1 flag)
+         *       |______|_____________________ First Byte (2 flags)
+         *  
+         *  The first byte is read. 
+         *  The two flags (first two bits) indicate if the 
+         *  final number will be positive or negative and if the a following byte needs to be read.
+         *  
+         *  First Byte:
+         *       0      - Positive
+         *       1      - Next Needed
+         *       100111 - Value
+         *  
+         *  A second byte is read as dictated from the last byte.
+         *  The flag here indicates that another byte needs to be read as well
+         *  
+         *  Second Byte:
+         *       1       - Next Needed
+         *       0001101 - Value
+         *  
+         *  A third byte is read as dictated from the last byte.
+         *  The flag here indicates that no more bytes need to be read.
+         *  
+         *  Thrid Byte:
+         *       0       - Next Not Needed
+         *       0000001 - Value
+         *  
+         *  The final value is a contatination of the values from each byte.
+         *  The 6 bit value from the first byte and the two 7 bit values from the next two bytes.
+         *  Each value is added onto the front of the final binary value.
+         *  The final value is this:
+         *  
+         *  Value:
+         *       00000010001101100111 = 9063
+         *  
+         *  --------------------------------------------------------------
+         *  
+         *  Example2:
+         *       0111001000000111
+         *       ^^^^^^^^^^^^^^^^
+         *       |      ||______|____ Second Byte (1 flags)
+         *       |______|____________ First Byte (2 flags)
+         *  
+         *  First Byte:
+         *       0      - Positive
+         *       1      - Next Needed
+         *       110010 - Value
+         *  
+         *  Second Byte:
+         *       0       - Next Not Needed
+         *       0000111 - Value
+         *  
+         *  Value:
+         *       0000111110010 = 498
+         *  
+         */
+        public int ReadVLQInt32()
+        {
+            var b1 = ReadByte();
+            var sign = (b1 & 128) == 128;
+            var next = (b1 & 64) == 64;
+            var size = b1 % 128 % 64;
+            var offset = 6;
+            while (next)
+            {
+                var b = ReadByte();
+                size = (b % 128) << offset | size;
+                next = (b & 128) == 128;
+                offset += 7;
+            }
+            size = sign ? size * -1 : size;
+            return size;
+        }
+        public uint ReadVLQUInt32()
+        {
+            var b1 = ReadByte();
+            var next = (b1 & 128u) == 128u;
+            uint size = b1 % 128u;
+            var offset = 7;
+            while (next)
+            {
+                var b = ReadByte();
+                size = (b % 128u) << offset | size;
+                next = (b & 128) == 128;
+                offset += 7;
+            }
+            return size;
+        }
+        /*  - Format Info
+         *  
+         *  DateTime is stored as a 64 bit number with a structure as follows:
+         *  
+         *  0000001101101111010111001001011001111101101000000110010000000000
+         *  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         *  |        ||    ||    ||        ||         ||    ||   ||________|__ Empty
+         *  |        ||    ||    ||        ||         ||    ||___|____________ Day - 1
+         *  |        ||    ||    ||        ||         ||____|_________________ Month - 1
+         *  |        ||    ||    ||        ||_________|_______________________ Year
+         *  |        ||    ||    ||________|__________________________________ Milisecond
+         *  |        ||    ||____|____________________________________________ Second
+         *  |        ||____|__________________________________________________ Minuite
+         *  |________|________________________________________________________ Hour
+         *    
+         *  In this case the date would be:
+         *  
+         *  0000001101101111010111001001011001111101101000000110010000000000
+         *  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+         *  |13      ||47  ||23  ||150     ||2010     ||0   ||25 ||0       |
+         *  
+         *  26/01/2010 13:47:23:150
+         *
+         */
+        public DateTime ReadDateTime()
+        {
+            var date = ReadInt32();
+            var time = ReadInt32();
+
+            var year = date >> 20;
+            var month = date >> 15 & 0x1F;
+            var day = date >> 10 & 0x1F;
+            var hour = time >> 22;
+            var minute = time >> 16 & 0x3F;
+            var second = time >> 10 & 0x3F;
+            var millisecond = time & 0b11_11111111;
+
+            return new DateTime(year, month + 1, day + 1, hour, minute, second, millisecond);
         }
         #endregion
 

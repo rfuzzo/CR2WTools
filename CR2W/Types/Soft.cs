@@ -11,7 +11,7 @@ namespace CR2W.Types
 {
     public struct Soft<T> where T : CResource
     {
-        //Do not chanage names
+        //Do not change names
         public string DepotPath { get; set; }
         public ushort Flags     { get; set; }
 

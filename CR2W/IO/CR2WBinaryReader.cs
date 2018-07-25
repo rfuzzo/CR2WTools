@@ -49,7 +49,7 @@ namespace CR2W.IO
         public uint NumChunks;
 
         //Tables
-        public STableHeader[]                headers;
+        public STableHeader[]           headers;
         public Dictionary<uint, string> strings;
         public string[]                 names;
         public SResource[]              resources;
@@ -148,12 +148,8 @@ namespace CR2W.IO
 
             if(!IgnoreCRC)
             {
-                var hash = new Crc32Algorithm(false);
-
-                var compute = BitConverter.ToUInt32(hash.ComputeHash(ReadBytes(Convert.ToInt32(size))), 0);
-
                 BaseStream.Seek(start, SeekOrigin.Begin);
-                if (compute != crc)
+                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size))) != crc)
                 {
                     throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 1 - Strings");
                 }

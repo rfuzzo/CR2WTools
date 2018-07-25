@@ -14,12 +14,24 @@ namespace CR2W.Types.W3
 {
     struct SBitmapTextureDataHeader
     {
+        //This value is always 0 as far as I can tell.
         public uint unknown1;
+
+        //Value is any of the following:
+        //9 11 8 4 12 10 6 5 7 2 13 1
+        //Values were taken from a dump of most xbm files in the game.
         public uint unknown2;
+
         public uint width;
         public uint height;
+
+        //Value is any of the following:
+        //512 256 128 1024 2048 4096 16 8192 32 64 8 16384
         public uint unknown5;
+
         public uint sizeorpitch;
+
+        //No idea - has huge variation from file to file.
         public uint unknown7;
     }
 
@@ -42,6 +54,49 @@ namespace CR2W.Types.W3
 
         [REDProp("textureGroup")]
         public CName TextureGroup { get; set; }
+        /*  - All possible options.
+         *  
+         *  BillboardAtlas
+         *  CharacterDiffuse
+         *  CharacterDiffuseWithAlpha
+         *  CharacterEmissive
+         *  CharacterNormal
+         *  CharacterNormalHQ
+         *  CharacterNormalmapGloss
+         *  Default
+         *  DetailNormalMap
+         *  DiffuseNoMips
+         *  Flares
+         *  FoliageDiffuse
+         *  Font
+         *  GUIWithAlpha
+         *  GUIWithoutAlpha
+         *  HeadDiffuse
+         *  HeadDiffuseWithAlpha
+         *  HeadEmissive
+         *  HeadNormal
+         *  HeadNormalHQ
+         *  MimicDecalsNormal
+         *  NormalmapGloss
+         *  NormalsNoMips
+         *  Particles
+         *  ParticlesWithoutAlpha
+         *  PostFxMap
+         *  QualityColor
+         *  QualityOneChannel
+         *  QualityTwoChannels
+         *  SpecialQuestDiffuse
+         *  SpecialQuestNormal
+         *  SystemNoMips
+         *  TerrainDiffuse
+         *  TerrainNormal
+         *  WorldDiffuse
+         *  WorldDiffuseWithAlpha
+         *  WorldEmissive
+         *  WorldNormal
+         *  WorldNormalHQ
+         *  WorldSpecular
+         */
 
         [REDProp("pcDownscaleBias")]
         public int PCDownscaleBias { get; set; }
@@ -59,7 +114,6 @@ namespace CR2W.Types.W3
         public uint TextureCacheKey { get; set; }
 
         public Bitmap TextureMap { get; set; }
-
 
         public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
@@ -90,8 +144,6 @@ namespace CR2W.Types.W3
                 sizeorpitch = br.ReadUInt32(),
                 unknown7    = br.ReadUInt32(),
             };
-
-
 
             var ddsheader = new DDSStruct
             {
@@ -153,15 +205,15 @@ namespace CR2W.Types.W3
         public List<TexEncodePair> TEX_ENCODE_PAIRS = new List<TexEncodePair>()
         {
             new TexEncodePair(){code = 0x3FD, format = ETextureFormat.TEXFMT_R8G8B8A8},
-            new TexEncodePair(){code = 0x407, format = ETextureFormat.TEXFMT_BC1},
-            new TexEncodePair(){code = 0x408, format = ETextureFormat.TEXFMT_BC3},
-            new TexEncodePair(){code = 0x409, format = ETextureFormat.TEXFMT_BC6H},
-            new TexEncodePair(){code = 0x40A, format = ETextureFormat.TEXFMT_BC7},
             new TexEncodePair(){code = 0x40B, format = ETextureFormat.TEXFMT_Float_R16G16B16A16},
             new TexEncodePair(){code = 0x40C, format = ETextureFormat.TEXFMT_Float_R32G32B32A32},
+            new TexEncodePair(){code = 0x407, format = ETextureFormat.TEXFMT_BC1},
             new TexEncodePair(){code = 0x40D, format = ETextureFormat.TEXFMT_BC2},
+            new TexEncodePair(){code = 0x408, format = ETextureFormat.TEXFMT_BC3},
             new TexEncodePair(){code = 0x40E, format = ETextureFormat.TEXFMT_BC4},
-            new TexEncodePair(){code = 0x40F, format = ETextureFormat.TEXFMT_BC5}
+            new TexEncodePair(){code = 0x40F, format = ETextureFormat.TEXFMT_BC5},
+            new TexEncodePair(){code = 0x409, format = ETextureFormat.TEXFMT_BC6H},
+            new TexEncodePair(){code = 0x40A, format = ETextureFormat.TEXFMT_BC7},
         };
 
         ETextureFormat DecodeTextureFormat(Int16 encoded)
