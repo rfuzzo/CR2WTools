@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
+    [REDPrimitive]
     public struct CName
     {
         private string _value;
@@ -23,11 +24,6 @@ namespace CR2W.Types
         public CName(string value)
         {
             _value = value;
-        }
-
-        public int CompareTo(CName other)
-        {
-            return _value.CompareTo(other._value);
         }
 
         public override string ToString()

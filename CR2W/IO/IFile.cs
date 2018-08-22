@@ -8,6 +8,6 @@ namespace CR2W.IO
 {
     public interface IFile
     {
-
+        
     }
 }

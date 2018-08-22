@@ -18,7 +18,7 @@ namespace CR2W
                 if (prop.IsDefined(typeof(REDPropAttribute)))
                 {
                     var attribute = (REDPropAttribute)prop.GetCustomAttribute(typeof(REDPropAttribute));
-                    if(attribute.Name != name)
+                    if (attribute.Name != name)
                     {
                         return false;
                     }
@@ -42,7 +42,7 @@ namespace CR2W
             return type.GetProperties().Where(prop => prop.IsDefined(typeof(REDPropAttribute))).ToArray();
         }
 
-        public static (string name, string type) GetREDTypeNamePair( this PropertyInfo prop )
+        public static (string name, string type) GetREDTypeNamePair(this PropertyInfo prop)
         {
             var attribute = (REDPropAttribute)prop.GetCustomAttribute(typeof(REDPropAttribute));
             var flags = new Stack<byte>(attribute.Flags.Reverse());
@@ -53,13 +53,13 @@ namespace CR2W
         {
             switch (type.Name)
             {
-                case "Byte": return "Uint8";
-                case "UInt16": return "Uint16";
-                case "UInt32": return "Uint32";
-                case "UInt64": return "Uint64";
-                case "SByte": return "Int8";
+                case "Byte":    return "Uint8";
+                case "UInt16":  return "Uint16";
+                case "UInt32":  return "Uint32";
+                case "UInt64":  return "Uint64";
+                case "SByte":   return "Int8";
                 case "Boolean": return "Bool";
-                case "Single": return "Float";
+                case "Single":  return "Float";
             }
             if (type.IsGenericType)
             {
@@ -88,9 +88,9 @@ namespace CR2W
             return type.Name;
         }
 
-        public static T SafePop<T>( this Stack<T> value ) where T : new()
+        public static T SafePop<T>(this Stack<T> value) where T : new()
         {
-            if(value.Count == 0)
+            if (value.Count == 0)
             {
                 return new T();
             }
@@ -139,5 +139,44 @@ namespace CR2W
         {
             this.Size = size;
         }
+    }
+
+    [AttributeUsage(AttributeTargets.Struct)]
+    public class REDPrimitive : Attribute
+    {
+        public REDPrimitive()
+        {
+
+        }
+    }
+
+
+    public enum REDTypeCode
+    {
+        Empty = 0,
+        Int8 = 1,
+        Uint8 = 2,
+        Int16 = 3,
+        Uint16 = 4,
+        Int32 = 5,
+        Uint32 = 6,
+        Int64 = 7,
+        Uint64 = 8,
+        Bool = 9,
+        Float = 10,
+        String = 11,
+        StringAnsi = 12,
+        CName = 13,
+        CGUID = 14,
+        IdTag = 15,
+        TagList = 16,
+        CDateTime = 17,
+        EngineTransform = 18,
+        EngineQsTransform = 19,
+        LocalizedString = 20,
+        EntityHandle = 21,
+        DataBuffer = 22,
+        SharedDataBuffer = 23,
+        DeferredDataBuffer = 24,
     }
 }

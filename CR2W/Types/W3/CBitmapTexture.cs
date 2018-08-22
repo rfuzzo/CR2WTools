@@ -9,32 +9,10 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Threading;
 
 namespace CR2W.Types.W3
 {
-    struct SBitmapTextureDataHeader
-    {
-        //This value is always 0 as far as I can tell.
-        public uint unknown1;
-
-        //Value is any of the following:
-        //9 11 8 4 12 10 6 5 7 2 13 1
-        //Values were taken from a dump of most xbm files in the game.
-        public uint unknown2;
-
-        public uint width;
-        public uint height;
-
-        //Value is any of the following:
-        //512 256 128 1024 2048 4096 16 8192 32 64 8 16384
-        public uint unknown5;
-
-        public uint sizeorpitch;
-
-        //No idea - has huge variation from file to file.
-        public uint unknown7;
-    }
-
     public class CBitmapTexture : CResource, ITexture
     {
         [REDProp("width")]
@@ -117,7 +95,6 @@ namespace CR2W.Types.W3
 
         public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
-            var pos = br.BaseStream.Position;
             base.ParseBytes(br, size);
 
             /*
@@ -134,68 +111,52 @@ namespace CR2W.Types.W3
              * 
              */
 
-            var cbmheader = new SBitmapTextureDataHeader()
-            {
-                unknown1    = br.ReadUInt32(),
-                unknown2    = br.ReadUInt32(),
-                width       = br.ReadUInt32(),
-                height      = br.ReadUInt32(),
-                unknown5    = br.ReadUInt32(),
-                sizeorpitch = br.ReadUInt32(),
-                unknown7    = br.ReadUInt32(),
-            };
+            var zero        = br.ReadUInt32();
+            var mipCount    = br.ReadUInt32();
+            var width       = br.ReadUInt32();
+            var height      = br.ReadUInt32();
+            var unknown5    = br.ReadUInt32();
+            var sizeorpitch = br.ReadUInt32();
+
+            Console.WriteLine("zero        {0}", zero);
+            Console.WriteLine("mipCount    {0}", mipCount);
+            Console.WriteLine("width       {0}", width);
+            Console.WriteLine("height      {0}", height);
+            Console.WriteLine("unknown5    {0}", unknown5);
+            Console.WriteLine("sizeorpitch {0}", sizeorpitch);
 
             var ddsheader = new DDSStruct
             {
                 size            = 124,
                 flags           = 659463,
-                width           = cbmheader.width,
-                height          = cbmheader.height,
-                sizeorpitch     = cbmheader.sizeorpitch,
+                width           = width,
+                height          = height,
+                sizeorpitch     = sizeorpitch,
                 depth           = 1,
                 mipmapcount     = 1,
                 reserved        = new uint[10],
             };
+
             ddsheader.ddscaps.caps1 = 4096;
-            ddsheader.pixelformat.flags = 5;
             ddsheader.pixelformat.size = 32;
-            ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT5;
+            ddsheader.pixelformat.flags = 5;
+            ddsheader.pixelformat.fourcc = DDSHelper.FOURCC_DXT1;
 
-            //switch (Compression)
-            //{
-            //    case ETextureCompression.TCM_DXTAlpha:
-            //    case ETextureCompression.TCM_DXTAlphaLinear:
-            //    case ETextureCompression.TCM_None:
-            //    case ETextureCompression.TCM_Normals:
-            //    case ETextureCompression.TCM_NormalsGloss:
-            //    case ETextureCompression.TCM_NormalsHigh:
-            //    case ETextureCompression.TCM_QualityR:
-            //    case ETextureCompression.TCM_QualityRG:
-            //    case ETextureCompression.TCM_RGBE:
-            //    case ETextureCompression.TCM_QualityColor:
-            //        ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT5;
-            //        break;
-            //    case ETextureCompression.TCM_DXTNoAlpha:
-            //        ddsheader.pixelformat.fourcc = DDS.Utils.Helper.FOURCC_DXT1;
-            //        break;
-            //}
-
-            var rawsize = Convert.ToInt32(pos + size - br.BaseStream.Position);
-            var raw = br.ReadBytes(rawsize);
-            var dds = new DDSImage(raw, ddsheader, true);
+            var dds = new DDSImage(br, ddsheader, true);
 
             Form form = new Form
             {
-                Text = "Image"
+                Text = "Image",
+                ClientSize = new Size((int)width, (int)height),
             };
             PictureBox pictureBox = new PictureBox
             {
                 Image = dds.BitmapImage,
-                Width = (int)ddsheader.width,
-                Height = (int)ddsheader.height
+                Width = (int)width,
+                Height = (int)height
             };
             form.Controls.Add(pictureBox);
-            var t = new Task(() => 
+            var t = new Task(() =>
             {
                 Application.Run(form);
             });

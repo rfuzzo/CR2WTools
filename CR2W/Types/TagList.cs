@@ -7,9 +7,16 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
+    [REDPrimitive]
     public struct TagList
     {
         public string[] tags;
+
+
+
+
+
+
     }
 }
 

@@ -22,6 +22,7 @@ namespace CR2W.Types
         ResourceHandle
     }
 
+    [REDPrimitive]
     public struct Handle<T>
     {
         public EHandleType HandleType { get; set; }

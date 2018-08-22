@@ -15,22 +15,12 @@ namespace CR2W.Types.W3
     /// This is the base class of all RedEngine3 serializable types.
     /// </summary>
     [REDClass]
-    public abstract class CObject : ISerializable, IReferencable, IScriptable
+    public abstract class CObject : IScriptable
     {
-        [REDProp("importFile")]
-        public string ImportFile { get; set; }
-
-        [REDProp("importFileTimeStamp")]
-        public CDateTime ImportFileTimeStamp { get; set; }
-
-        [REDProp("authorName")]
-        public string AuthorName { get; set; } 
-
         public Dictionary<uint, CObject> Children { get; set; }
 
-        public uint Template { get; set; }
-
-        public ushort Flags { get; set; }
+        public override UInt16 Flags { get; set; }
+        public override UInt32 Template { get; set; }
 
         public CObject()
         {
@@ -38,8 +28,8 @@ namespace CR2W.Types.W3
             Console.WriteLine($"CObject created: {this.GetType().Name}");
         }
 
-        public event SerializeEventHandler Serialize;
-        public event DeSerializeEventHandler DeSerialize;
+        public override event SerializeEventHandler Serialize;
+        public override event DeSerializeEventHandler DeSerialize;
 
         /// <summary>
         /// Get the CObject parent for this instance 
@@ -71,7 +61,6 @@ namespace CR2W.Types.W3
         }
 
         #region DeSerializing
-
         public virtual void ParseBytes(CR2WBinaryReader br, uint size)
         {
             ParseClass(br, this);
@@ -102,7 +91,6 @@ namespace CR2W.Types.W3
             //             attributes to map the values then there will be problems trying to integrate this.
             #endregion
         }
-
         protected void ParseClass(CR2WBinaryReader br, object instance)
         {
             br.ReadByte();
@@ -126,7 +114,6 @@ namespace CR2W.Types.W3
                 prop.SetValue(instance, value);
             }
         }
-
         protected object ParseProperty(CR2WBinaryReader br, Type proptype)
         {
             //Basic / Value Types
@@ -219,22 +206,22 @@ namespace CR2W.Types.W3
             //Should be impossible to reach if all types get covered above.
             return null;
         }
+
+        public override void OnDeSerialize(IFile source, REDEventArgs e)
+        {
+            DeSerialize?.Invoke(source, e);
+        }
+
         #endregion
 
         #region Serializing
 
-
-
-        public virtual void OnSerialize(IFile source, REDEventArgs e)
+        public override void OnSerialize(IFile source, REDEventArgs e)
         {
             Serialize?.Invoke(source, e);
         }
 
-
-
         #endregion
-
-
 
     }
 }

@@ -7,6 +7,17 @@ using System.Text;
 using CR2W;
 using CR2W.IO;
 using CR2W.Types.W3;
+using CR2W.Types;
+using CR2W.CRC32;
+
+using System.Xml;
+using System.Globalization;
+using CR2W.DDS;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Linq;
+using CR2W.DDS.Utils;
+using System.Threading;
 
 namespace CR2WConsole
 {
@@ -30,6 +41,111 @@ namespace CR2WConsole
                     //OpenFile(of.FileName);
                     TestFile(of.FileName, Console.Out);
                     //LegacyFile(of.FileName);
+                    //ReadCache(of.FileName);
+                }
+            }
+        }
+
+        static void ReadCache(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                using (var br = new BinaryReader(stream))
+                {
+                    br.BaseStream.Seek(-32, SeekOrigin.End);
+
+                    var crc64               = br.ReadUInt64();
+                    var usedPages           = br.ReadUInt32();
+                    var entryCount          = br.ReadUInt32();
+                    var stringTableSize     = br.ReadUInt32();
+                    var mipOffsetTableSize  = br.ReadUInt32();
+                    var idString            = br.ReadChars(4);
+                    var version             = br.ReadUInt32();
+
+                    Console.WriteLine("CRC64:               {0}", crc64);
+                    Console.WriteLine("UsedPages:           {0}", usedPages);
+                    Console.WriteLine("EntryCount:          {0}", entryCount);
+                    Console.WriteLine("StringTableCount:    {0}", stringTableSize);
+                    Console.WriteLine("MipOffsetTableSize:  {0}", mipOffsetTableSize);
+                    Console.WriteLine("IdString:            {0}", new String(idString));
+                    Console.WriteLine("Version:             {0}", version);
+
+                    var jmp = -(32 + (entryCount * 52) + stringTableSize + (mipOffsetTableSize * 4));
+                    br.BaseStream.Seek(jmp, SeekOrigin.End);
+
+                    Console.WriteLine();
+                    Console.WriteLine("Mip Offsets {0}:", mipOffsetTableSize);
+                    Console.WriteLine();
+                    var chunkoffsets = new uint[mipOffsetTableSize];
+                    for (var i = 0; i < mipOffsetTableSize; i++)
+                    {
+                        chunkoffsets[i] = br.ReadUInt32();
+                        Console.WriteLine("\t{0}: {1}", i, chunkoffsets[i]);
+                    }
+
+                    Console.WriteLine();
+                    Console.WriteLine("Strings: {0}", entryCount);
+                    Console.WriteLine();
+                    var names = new Dictionary<uint, string>();
+                    var sb = new StringBuilder();
+                    uint offset = 0;
+                    for (uint i = 1; i <= stringTableSize; i++)
+                    {
+                        char c = br.ReadChar();
+                        if (c == 0)
+                        {
+                            names.Add(offset, sb.ToString());
+                            Console.WriteLine("\t{0}: {1}", offset, sb.ToString() );
+                            sb.Clear();
+                            offset = i;
+                        }
+                        else
+                        {
+                            sb.Append(c);
+                        }
+                    }
+
+                    Console.WriteLine();
+                    Console.WriteLine("Entries:");
+                    Console.WriteLine();
+                    Console.WriteLine("\tKey        |Index      |Offset     |SizeC      |SizeU      |Align      |Width |Height|Mips  |Slices|MipOffset  |NumMips    |DateTime             |Type  |IsCube|File");
+                    Console.WriteLine("\t-----------|-----------|-----------|-----------|-----------|-----------|------|------|------|------|-----------|-----------|---------------------|------|------|------");
+                    for (var i = 0; i < entryCount; i++)
+                    {
+                        var Key                 = br.ReadUInt32();
+                        var pathStringIndex     = br.ReadUInt32();
+                        var pageOFfset          = br.ReadUInt32();
+                        var compressedSize      = br.ReadUInt32();
+                        var uncompressedSize    = br.ReadUInt32();
+                        var baseAlignment       = br.ReadUInt32();
+                        var baseWidth           = br.ReadUInt16();
+                        var baseHeight          = br.ReadUInt16();
+                        var mipcount            = br.ReadUInt16();
+                        var sliceCount          = br.ReadUInt16();
+                        var mipOffsetIndex      = br.ReadUInt32();
+                        var numMipOffsets       = br.ReadUInt32();
+                        var timeStamp           = br.ReadUInt64();
+                        var type                = br.ReadUInt16();
+                        var isCube              = br.ReadUInt16();
+
+                        Console.WriteLine("\t{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}|{9}|{10}|{11}|{12}|{13}|{14}|{15}",
+                            Convert.ToString(Key).PadRight(11),
+                            Convert.ToString(pathStringIndex).PadRight(11),
+                            Convert.ToString(pageOFfset).PadRight(11),
+                            Convert.ToString(compressedSize).PadRight(11),
+                            Convert.ToString(uncompressedSize).PadRight(11),
+                            Convert.ToString(baseAlignment).PadRight(11),
+                            Convert.ToString(baseWidth).PadRight(6),
+                            Convert.ToString(baseHeight).PadRight(6),
+                            Convert.ToString(mipcount).PadRight(6),
+                            Convert.ToString(sliceCount).PadRight(6),
+                            Convert.ToString(mipOffsetIndex).PadRight(11),
+                            Convert.ToString(numMipOffsets).PadRight(11),
+                            new CDateTime(timeStamp).ToString().PadRight(21),
+                            Convert.ToString(type).PadRight(6),
+                            Convert.ToString(isCube).PadRight(6),
+                            Path.GetFileName(names[pathStringIndex]));
+                    }
                 }
             }
         }
@@ -209,6 +325,27 @@ namespace CR2WConsole
                     {
                         Console.WriteLine("\t\t{0}", mod.ModuleClass);
                         Console.WriteLine("\t\t{0}", mod.ModuleName);
+                    }
+                }
+            }
+            else if(res is CFont fnt)
+            {
+                Console.Write("\tTextures: ");
+                foreach (var tex in fnt.Textures)
+                {
+                    Console.Write(" {0}", tex.Index);
+                }
+                Console.WriteLine();
+                foreach (var child in fnt.Children)
+                {
+                    Console.WriteLine("\t{0}:", child.Key);
+                    if (child.Value is CBitmapTexture bmp)
+                    {
+                        Console.WriteLine("\t\tHeight:      {0}", bmp.Height);
+                        Console.WriteLine("\t\tWidth:       {0}", bmp.Width);
+                        Console.WriteLine("\t\tCompression: {0}", bmp.Compression);
+                        Console.WriteLine("\t\tGroup:       {0}", bmp.TextureGroup);
+                        Console.WriteLine("\t\tFormat:      {0}", bmp.Format);
                     }
                 }
             }

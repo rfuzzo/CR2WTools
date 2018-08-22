@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 namespace CR2W.Types
 {
     [REDPrimitive]
-    public struct Static<T>
+    public struct CPhysicalCollision
     {
-
-
-
-
-
     }
 }

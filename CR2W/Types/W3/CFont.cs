@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
-    public abstract class IReferencable
+    public class CFont : CResource
     {
-        
+        [REDProp("textures", 2, 0)]
+        public Array<Handle<CBitmapTexture>> Textures { get; set; }
     }
 }

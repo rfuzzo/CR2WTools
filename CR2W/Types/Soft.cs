@@ -9,11 +9,35 @@ using CR2W.Types.W3;
 
 namespace CR2W.Types
 {
-    public struct Soft<T> where T : CResource
+    [REDPrimitive]
+    public struct Soft<T> where T : CResource, new()
     {
-        //Do not change names
-        public string DepotPath { get; set; }
-        public ushort Flags     { get; set; }
+        private T _instance;
+        private string _cachedPath;
+
+        /// <summary>
+        /// Get the l
+        /// </summary>
+        public string DepotPath
+        {
+            get
+            {
+                if(_instance != null)
+                {
+                    return _instance.GetPath();
+                }
+                return _cachedPath;
+            }
+            set
+            {
+                if(_instance == null)
+                {
+                    _cachedPath = value;
+                }
+            }
+        }
+
+        public ushort Flags { get; set; }
 
         public Type SoftOf
         {

@@ -8,6 +8,7 @@ using CR2W.Types.W3;
 
 namespace CR2W.Types
 {
+    [REDPrimitive]
     public struct EngineTransform
     {
         public float ScaleX { get; set; }

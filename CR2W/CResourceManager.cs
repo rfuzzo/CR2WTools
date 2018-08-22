@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using CR2W.Types.W3;
 using CR2W.Types;
 using CR2W.IO;
-
 using System.IO;
 using System.Reflection;
 

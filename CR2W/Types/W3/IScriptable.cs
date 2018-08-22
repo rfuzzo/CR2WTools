@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types.W3
 {
-    public interface IScriptable
+    public abstract class IScriptable : ISerializable
     {
 
     }

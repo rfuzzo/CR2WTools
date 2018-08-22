@@ -2,7 +2,7 @@
 
 namespace CR2W.DDS.Utils
 {
-	public class Helper
+	public class DDSHelper
 	{
 		#region Constants
 
@@ -38,8 +38,8 @@ namespace CR2W.DDS.Utils
 		public const int DDSCAPS2_CUBEMAP_NEGATIVEZ = 0x00008000;
 		public const int DDSCAPS2_VOLUME = 0x00200000;
 
-		// FOURCC
-		public const uint FOURCC_DXT1 = 0x31545844;
+        // FOURCC
+        public const uint FOURCC_DXT1 = 0x31545844;
 		public const uint FOURCC_DXT2 = 0x32545844;
 		public const uint FOURCC_DXT3 = 0x33545844;
 		public const uint FOURCC_DXT4 = 0x34545844;
@@ -449,7 +449,7 @@ namespace CR2W.DDS.Utils
 		public static int[] ComputeMaskParams(uint mask)
 		{
 			int rShift1 = 0; int rMul = 0; int rShift2 = 0;
-			Helper.ComputeMaskParams(mask, ref rShift1, ref rMul, ref rShift2);
+			DDSHelper.ComputeMaskParams(mask, ref rShift1, ref rMul, ref rShift2);
 			return new int[] { rShift1, rMul, rShift2 };
 		}
 	}

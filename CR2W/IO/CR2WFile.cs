@@ -8,16 +8,16 @@ namespace CR2W.IO
 {
     public class CR2WFile : IFile
     {
-        public string path;
-        public SFileHeader fileheader;
-        public STableHeader[] tableheaders;
-        public SString[] strings;
-        public SName[] names;
-        public SResource[] resources;
-        public STable4Item[] table4;
-        public SObject[] objects;
-        public SBuffer[] buffers;
-        public SEmbedded[] embedded;
+        public string           path;
+        public SFileHeader      fileheader;
+        public STableHeader[]   tableheaders;
+        public SString[]        strings;
+        public SName[]          names;
+        public SResource[]      resources;
+        public STable4Item[]    table4;
+        public SObject[]        objects;
+        public SBuffer[]        buffers;
+        public SEmbedded[]      embedded;
     }
 
     public class SFileHeader
@@ -67,10 +67,14 @@ namespace CR2W.IO
 
     public class STable4Item
     {
-        public uint var1;
-        public uint var2;
-        public uint var3;
-        public uint var4;
+        public ushort classId;
+        public ushort unknown1;
+        public ushort propertyId;
+        public ushort unknown2;
+        public ulong hash;
+
+        public string className;
+        public string propertyName;
     }
 
     public class SObject

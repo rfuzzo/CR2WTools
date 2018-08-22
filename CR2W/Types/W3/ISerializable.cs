@@ -11,9 +11,15 @@ namespace CR2W.Types.W3
     public delegate void SerializeEventHandler(IFile sender, REDEventArgs e);
     public delegate void DeSerializeEventHandler(IFile sender, REDEventArgs e);
 
-    public interface ISerializable
+    public abstract class ISerializable : IReferencable
     {
-        event SerializeEventHandler Serialize;
-        event DeSerializeEventHandler DeSerialize;
+        public abstract UInt16 Flags { get; set; }
+        public abstract UInt32 Template { get; set; }
+
+        public abstract event SerializeEventHandler Serialize;
+        public abstract event DeSerializeEventHandler DeSerialize;
+
+        public abstract void OnSerialize(IFile source, REDEventArgs e);
+        public abstract void OnDeSerialize(IFile source, REDEventArgs e);
     }
 }

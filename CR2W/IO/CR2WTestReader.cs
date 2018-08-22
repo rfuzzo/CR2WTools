@@ -6,11 +6,6 @@ using System.IO;
 using CR2W.Types;
 using CR2W.CRC32;
 using CR2W.FNV1A;
-using System.Collections;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Threading.Tasks;
-using System.Threading;
 
 /*
  *      TEST PARSER
@@ -22,121 +17,114 @@ using System.Threading;
 
 namespace CR2W.IO
 {
-    internal struct TSFileHeader
-    {
-        public uint fileversion;
-        public uint flags;
-        public ulong timestamp;
-        public uint buildversion;
-        public uint disksize;
-        public uint memsize;
-        public uint crc32;
-        public uint numchunks;
-    }
-    internal struct TSTableHeader
-    {
-        public uint Offset;
-        public uint Size;
-        public uint CRC32;
-    }
-    internal struct TSName
-    {
-        public uint Offset;
-        public uint Hash;
-        public string Value;
-    }
-    internal struct TSResource
-    {
-        public uint Offset;
-        public string Type;
-        public ushort Flags;
-        public string Path;
-    }
-    internal struct TSObject
-    {
-        public uint TypeID;
-        public uint Flags;
-        public uint ParentID;
-        public uint Size;
-        public uint Offset;
-        public uint Template;
-        public uint CRC32;
-    }
-    internal struct TSBuffer
-    {
-        public uint Flags;
-        public uint ID;
-        public uint Offset;
-        public uint DiskSize;
-        public uint MemSize;
-        public uint CRC32;
-    }
-    internal struct TSEmbedded
-    {
-        public uint  Id;
-        public uint  Path;
-        public ulong Hash;
-        public uint  Offset;
-        public uint  Length;
-    }
-
-    internal class CSectorData
-    {
-        public uint Unknown1;
-        public uint Unknown2;
-        public SSectorDataResource[] resources;
-        public SSectorDataObject[] objects;
-        public byte[] blockdata;
-    }
-    internal struct SSectorDataResource
-    {
-        public float box0;
-        public float box1;
-        public float box2;
-        public float box3;
-        public float box4;
-        public float box5;
-        public ulong patchHash;
-    }
-    internal struct SSectorDataObject
-    {
-        public byte type;
-        public byte flags;
-        public ushort radius;
-        public ulong offset;
-        public float positionX;
-        public float positionY;
-        public float positionZ;
-    }
-
     public sealed class CR2WTestReader : BinaryReader
     {
+        #region Internal Structs
+        internal struct SFileHeader
+        {
+            public uint fileversion;
+            public uint flags;
+            public ulong timestamp;
+            public uint buildversion;
+            public uint disksize;
+            public uint memsize;
+            public uint crc32;
+            public uint numchunks;
+        }
+        internal struct STableHeader
+        {
+            public uint Offset;
+            public uint Size;
+            public uint CRC32;
+        }
+        internal struct SName
+        {
+            public uint Offset;
+            public uint Hash;
+            public string Value;
+        }
+        internal struct SResource
+        {
+            public uint Offset;
+            public string Type;
+            public ushort Flags;
+            public string Path;
+        }
+        internal struct SObject
+        {
+            public uint TypeID;
+            public uint Flags;
+            public uint ParentID;
+            public uint Size;
+            public uint Offset;
+            public uint Template;
+            public uint CRC32;
+        }
+        internal struct SBuffer
+        {
+            public uint Flags;
+            public uint ID;
+            public uint Offset;
+            public uint DiskSize;
+            public uint MemSize;
+            public uint CRC32;
+        }
+        internal struct SEmbedded
+        {
+            public uint Id;
+            public uint Path;
+            public ulong Hash;
+            public uint Offset;
+            public uint Length;
+        }
+
+        internal class CSectorData
+        {
+            public uint Unknown1;
+            public uint Unknown2;
+            public SSectorDataResource[] resources;
+            public SSectorDataObject[] objects;
+            public byte[] blockdata;
+        }
+        internal struct SSectorDataResource
+        {
+            public float box0;
+            public float box1;
+            public float box2;
+            public float box3;
+            public float box4;
+            public float box5;
+            public ulong patchHash;
+        }
+        internal struct SSectorDataObject
+        {
+            public byte type;
+            public byte flags;
+            public ushort radius;
+            public ulong offset;
+            public float positionX;
+            public float positionY;
+            public float positionZ;
+        }
+        #endregion
+
         #region Props/Vars
 
         public TextWriter Writer { get; set; }
 
         public string FilePath { get; set; }
 
-        private TSFileHeader        fileheader;
-        TSTableHeader[]             tableheaders;
-        Dictionary<uint, string>    strings;
-        List<TSName>                names;
-        List<TSResource>            resources;
-        List<TSObject>              objects;
-        List<TSBuffer>              buffers;
-        List<TSEmbedded>            embedded;
+        private SFileHeader        fileheader;
+        STableHeader[]             tableheaders;
+        Dictionary<uint, string>   strings;
+        List<SName>                names;
+        List<SResource>            resources;
+        List<STable4Item>          table4;
+        List<SObject>              objects;
+        List<SBuffer>              buffers;
+        List<SEmbedded>            embedded;
 
-        TSName GetName(int id)
-        {
-            return names[id];
-        }
-
-        TSResource GetResource(int id)
-        {
-            return resources[id];
-        }
-
-        readonly byte[] Magic = { 67, 82, 50, 87 };
+        readonly uint Magic = 0x57325243;
 
         #endregion
 
@@ -164,14 +152,14 @@ namespace CR2W.IO
         {
             BaseStream.Seek(0, SeekOrigin.Begin);
             
-            if (!Magic.SequenceEqual(ReadBytes(4)))
+            if (Magic != ReadUInt32())
             {
                 throw new Exception("Not a CR2W file");
             }
             
             fileheader.fileversion  = ReadUInt32();
             
-            if(!(fileheader.fileversion == 162 || fileheader.fileversion == 163))
+            if(!(fileheader.fileversion >= 159 && fileheader.fileversion <= 163))
             {
                 throw new Exception($"Unknown Version: {fileheader.fileversion}");
             }
@@ -184,14 +172,17 @@ namespace CR2W.IO
             fileheader.crc32        = ReadUInt32();
             fileheader.numchunks    = ReadUInt32();
 
+            var ts = new CDateTime(fileheader.timestamp);
+
+            Writer.WriteLine("FileName:       {0}", Path.GetFileName(FilePath));
             Writer.WriteLine("FileVersion:    {0}", fileheader.fileversion);
             Writer.WriteLine("Flags:          {0}", fileheader.flags);
-            Writer.WriteLine("DateTime:       {0}", fileheader.timestamp);
+            Writer.WriteLine("DateTime:       {0}.{1}", ts.ToString(), ts.Value.Millisecond);
             Writer.WriteLine("BuildVersion:   {0}", fileheader.buildversion);
             Writer.WriteLine("DiskSize:       {0}", fileheader.disksize);
             Writer.WriteLine("MemSize:        {0}", fileheader.memsize);
             Writer.WriteLine("CRC32:          0x{0:X}", fileheader.crc32);
-            Writer.WriteLine("NumChunks:      {0:x}", fileheader.numchunks);
+            Writer.WriteLine("NumChunks:      {0}", fileheader.numchunks);
             
             GetHeaders();
             
@@ -200,14 +191,14 @@ namespace CR2W.IO
             GetStrings();
             GetNames();
             GetResources();
+            GetTable4();
             GetObjects();
             GetBuffers();
             GetEmbedded();
 
             ReadObjectData();
         }
-
-        private uint CalculateHeaderCRC32(TSFileHeader fileheader)
+        private uint CalculateHeaderCRC32(SFileHeader fileheader)
         {
             var b = new List<Byte>();
             b.AddRange(BitConverter.GetBytes(0x57325243));
@@ -227,13 +218,12 @@ namespace CR2W.IO
             }
             return Crc32Algorithm.Compute(b.ToArray());
         }
-
         void GetHeaders()
         {
-            tableheaders = new TSTableHeader[10];
+            tableheaders = new STableHeader[10];
             for (int i = 0; i < 10; i++)
             {
-                tableheaders[i] = new TSTableHeader()
+                tableheaders[i] = new STableHeader()
                 {
                     Offset  = ReadUInt32(),
                     Size    = ReadUInt32(),
@@ -249,7 +239,11 @@ namespace CR2W.IO
             for (int i = 0; i < tableheaders.Length; i++)
             {
                 var h = tableheaders[i];
-                Writer.WriteLine("|{0}|{1}|{2}|{3}", Convert.ToString(i + 1).PadRight(3), Convert.ToString(h.Offset).PadRight(10), Convert.ToString(h.Size).PadRight(10), h.CRC32);
+                Writer.WriteLine("|{0}|{1}|{2}|0x{3:X8}", 
+                    Convert.ToString(i + 1).PadRight(3), 
+                    Convert.ToString(h.Offset).PadRight(10), 
+                    Convert.ToString(h.Size).PadRight(10), 
+                    h.CRC32);
             }
         }
         #endregion
@@ -298,7 +292,7 @@ namespace CR2W.IO
         }
         void GetNames()
         {
-            names = new List<TSName>();
+            names = new List<SName>();
 
             var start = tableheaders[1].Offset;
             var size = tableheaders[1].Size;
@@ -310,7 +304,7 @@ namespace CR2W.IO
                 var o = ReadUInt32();
                 var h = ReadUInt32();
                 var v = strings[o];
-                names.Add(new TSName()
+                names.Add(new SName()
                 {
                     Offset = o,
                     Hash = h,
@@ -327,7 +321,7 @@ namespace CR2W.IO
             Writer.WriteLine("|----------|---------------|---------------|---------------------------");
             foreach (var r in names)
             {
-                Writer.WriteLine("|{0}|{1}|{2}|{3}", Convert.ToString(r.Offset).PadRight(10), Convert.ToString(r.Hash).PadRight(15), Convert.ToString(FNV1A32HashAlgorithm.Compute(r.Value)).PadRight(15), r.Value);
+                Writer.WriteLine("|{0}|{1}|{2}|{3}", Convert.ToString(r.Offset).PadRight(10), $"0x{r.Hash:X}".PadRight(15), $"0x{FNV1A32HashAlgorithm.HashString(r.Value):X}".PadRight(15), r.Value);
             }
         }
         void GetResources()
@@ -338,7 +332,7 @@ namespace CR2W.IO
             if (size == 0)
                 return;
 
-            resources = new List<TSResource>();
+            resources = new List<SResource>();
             BaseStream.Seek(start, SeekOrigin.Begin);
 
             for (int i = 0; i < size; i++)
@@ -347,7 +341,7 @@ namespace CR2W.IO
                 var t = ReadUInt16();
                 var f = ReadUInt16();
 
-                resources.Add(new TSResource()
+                resources.Add(new SResource()
                 {
                     Offset = o,
                     Type = names[t].Value,
@@ -368,17 +362,57 @@ namespace CR2W.IO
                 Writer.WriteLine("|{0}|{1}|{2}", h.Type.PadRight(25), h.Path.PadRight(100), h.Flags);
             }
         }
+        void GetTable4()
+        {
+            var start = tableheaders[3].Offset;
+            var size = tableheaders[3].Size;
+
+            if (size == 0)
+                return;
+
+            table4 = new List<STable4Item>();
+            BaseStream.Seek(start, SeekOrigin.Begin);
+
+            for (int i = 0; i < size; i++)
+            {
+                table4.Add(new STable4Item()
+                {
+                    classId = ReadUInt16(),
+                    unknown1 = ReadUInt16(),
+                    propertyId = ReadUInt16(),
+                    unknown2 = ReadUInt16(),
+                    hash = ReadUInt64(),
+                });
+            }
+            Writer.WriteLine("\n");
+            Writer.WriteLine("\tTable  4");
+            Writer.WriteLine("\tSize   {0}", size);
+            Writer.WriteLine("\tOffset {0}", start);
+            Writer.WriteLine("\n");
+
+            Writer.WriteLine("|ClassName                |Unknown1   |PropertyName             |Unknown2   |Hash");
+            Writer.WriteLine("|-------------------------|-----------|-------------------------|-----------|-------------------");
+            foreach (var i in table4)
+            {
+                Writer.WriteLine("|{0}|{1}|{2}|{3}|{4}",
+                    names[i.classId].Value.PadRight(25),
+                    $"{i.unknown1}".PadRight(11),
+                    names[i.propertyId].Value.PadRight(25),
+                    $"{i.unknown2}".PadRight(11),
+                    $"0x{i.hash:X}".PadRight(11));
+            }
+        }
         void GetObjects()
         {
             var start = tableheaders[4].Offset;
             var size = tableheaders[4].Size;
 
-            objects = new List<TSObject>();
+            objects = new List<SObject>();
             BaseStream.Seek(start, SeekOrigin.Begin);
 
             for (int i = 0; i < size; i++)
             {
-                objects.Add(new TSObject()
+                objects.Add(new SObject()
                 {
                     TypeID      = ReadUInt16(),
                     Flags       = ReadUInt16(),
@@ -400,14 +434,13 @@ namespace CR2W.IO
             foreach (var o in objects)
             {
                 Writer.WriteLine("|{0}|{1}|{2}|{3}|{4}|{5}|{6}", 
-                    GetName(Convert.ToInt32(o.TypeID)).Value.PadRight(30),
+                    names[Convert.ToInt32(o.TypeID)].Value.PadRight(30),
                     Convert.ToString(o.Flags).PadRight(10),
                     Convert.ToString(o.ParentID).PadRight(10),
                     Convert.ToString(o.Size).PadRight(10),
                     Convert.ToString(o.Offset).PadRight(10),
                     Convert.ToString(o.Template).PadRight(10),
                     Convert.ToString(o.CRC32));
-
             }
         }
         void GetBuffers()
@@ -418,7 +451,7 @@ namespace CR2W.IO
             if (size == 0)
                 return;
 
-            buffers = new List<TSBuffer>();
+            buffers = new List<SBuffer>();
             BaseStream.Seek(start, SeekOrigin.Begin);
 
             Writer.WriteLine("\n");
@@ -429,7 +462,7 @@ namespace CR2W.IO
 
             for (int i = 0; i < size; i++)
             {
-                buffers.Add(new TSBuffer()
+                buffers.Add(new SBuffer()
                 {
                     Flags    = ReadUInt32(),
                     ID       = ReadUInt32(),
@@ -460,7 +493,7 @@ namespace CR2W.IO
             if (size == 0)
                 return;
 
-            embedded = new List<TSEmbedded>();
+            embedded = new List<SEmbedded>();
             BaseStream.Seek(start, SeekOrigin.Begin);
 
             Writer.WriteLine("\n");
@@ -471,7 +504,7 @@ namespace CR2W.IO
 
             for (int i = 0; i < size; i++)
             {
-                embedded.Add(new TSEmbedded()
+                embedded.Add(new SEmbedded()
                 {
                     Id      = ReadUInt32(),
                     Path    = ReadUInt32(),
@@ -498,7 +531,6 @@ namespace CR2W.IO
         #endregion
 
         #region Data
-
         private void ReadObjectData()
         {
             Writer.WriteLine("\n");
@@ -509,7 +541,7 @@ namespace CR2W.IO
             {
                 BaseStream.Seek(obj.Offset, SeekOrigin.Begin);
                 var end = obj.Offset + obj.Size;
-                var type = GetName(Convert.ToInt32(obj.TypeID)).Value;
+                var type = names[Convert.ToInt32(obj.TypeID)].Value;
 
                 Writer.WriteLine(type);
                 Writer.WriteLine("{");
@@ -523,7 +555,7 @@ namespace CR2W.IO
                         break;
                     case "CClipMapCookedData":
                         {
-                            Console.WriteLine("\tBytes: {0}", obj.Size);
+                            Writer.WriteLine("\tBytes: {0}", obj.Size);
                             BaseStream.Seek(obj.Size, SeekOrigin.Current);
                         }
                         break;
@@ -534,7 +566,6 @@ namespace CR2W.IO
                         break;
                 }
                 Writer.WriteLine("}");
-
                 if (end - BaseStream.Position > 0)
                 {
                     switch (type)
@@ -553,6 +584,21 @@ namespace CR2W.IO
                                 Writer.WriteLine(xmlstr);
                             }
                             break;
+                        case "CBitmapTexture":
+                            {
+                                Writer.WriteLine("Zero:      {0}", ReadUInt32());
+                                Writer.WriteLine("MipCount:  {0}", ReadUInt32());
+                                Writer.WriteLine("Width:     {0}", ReadUInt32());
+                                Writer.WriteLine("Height:    {0}", ReadUInt32());
+                                Writer.WriteLine("Unknown5:  {0}", ReadUInt32());
+                                Writer.WriteLine("Unknown6:  {0}", ReadUInt32());
+                            }
+                            break;
+                        case "CCubeTexture":
+                            {
+                                Writer.WriteLine(Encoding.UTF8.GetString(ReadBytes(Convert.ToInt32(end - BaseStream.Position))));
+                            }
+                            break;
                     }
                     var unknown = ReadBytes(Convert.ToInt32(end - BaseStream.Position));
                     Writer.WriteLine("Unknown Bytes: {0}", unknown.Length);
@@ -564,24 +610,21 @@ namespace CR2W.IO
                 Writer.WriteLine();
             }
         }
-
         private void ReadBufferData()
         {
 
         }
-
         private void ReadEmbeddedData()
         {
 
         }
-
         #endregion
 
         #region Variables
         void ReadVariable(string offset)
         {
             ReadByte();
-            while(true)
+            while (true)
             {
                 var nameId = ReadInt16();
                 if(nameId == 0)
@@ -590,11 +633,20 @@ namespace CR2W.IO
                 }
                 var typeId = ReadInt16();
                 var size = ReadInt32() - 4;
-                Writer.Write("{0}{1} {2}", offset, GetName(nameId).Value, GetName(typeId).Value);
+                Writer.Write("{0}{1} {2}", offset, names[nameId].Value, names[typeId].Value);
+                var start = BaseStream.Position;
                 ParseVariale(names[typeId].Value, size, $"\t{offset}");
+                var end = BaseStream.Position;
+                if (end - start != size)
+                {
+                    Writer.WriteLine();
+                    Writer.WriteLine("ERROR!!!!!!!!!");
+                    Writer.WriteLine("Expected Size: {0}", size);
+                    Writer.WriteLine("Actual Size:   {0}", end - start);
+                }
             }
         }
-        void ParseVariale(string type, int size, string offset )
+        void ParseVariale(string type, int size, string offset)
         {
             var arr = type.Split(new char[] { ':' }, 2);
             switch (arr[0])
@@ -685,7 +737,7 @@ namespace CR2W.IO
                     return;
                 case "CName":
                     {
-                        Writer.WriteLine(" {0}", GetName(ReadUInt16()).Value);
+                        Writer.WriteLine(" {0}", names[ReadUInt16()].Value);
                     }
                     return;
                 case "CGUID":
@@ -705,7 +757,7 @@ namespace CR2W.IO
                     return;
                 case "soft":
                     {
-                        var res = GetResource(ReadUInt16() - 1);
+                        var res = resources[ReadUInt16() - 1];
                         Writer.WriteLine(" {0} {1} ({2})", res.Type, res.Path, res.Flags);
                     }
                     return;
@@ -733,7 +785,7 @@ namespace CR2W.IO
                         else
                         {
                             id *= -1;
-                            var res = GetResource(id - 1);
+                            var res = resources[id - 1];
                             Writer.WriteLine(" {0} {1} ({2})", res.Type, res.Path, res.Flags);
                         }
                     }
@@ -751,12 +803,15 @@ namespace CR2W.IO
                     return;
                 case "IdTag":
                     {
-                        var tagtype = ReadByte();
+                        var dynamic = ReadBoolean();
                         var guid = new CGUID(ReadBytes(16));
-                        switch (tagtype)
+                        if(dynamic)
                         {
-                            case 0: Writer.WriteLine(" [Static: {0}]", guid.ToString()); break;
-                            case 1: Writer.WriteLine(" [Dynamic: {0}]", guid.ToString()); break;
+                            Writer.WriteLine(" [Dynamic: {0}]", guid.ToString());
+                        }
+                        else
+                        {
+                            Writer.WriteLine(" [Static: {0}]", guid.ToString());
                         }
                     }
                     return;
@@ -804,7 +859,7 @@ namespace CR2W.IO
                         var tags = new string[count];
                         for (var i = 0; i < count; i++)
                         {
-                            tags[i] = GetName(ReadUInt16()).Value;
+                            tags[i] = names[ReadUInt16()].Value;
                         }
                         Writer.WriteLine(" [{0}]", string.Join(",", tags));
                     }
@@ -839,12 +894,15 @@ namespace CR2W.IO
                                 break;
                             //IdTag
                             case 2:
-                                var tagtype = ReadByte();
-                                var idguid = new CGUID(ReadBytes(16));
-                                switch (tagtype)
+                                var dynamic = ReadBoolean();
+                                var guid = new CGUID(ReadBytes(16));
+                                if (dynamic)
                                 {
-                                    case 0: Writer.WriteLine(" [IdTag - Static: {0}]", idguid.ToString()); break;
-                                    case 1: Writer.WriteLine(" [IdTag - Dynamic: {0}]", idguid.ToString()); break;
+                                    Writer.WriteLine(" [Dynamic: {0}]", guid.ToString());
+                                }
+                                else
+                                {
+                                    Writer.WriteLine(" [Static: {0}]", guid.ToString());
                                 }
                                 break;
                         }
@@ -866,8 +924,8 @@ namespace CR2W.IO
                     return;
                 case "CDateTime":
                     {
-                        var datetime = ReadDateTime();
-                        Writer.WriteLine(" {0}", datetime.ToString());
+                        var datetime = new CDateTime(ReadUInt64());
+                        Writer.WriteLine(" {0}.{1}", datetime.ToString(), datetime.Value.Millisecond);
                     }
                     return;
                 case "SharedDataBuffer":
@@ -889,6 +947,25 @@ namespace CR2W.IO
                         Writer.WriteLine(" {0}", ReadUInt16());
                     }
                     return;
+                case "CPhysicalCollision":
+                    {
+                        var unknown = ReadUInt32();
+                        var nameCount = ReadByte();
+                        
+                        Writer.WriteLine();
+                        Writer.WriteLine("{0}{{", offset.Substring(1));
+                        Writer.WriteLine("{0}unknown Uint32 {1}", offset, unknown);
+                        Writer.WriteLine("{0}Types", offset);
+                        Writer.WriteLine("{0}{{", offset);
+                        for (byte i = 0; i < nameCount; i++)
+                        {
+                            Writer.WriteLine("\t{0}Id {1}: {2}", offset, i, names[ReadUInt16()].Value);
+                        }
+                        Writer.WriteLine("{0}}}", offset);
+                        Writer.WriteLine("{0}Bytes {1}", offset, String.Join(", ", ReadBytes(16)));
+                        Writer.WriteLine("{0}}}", offset.Substring(1));
+                    }
+                    return;
             }
 
             Type myType = Type.GetType($"CR2W.Types.W3.{type}");
@@ -906,7 +983,7 @@ namespace CR2W.IO
                             {
                                 break;
                             }
-                            values.Add(GetName(flag).Value);
+                            values.Add(names[flag].Value);
                         }
                         if(values.Count != 0)
                         {
@@ -919,7 +996,7 @@ namespace CR2W.IO
                     }
                     else
                     {
-                        var value = GetName(ReadUInt16()).Value;
+                        var value = names[ReadUInt16()].Value;
                         Writer.WriteLine(" {0}", value);
                     }
                     return;
@@ -1134,47 +1211,9 @@ namespace CR2W.IO
             }
             return size;
         }
-        /*  - Format Info
-         *  
-         *  DateTime is stored as a 64 bit number with a structure as follows:
-         *  
-         *  0000001101101111010111001001011001111101101000000110010000000000
-         *  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-         *  |        ||    ||    ||        ||         ||    ||   ||________|__ Empty
-         *  |        ||    ||    ||        ||         ||    ||___|____________ Day - 1
-         *  |        ||    ||    ||        ||         ||____|_________________ Month - 1
-         *  |        ||    ||    ||        ||_________|_______________________ Year
-         *  |        ||    ||    ||________|__________________________________ Milisecond
-         *  |        ||    ||____|____________________________________________ Second
-         *  |        ||____|__________________________________________________ Minuite
-         *  |________|________________________________________________________ Hour
-         *    
-         *  In this case the date would be:
-         *  
-         *  0000001101101111010111001001011001111101101000000110010000000000
-         *  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-         *  |13      ||47  ||23  ||150     ||2010     ||0   ||25 ||0       |
-         *  
-         *  26/01/2010 13:47:23:150
-         *
-         */
-        public DateTime ReadDateTime()
-        {
-            var date = ReadInt32();
-            var time = ReadInt32();
-
-            var year = date >> 20;
-            var month = date >> 15 & 0x1F;
-            var day = date >> 10 & 0x1F;
-            var hour = time >> 22;
-            var minute = time >> 16 & 0x3F;
-            var second = time >> 10 & 0x3F;
-            var millisecond = time & 0b11_11111111;
-
-            return new DateTime(year, month + 1, day + 1, hour, minute, second, millisecond);
-        }
         #endregion
 
+        #region Cleaning Up
         protected override void Dispose(bool disposing)
         {
             strings     = null;
@@ -1185,5 +1224,6 @@ namespace CR2W.IO
             embedded    = null;
             base.Dispose(disposing);
         }
+        #endregion
     }
 }

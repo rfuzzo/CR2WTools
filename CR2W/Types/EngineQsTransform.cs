@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
+    [REDPrimitive]
     public struct EngineQsTransform
     {
         public float ScaleX { get; set; }

@@ -11,7 +11,7 @@ using System.Reflection;
 
 namespace CR2W.IO
 {
-    public sealed class CR2WBinaryReader : BinaryReader
+    public sealed class CR2WBinaryReader : BinaryReader, IFile
     {
         #region Constructors
 
@@ -189,7 +189,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
                 {
-                    throw new MismatchCRC32Exception( "CRC32 Checksum failed for Table 2 - References" );
+                    throw new MismatchCRC32Exception( "CRC32 Checksum failed for Table 2 - Names" );
                 }
             }
 
@@ -216,7 +216,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 3 - Handles");
+                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 3 - Resources");
                 }
             }
             resources = new SResource[size];
@@ -508,18 +508,7 @@ namespace CR2W.IO
         /// <returns>CDatetime value</returns>
         public CDateTime ReadCDateTime()
         {
-            var date        = ReadInt32();
-            var time        = ReadInt32();
-
-            var year        = date >> 20;
-            var month       = date >> 15 & 0x1F;
-            var day         = date >> 10 & 0x1F;
-            var hour        = time >> 22;
-            var minute      = time >> 16 & 0x3F;
-            var second      = time >> 10 & 0x3F;
-            var millisecond = time & 0b11_11111111;
-
-            return new CDateTime(new DateTime(year, month, day, hour, minute, second, millisecond));
+            return new CDateTime(ReadUInt64());
         }
 
         /// <summary>
@@ -530,6 +519,10 @@ namespace CR2W.IO
         /// <returns></returns>
         public object ReadEnumerator( Type enumType )
         {
+            if(!enumType.IsEnum)
+            {
+                throw new ArgumentException($"Type '{enumType.Name}' is not a enumumerator.");
+            }
             if (enumType.IsDefined(typeof(FlagsAttribute), false))
             {
                 var flags = new List<string>();
@@ -649,11 +642,29 @@ namespace CR2W.IO
         /// <returns>EntityHandle Struct</returns>
         public EntityHandle ReadEntityHandle()
         {
+            var handletype = ReadByte();
+
+            if(handletype == 1)
+            {
+                return new EntityHandle()
+                {
+                    HandleType = handletype,
+                    Value = new CGUID(ReadBytes(16)),
+                    Unknown = ReadBytes(16),
+                };
+            }
+            else if(handletype == 2)
+            {
+                return new EntityHandle()
+                {
+                    HandleType = handletype,
+                    TagType = ReadByte(),
+                    Value = new CGUID(ReadBytes(16)),
+                };
+            }
             return new EntityHandle()
             {
-                Flag = ReadByte(),
-                Type = ReadByte(),
-                Value = ReadCGUID(),
+                HandleType = handletype
             };
         }
 

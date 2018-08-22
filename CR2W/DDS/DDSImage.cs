@@ -3,6 +3,7 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.IO;
 using CR2W.DDS.Utils;
+using CR2W.IO;
 
 namespace CR2W.DDS
 {
@@ -97,40 +98,34 @@ namespace CR2W.DDS
 				data = ReadData(reader, header);
 				if (data != null)
 				{
-					byte[] rawData = Decompressor.Expand(header, data, pixelFormat);
+					byte[] rawData = DDSDecompressor.Expand(header, data, pixelFormat);
 					_bitmap = CreateBitmap((int)header.width, (int)header.height, rawData);
 				}
 			}
 		}
 
-        public DDSImage( byte[] raw, DDSStruct header, bool alpha )
+        public DDSImage(CR2WBinaryReader reader, DDSStruct header, bool alpha)
         {
             Utils.PixelFormat pixelFormat = Utils.PixelFormat.UNKNOWN;
             byte[] data = null;
 
-            using (var mem = new MemoryStream(raw))
+            if (header.depth == 0) header.depth = 1;
+
+            _isValid = true;
+            _alpha = alpha;
+
+            uint blocksize = 0;
+            pixelFormat = GetFormat(header, ref blocksize);
+            if (pixelFormat == Utils.PixelFormat.UNKNOWN)
             {
-                using (var reader = new BinaryReader(mem))
-                {
-                    if (header.depth == 0) header.depth = 1;
+                throw new InvalidFileHeaderException();
+            }
 
-                    _isValid = true;
-                    _alpha = alpha;
-
-                    uint blocksize = 0;
-                    pixelFormat = GetFormat(header, ref blocksize);
-                    if (pixelFormat == Utils.PixelFormat.UNKNOWN)
-                    {
-                        throw new InvalidFileHeaderException();
-                    }
-
-                    data = ReadData(reader, header);
-                    if (data != null)
-                    {
-                        byte[] rawData = Decompressor.Expand(header, data, pixelFormat);
-                        _bitmap = CreateBitmap((int)header.width, (int)header.height, rawData);
-                    }
-                }
+            data = ReadData(reader, header);
+            if (data != null)
+            {
+                byte[] rawData = DDSDecompressor.Expand(header, data, pixelFormat);
+                _bitmap = CreateBitmap((int)header.width, (int)header.height, rawData);
             }
         }
 
@@ -139,7 +134,7 @@ namespace CR2W.DDS
 			byte[] compdata = null;
 			uint compsize = 0;
 
-			if ((header.flags & Helper.DDSD_LINEARSIZE) > 1)
+			if ((header.flags & DDSHelper.DDSD_LINEARSIZE) > 1)
 			{
 				compdata = reader.ReadBytes((int)header.sizeorpitch);
 				compsize = (uint)compdata.Length;
@@ -244,89 +239,123 @@ namespace CR2W.DDS
 			header.ddscaps.caps4 = reader.ReadUInt32();
 			header.texturestage = reader.ReadUInt32();
 
-			return true;
+            PrintHeader(header);
+
+            return true;
 		}
+
+        public static void PrintHeader(DDSStruct header)
+        {
+            Console.WriteLine("header.");
+            Console.WriteLine("\tsize             {0}", header.size);
+            Console.WriteLine("\tflags            {0}", header.flags);
+            Console.WriteLine("\twidth            {0}", header.width);
+            Console.WriteLine("\theight           {0}", header.height);
+            Console.WriteLine("\tsizeorpitch      {0}", header.sizeorpitch);
+            Console.WriteLine("\tdepth            {0}", header.depth);
+            Console.WriteLine("\tmipmapcount      {0}", header.mipmapcount);
+            Console.WriteLine("\talphabitdepth    {0}", header.alphabitdepth);
+            for (int i = 0; i < header.reserved.Length; i++)
+            {
+                Console.WriteLine("\treserved[{0}]      {1}", i, header.reserved[i]);
+            }
+            Console.WriteLine("header.pixelformat");
+            Console.WriteLine("\tsize             {0}", header.pixelformat.size);
+            Console.WriteLine("\tflags            {0}", header.pixelformat.flags);
+            Console.WriteLine("\tfourcc           {0}", header.pixelformat.fourcc);
+            Console.WriteLine("\trgbbitcount      {0}", header.pixelformat.rgbbitcount);
+            Console.WriteLine("\trbitmask         {0}", header.pixelformat.rbitmask);
+            Console.WriteLine("\tgbitmask         {0}", header.pixelformat.gbitmask);
+            Console.WriteLine("\tbbitmask         {0}", header.pixelformat.bbitmask);
+            Console.WriteLine("\talphabitmask     {0}", header.pixelformat.alphabitmask);
+            Console.WriteLine("header.ddscaps");
+            Console.WriteLine("\tcaps1            {0}", header.ddscaps.caps1);
+            Console.WriteLine("\tcaps2            {0}", header.ddscaps.caps2);
+            Console.WriteLine("\tcaps3            {0}", header.ddscaps.caps3);
+            Console.WriteLine("\tcaps4            {0}", header.ddscaps.caps4);
+            Console.WriteLine();
+        }
 
         private Utils.PixelFormat GetFormat(DDSStruct header, ref uint blocksize)
 		{
 			Utils.PixelFormat format = Utils.PixelFormat.UNKNOWN;
-			if ((header.pixelformat.flags & Helper.DDPF_FOURCC) == Helper.DDPF_FOURCC)
+			if ((header.pixelformat.flags & DDSHelper.DDPF_FOURCC) == DDSHelper.DDPF_FOURCC)
 			{
 				blocksize = ((header.width + 3) / 4) * ((header.height + 3) / 4) * header.depth;
 
 				switch (header.pixelformat.fourcc)
 				{
-					case Helper.FOURCC_DXT1:
+					case DDSHelper.FOURCC_DXT1:
 						format = Utils.PixelFormat.DXT1;
 						blocksize *= 8;
 						break;
 
-					case Helper.FOURCC_DXT2:
+					case DDSHelper.FOURCC_DXT2:
 						format = Utils.PixelFormat.DXT2;
 						blocksize *= 16;
 						break;
 
-					case Helper.FOURCC_DXT3:
+					case DDSHelper.FOURCC_DXT3:
 						format = Utils.PixelFormat.DXT3;
 						blocksize *= 16;
 						break;
 
-					case Helper.FOURCC_DXT4:
+					case DDSHelper.FOURCC_DXT4:
 						format = Utils.PixelFormat.DXT4;
 						blocksize *= 16;
 						break;
 
-					case Helper.FOURCC_DXT5:
+					case DDSHelper.FOURCC_DXT5:
 						format = Utils.PixelFormat.DXT5;
 						blocksize *= 16;
 						break;
 
-					case Helper.FOURCC_ATI1:
+					case DDSHelper.FOURCC_ATI1:
 						format = Utils.PixelFormat.ATI1N;
 						blocksize *= 8;
 						break;
 
-					case Helper.FOURCC_ATI2:
+					case DDSHelper.FOURCC_ATI2:
 						format = Utils.PixelFormat.THREEDC;
 						blocksize *= 16;
 						break;
 
-					case Helper.FOURCC_RXGB:
+					case DDSHelper.FOURCC_RXGB:
 						format = Utils.PixelFormat.RXGB;
 						blocksize *= 16;
 						break;
 
-					case Helper.FOURCC_DOLLARNULL:
+					case DDSHelper.FOURCC_DOLLARNULL:
 						format = Utils.PixelFormat.A16B16G16R16;
 						blocksize = header.width * header.height * header.depth * 8;
 						break;
 
-					case Helper.FOURCC_oNULL:
+					case DDSHelper.FOURCC_oNULL:
 						format = Utils.PixelFormat.R16F;
 						blocksize = header.width * header.height * header.depth * 2;
 						break;
 
-					case Helper.FOURCC_pNULL:
+					case DDSHelper.FOURCC_pNULL:
 						format = Utils.PixelFormat.G16R16F;
 						blocksize = header.width * header.height * header.depth * 4;
 						break;
 
-					case Helper.FOURCC_qNULL:
+					case DDSHelper.FOURCC_qNULL:
 						format = Utils.PixelFormat.A16B16G16R16F;
 						blocksize = header.width * header.height * header.depth * 8;
 						break;
 
-					case Helper.FOURCC_rNULL:
+					case DDSHelper.FOURCC_rNULL:
 						format = Utils.PixelFormat.R32F;
 						blocksize = header.width * header.height * header.depth * 4;
 						break;
 
-					case Helper.FOURCC_sNULL:
+					case DDSHelper.FOURCC_sNULL:
 						format = Utils.PixelFormat.G32R32F;
 						blocksize = header.width * header.height * header.depth * 8;
 						break;
 
-					case Helper.FOURCC_tNULL:
+					case DDSHelper.FOURCC_tNULL:
 						format = Utils.PixelFormat.A32B32G32R32F;
 						blocksize = header.width * header.height * header.depth * 16;
 						break;
@@ -340,9 +369,9 @@ namespace CR2W.DDS
 			else
 			{
 				// uncompressed image
-				if ((header.pixelformat.flags & Helper.DDPF_LUMINANCE) == Helper.DDPF_LUMINANCE)
+				if ((header.pixelformat.flags & DDSHelper.DDPF_LUMINANCE) == DDSHelper.DDPF_LUMINANCE)
 				{
-					if ((header.pixelformat.flags & Helper.DDPF_ALPHAPIXELS) == Helper.DDPF_ALPHAPIXELS)
+					if ((header.pixelformat.flags & DDSHelper.DDPF_ALPHAPIXELS) == DDSHelper.DDPF_ALPHAPIXELS)
 					{
 						format = Utils.PixelFormat.LUMINANCE_ALPHA;
 					}
@@ -353,7 +382,7 @@ namespace CR2W.DDS
 				}
 				else
 				{
-					if ((header.pixelformat.flags & Helper.DDPF_ALPHAPIXELS) == Helper.DDPF_ALPHAPIXELS)
+					if ((header.pixelformat.flags & DDSHelper.DDPF_ALPHAPIXELS) == DDSHelper.DDPF_ALPHAPIXELS)
 					{
 						format = Utils.PixelFormat.RGBA;
 					}

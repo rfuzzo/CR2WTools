@@ -9,18 +9,28 @@ using CR2W.Types.W3;
 
 namespace CR2W.Types
 {
+    [REDPrimitive]
     public struct Ptr<T>
     {
+        private T _instance;
+
+        public T Instance => _instance;
+        public bool HasValue => _instance != null;
+        public Type PointerType => typeof(T);
+        public Type InstanceType => _instance.GetType();
         public uint Index { get; set; }
 
-        public Type PtrOf
+        public void DeSerialize(IFile file, REDEventArgs e)
         {
-            get
+            if(typeof(T).IsAssignableFrom(typeof(T)))
             {
-                return typeof(T);
+                throw new Exception($"{nameof(T)} is not assignable from {nameof(T)}");
             }
-        }
+            
+            
 
-        
+
+
+        }
     }
 }

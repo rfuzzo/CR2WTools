@@ -1,12 +1,29 @@
 ﻿using System;
+using System.Text;
+using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
     public class CSourceTexture : CResource
     {
-        UInt32 Width { get; set; }
-        UInt32 Height { get; set; }
-        UInt32 Pitch { get; set; }
-        ETextureRawFormat Format { get; set; }
+        [REDProp("width")]
+        public UInt32 Width { get; set; }
+
+        [REDProp("height")]
+        public UInt32 Height { get; set; }
+
+        [REDProp("pitch")]
+        public UInt32 Pitch { get; set; }
+
+        [REDProp("format")]
+        public ETextureRawFormat Format { get; set; }
+
+        public override void ParseBytes(CR2WBinaryReader br, uint size)
+        {
+            var end = br.BaseStream.Position + size;
+
+            base.ParseBytes(br, size);
+
+        }
     }
 }

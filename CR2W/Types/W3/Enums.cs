@@ -1246,14 +1246,16 @@ namespace CR2W.Types.W3
         TCM_QualityRG = 10,
         TCM_QualityColor = 11,
     }
+
     public enum ETextureCategory
     {
-        Generic,
-        World,
-        Scene,
-        Characters,
-        Heads
+        Generic = 0,
+        World = 1,
+        Scene = 2,
+        Characters = 3,
+        Heads = 4
     }
+
     public enum ETextureRawFormat
     {
         TRF_TrueColor = 0,
@@ -1262,6 +1264,7 @@ namespace CR2W.Types.W3
         TRF_AlphaGrayscale = 3,
         TRF_HDRGrayscale = 4,
     }
+
     public enum EEnvColorGroup
     {
         ECG_Default,

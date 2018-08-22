@@ -53,12 +53,28 @@ namespace CR2W.IO
             }
 
             Console.WriteLine();
+            Console.WriteLine("Resources:");
+            var length = ReadVLQInt32();
+            Console.WriteLine("\t{0}", Encoding.ASCII.GetString(ReadBytes(Math.Abs(length))));
+
+            Console.WriteLine();
             Console.WriteLine(BaseStream.Position);
             Console.WriteLine();
-            //Console.WriteLine(Encoding.ASCII.GetString(ReadBytes(Convert.ToInt32(BaseStream.Length - BaseStream.Position))));
+
+
+            Console.WriteLine(ReadUInt16());
+            Console.WriteLine(ReadUInt16());
+            Console.WriteLine(ReadUInt32());
+            Console.WriteLine(ReadUInt16());
+            Console.WriteLine(ReadUInt16());
+            Console.WriteLine(ReadUInt32());
+            Console.WriteLine(ReadUInt16());
+            Console.WriteLine(ReadUInt16());
+            Console.WriteLine(ReadUInt32());
 
 
 
+            Console.WriteLine(Encoding.ASCII.GetString(ReadBytes(Convert.ToInt32(BaseStream.Length - BaseStream.Position))));
 
 
 

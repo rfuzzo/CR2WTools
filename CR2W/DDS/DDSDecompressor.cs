@@ -3,7 +3,7 @@ using CR2W.DDS.Utils;
 
 namespace CR2W.DDS
 {
-	internal class Decompressor
+	internal class DDSDecompressor
 	{
 		internal static byte[] Expand(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
@@ -77,8 +77,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressDXT1(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -103,8 +103,8 @@ namespace CR2W.DDS
 						{
 							ushort colour0 = *((ushort*)temp);
 							ushort colour1 = *((ushort*)(temp + 2));
-							Helper.DxtcReadColor(colour0, ref colours[0]);
-							Helper.DxtcReadColor(colour1, ref colours[1]);
+							DDSHelper.DxtcReadColor(colour0, ref colours[0]);
+							DDSHelper.DxtcReadColor(colour1, ref colours[1]);
 
 							uint bitmask = ((uint*)temp)[1];
 							temp += 8;
@@ -177,7 +177,7 @@ namespace CR2W.DDS
 			// Can do color & alpha same as dxt3, but color is pre-multiplied
 			// so the result will be wrong unless corrected.
 			byte[] rawData = DecompressDXT3(header, data, pixelFormat);
-			Helper.CorrectPremult((uint)(width * height * depth), ref rawData);
+			DDSHelper.CorrectPremult((uint)(width * height * depth), ref rawData);
 
 			return rawData;
 		}
@@ -185,8 +185,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressDXT3(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -208,7 +208,7 @@ namespace CR2W.DDS
 							byte* alpha = temp;
 							temp += 8;
 
-							Helper.DxtcReadColors(temp, ref colours);
+							DDSHelper.DxtcReadColors(temp, ref colours);
 							temp += 4;
 
 							uint bitmask = ((uint*)temp)[1];
@@ -276,7 +276,7 @@ namespace CR2W.DDS
 			// Can do color & alpha same as dxt5, but color is pre-multiplied
 			// so the result will be wrong unless corrected.
 			byte[] rawData = DecompressDXT5(header, data, pixelFormat);
-			Helper.CorrectPremult((uint)(width * height * depth), ref rawData);
+			DDSHelper.CorrectPremult((uint)(width * height * depth), ref rawData);
 
 			return rawData;
 		}
@@ -284,8 +284,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressDXT5(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -312,7 +312,7 @@ namespace CR2W.DDS
 							byte* alphamask = (temp + 2);
 							temp += 8;
 
-							Helper.DxtcReadColors(temp, ref colours);
+							DDSHelper.DxtcReadColors(temp, ref colours);
 							uint bitmask = ((uint*)temp)[1];
 							temp += 8;
 
@@ -419,8 +419,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressRGB(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -431,11 +431,11 @@ namespace CR2W.DDS
 			uint valMask = (uint)((header.pixelformat.rgbbitcount == 32) ? ~0 : (1 << (int)header.pixelformat.rgbbitcount) - 1);
 			uint pixSize = (uint)(((int)header.pixelformat.rgbbitcount + 7) / 8);
 			int rShift1 = 0; int rMul = 0; int rShift2 = 0;
-			Helper.ComputeMaskParams(header.pixelformat.rbitmask, ref rShift1, ref rMul, ref rShift2);
+			DDSHelper.ComputeMaskParams(header.pixelformat.rbitmask, ref rShift1, ref rMul, ref rShift2);
 			int gShift1 = 0; int gMul = 0; int gShift2 = 0;
-			Helper.ComputeMaskParams(header.pixelformat.gbitmask, ref gShift1, ref gMul, ref gShift2);
+			DDSHelper.ComputeMaskParams(header.pixelformat.gbitmask, ref gShift1, ref gMul, ref gShift2);
 			int bShift1 = 0; int bMul = 0; int bShift2 = 0;
-			Helper.ComputeMaskParams(header.pixelformat.bbitmask, ref bShift1, ref bMul, ref bShift2);
+			DDSHelper.ComputeMaskParams(header.pixelformat.bbitmask, ref bShift1, ref bMul, ref bShift2);
 
 			int offset = 0;
 			int pixnum = width * height * depth;
@@ -462,8 +462,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressRGBA(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -475,13 +475,13 @@ namespace CR2W.DDS
 			// Funny x86s, make 1 << 32 == 1
 			uint pixSize = (header.pixelformat.rgbbitcount + 7) / 8;
 			int rShift1 = 0; int rMul = 0; int rShift2 = 0;
-			Helper.ComputeMaskParams(header.pixelformat.rbitmask, ref rShift1, ref rMul, ref rShift2);
+			DDSHelper.ComputeMaskParams(header.pixelformat.rbitmask, ref rShift1, ref rMul, ref rShift2);
 			int gShift1 = 0; int gMul = 0; int gShift2 = 0;
-			Helper.ComputeMaskParams(header.pixelformat.gbitmask, ref gShift1, ref gMul, ref gShift2);
+			DDSHelper.ComputeMaskParams(header.pixelformat.gbitmask, ref gShift1, ref gMul, ref gShift2);
 			int bShift1 = 0; int bMul = 0; int bShift2 = 0;
-			Helper.ComputeMaskParams(header.pixelformat.bbitmask, ref bShift1, ref bMul, ref bShift2);
+			DDSHelper.ComputeMaskParams(header.pixelformat.bbitmask, ref bShift1, ref bMul, ref bShift2);
 			int aShift1 = 0; int aMul = 0; int aShift2 = 0;
-			Helper.ComputeMaskParams(header.pixelformat.alphabitmask, ref aShift1, ref aMul, ref aShift2);
+			DDSHelper.ComputeMaskParams(header.pixelformat.alphabitmask, ref aShift1, ref aMul, ref aShift2);
 
 			int offset = 0;
 			int pixnum = width * height * depth;
@@ -510,8 +510,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] Decompress3Dc(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -618,8 +618,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressAti1n(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -690,8 +690,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressLum(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -700,7 +700,7 @@ namespace CR2W.DDS
 			byte[] rawData = new byte[depth * sizeofplane + height * bps + width * bpp];
 
 			int lShift1 = 0; int lMul = 0; int lShift2 = 0;
-			Helper.ComputeMaskParams(header.pixelformat.rbitmask, ref lShift1, ref lMul, ref lShift2);
+			DDSHelper.ComputeMaskParams(header.pixelformat.rbitmask, ref lShift1, ref lMul, ref lShift2);
 
 			int offset = 0;
 			int pixnum = width * height * depth;
@@ -723,8 +723,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressRXGB(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -753,7 +753,7 @@ namespace CR2W.DDS
 							byte* alphamask = temp + 2;
 							temp += 8;
 
-							Helper.DxtcReadColors(temp, ref color_0, ref color_1);
+							DDSHelper.DxtcReadColors(temp, ref color_0, ref color_1);
 							temp += 4;
 
 							uint bitmask = ((uint*)temp)[1];
@@ -869,8 +869,8 @@ namespace CR2W.DDS
 		private static unsafe byte[] DecompressFloat(DDSStruct header, byte[] data, PixelFormat pixelFormat)
 		{
 			// allocate bitmap
-			int bpp = (int)(Helper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
-			int bps = (int)(header.width * bpp * Helper.PixelFormatToBpc(pixelFormat));
+			int bpp = (int)(DDSHelper.PixelFormatToBpp(pixelFormat, header.pixelformat.rgbbitcount));
+			int bps = (int)(header.width * bpp * DDSHelper.PixelFormatToBpc(pixelFormat));
 			int sizeofplane = (int)(bps * header.height);
 			int width = (int)header.width;
 			int height = (int)header.height;
@@ -912,17 +912,17 @@ namespace CR2W.DDS
 
 						case PixelFormat.R16F:  // Red float, green = blue = max
 							size = width * height * depth * bpp;
-							Helper.ConvR16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
+							DDSHelper.ConvR16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
 							break;
 
 						case PixelFormat.A16B16G16R16F:  // Just convert from half to float.
 							size = width * height * depth * bpp;
-							Helper.ConvFloat16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
+							DDSHelper.ConvFloat16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
 							break;
 
 						case PixelFormat.G16R16F:  // Convert from half to float, set blue = max.
 							size = width * height * depth * bpp;
-							Helper.ConvG16R16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
+							DDSHelper.ConvG16R16ToFloat32((uint*)destData, (ushort*)temp, (uint)size);
 							break;
 
 						default:

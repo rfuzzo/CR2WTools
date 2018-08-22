@@ -49,10 +49,10 @@
   <ItemGroup>
     <Compile Include="DDS\DDS.cs" />
     <Compile Include="DDS\DDSImage.cs" />
-    <Compile Include="DDS\Decompressor.cs" />
-    <Compile Include="DDS\Utils.cs" />
-    <Compile Include="FNV1a\FNV1A.cs" />
-    <Compile Include="IO\CObjectBinaryReader.cs" />
+    <Compile Include="DDS\DDSDecompressor.cs" />
+    <Compile Include="DDS\DDSUtils.cs" />
+    <Compile Include="FNV1a\FNV1A32HashAlgorithm.cs" />
+    <Compile Include="FNV1a\FNV1A64HashAlgorithm.cs" />
     <Compile Include="IO\CR2WLegacyReader.cs" />
     <Compile Include="CResourceManager.cs" />
     <Compile Include="CRC32\Crc32Algorithm.cs" />
@@ -60,6 +60,7 @@
     <Compile Include="CRC32\SafeProxy.cs" />
     <Compile Include="CRC32\SafeProxyC.cs" />
     <Compile Include="CRC32\MismatchCRC32Exception.cs" />
+    <Compile Include="IO\CR2WTestReader2.cs" />
     <Compile Include="IO\IFile.cs" />
     <Compile Include="IO\InvalidCR2WFileException.cs" />
     <Compile Include="IO\CR2WFile.cs" />
@@ -76,6 +77,9 @@
     <Compile Include="IO\CR2WTestReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\Array.cs" />
+    <Compile Include="Types\CPhysicalCollision.cs" />
+    <Compile Include="Types\DeferredDataBuffer.cs" />
+    <Compile Include="Types\StringAnsi.cs" />
     <Compile Include="Types\W3\CClipMapCookedData.cs" />
     <Compile Include="Types\CGUID.cs" />
     <Compile Include="Types\Handle.cs" />
@@ -123,6 +127,7 @@
     <Compile Include="Types\W3\CEnvToneMappingParameters.cs" />
     <Compile Include="Types\W3\CEnvWaterParameters.cs" />
     <Compile Include="Types\W3\CEnvWindParameters.cs" />
+    <Compile Include="Types\W3\CFont.cs" />
     <Compile Include="Types\W3\CGraphBlock.cs" />
     <Compile Include="Types\W3\CGraphConnection.cs" />
     <Compile Include="Types\W3\CGraphSocket.cs" />

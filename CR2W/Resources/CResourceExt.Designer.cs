@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace CR2W.Resources {
+namespace RED.Resources {
     using System;
     
     
