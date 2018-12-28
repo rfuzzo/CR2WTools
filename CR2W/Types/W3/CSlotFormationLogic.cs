@@ -1,0 +1,24 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CR2W.Types.W3
+{
+public class CSlotFormationLogic : IFormationLogic
+{
+#region RED Properties
+
+[REDProp("recomputionDelay")]
+public float RecomputionDelay { get; set;}
+
+[REDProp("minCatchupDistance")]
+public float MinCatchupDistance { get; set;}
+
+[REDProp("formationPattern")]
+public Ptr<IFormationPatternNode> FormationPattern { get; set;}
+
+#endregion
+}
+}

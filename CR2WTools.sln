@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CR2W", "CR2W\CR2W.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CR2WConsole", "CR2WConsole\CR2WConsole.csproj", "{B8A52A7D-2491-49D9-8EDB-8D5DE7DF9C38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LimeKit", "LimeKit\LimeKit.csproj", "{E6AAEBAA-F319-42B8-B922-1C8697AEF529}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B8A52A7D-2491-49D9-8EDB-8D5DE7DF9C38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8A52A7D-2491-49D9-8EDB-8D5DE7DF9C38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8A52A7D-2491-49D9-8EDB-8D5DE7DF9C38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6AAEBAA-F319-42B8-B922-1C8697AEF529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6AAEBAA-F319-42B8-B922-1C8697AEF529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6AAEBAA-F319-42B8-B922-1C8697AEF529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6AAEBAA-F319-42B8-B922-1C8697AEF529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

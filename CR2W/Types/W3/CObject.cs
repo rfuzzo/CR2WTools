@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Diagnostics;
 using CR2W.IO;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
@@ -15,6 +16,7 @@ namespace CR2W.Types.W3
     /// This is the base class of all RedEngine3 serializable types.
     /// </summary>
     [REDClass]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public abstract class CObject : IScriptable
     {
         public Dictionary<uint, CObject> Children { get; set; }
@@ -119,6 +121,7 @@ namespace CR2W.Types.W3
             //Basic / Value Types
             switch (proptype.Name)
             {
+                case "Int8":              return br.ReadSByte();
                 case "Byte":              return br.ReadByte();
                 case "UInt16":            return br.ReadUInt16();
                 case "UInt32":            return br.ReadUInt32();

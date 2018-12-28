@@ -39,9 +39,20 @@ namespace CR2WConsole
                 if (of.ShowDialog() == DialogResult.OK)
                 {
                     //OpenFile(of.FileName);
-                    TestFile(of.FileName, Console.Out);
+                    //TestFile(of.FileName, Console.Out);
                     //LegacyFile(of.FileName);
                     //ReadCache(of.FileName);
+
+                    CResource res;
+                    try
+                    {
+                        res = CResourceManager.LoadResource(of.FileName);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        return;
+                    }
                 }
             }
         }
