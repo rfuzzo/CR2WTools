@@ -5,16 +5,15 @@ using CR2W.IO;
 using CR2W.DDS.Utils;
 using CR2W.DDS;
 using System.Windows.Forms;
-using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace CR2W.Types.W3
 {
-    [TypeConverter(typeof(ExpandableObjectConverter))]public class CBitmapTexture : CResource, ITexture
+    public class CBitmapTexture : CResource, ITexture
     {
         [REDProp("width")]
         public uint Width { get; set; }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
+using System.Threading.Tasks;
 using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
-    [TypeConverter(typeof(ExpandableObjectConverter))]public class CSectorData : ISerializable
+    public class CSectorData : ISerializable
     {
         public uint Unknown1 { get; set; }
         public byte Unknown2 { get; set; }

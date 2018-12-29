@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Xml;
 using CR2W.IO;
 
 
 namespace CR2W.Types.W3
 {
-    [TypeConverter(typeof(ExpandableObjectConverter))]public class CRagdoll : CResource
+    public class CRagdoll : CResource
     {
         [REDProp("windScaler")]
         public float WindScaler { get; set; }

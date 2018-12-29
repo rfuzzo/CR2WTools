@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
+using System.Threading.Tasks;
 using CR2W.IO;
 using System.IO;
 
 namespace CR2W.Types.W3
 {
-    [TypeConverter(typeof(ExpandableObjectConverter))]public class CIndexed2dArray : C2dArray
+    public class CIndexed2dArray : C2dArray
     {
         public int GetRowIndexByKey( CName name )
         {

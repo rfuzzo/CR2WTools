@@ -1,0 +1,23 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.ComponentModel;
+
+namespace CR2W.Types.W3
+{
+[TypeConverter(typeof(ExpandableObjectConverter))]
+public class CAIAnimalRunWild : CAIDynamicWander
+{
+#region RED Properties
+
+[REDProp("packRegroupEvent")]
+public CName PackRegroupEvent { get; set;}
+
+[REDProp("leaderRegroupEvent")]
+public CName LeaderRegroupEvent { get; set;}
+
+#endregion
+}
+}

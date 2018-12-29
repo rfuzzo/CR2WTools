@@ -1,0 +1,26 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.ComponentModel;
+
+namespace CR2W.Types.W3
+{
+[TypeConverter(typeof(ExpandableObjectConverter))]
+public class CBTTaskForceSetStatDef : IBehTreeTaskDefinition
+{
+#region RED Properties
+
+[REDProp("percent")]
+public Int32 Percent { get; set;}
+
+[REDProp("onActivate")]
+public bool OnActivate { get; set;}
+
+[REDProp("onDeactivate")]
+public bool OnDeactivate { get; set;}
+
+#endregion
+}
+}

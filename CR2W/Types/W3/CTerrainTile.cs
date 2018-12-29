@@ -1,11 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using CR2W.IO;
 
 
 namespace CR2W.Types.W3
 {
-    [TypeConverter(typeof(ExpandableObjectConverter))]public class CTerrainTile : CResource
+    public class CTerrainTile : CResource
     {
         [REDProp("tileFileVersion")]
         public UInt32 TileFileVersion { get; set; }

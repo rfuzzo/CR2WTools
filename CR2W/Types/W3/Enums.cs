@@ -2,93 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.ComponentModel;
+using System.Threading.Tasks;
 
 namespace CR2W.Types.W3
 {
-    //rfuzzo: enums not in rtti begin
-    public enum EAllowedActorGroups
-    {
-
-    }
-    public enum EHardAttachmentFlags
-    {
-
-
-    }
-    public enum EApertureValue
-    {
-
-    }
-    public enum ETopLevelAIPriorities
-    {
-
-    }
-    public enum ESoundAmbientDynamicParameter
-    {
-
-    }
-    public enum ESkeletonBoneFlags
-    {
-
-
-    }
-    public enum ESceneItemEventMode
-    {
-
-    }
-    public enum EQuestManageFastTravelOperation
-    {
-
-    }
-    public enum EMovementFlags
-    {
-
-    }
-    public enum EMeshChunkRenderMask
-    {
-
-    }
-    public enum ELightUsageMask
-    {
-
-
-    }
-    public enum ELightCubeSides
-    {
-
-    }
-    public enum EJournalContentType
-    {
-
-    }
-    public enum EImmunityFlags
-    {
-
-    }
-    public enum EFixBonesHierarchyType
-    {
-
-    }
-    public enum EDismembermentEffectTypeFlag
-    {
-
-    }
-    public enum ECameraLightBitfield
-    {
-
-
-    }
-    public enum EBehaviorVarContext
-    {
-
-    }
-    public enum EArbitratorPriorities
-    {
-
-    }
-    //rfuzzo: enums not in rtti end
-
     public enum EPlayerEvadeType
     {
         PET_Roll,
