@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ using CR2W.Types.W3;
 namespace CR2W.Types
 {
     [REDPrimitive]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public struct Soft<T> where T : CResource, new()
     {
         private T _instance;

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CScriptedFlashFunction : IScriptedFlash
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CScriptedFlashFunction : IScriptedFlash
 {
 #region RED Properties
 

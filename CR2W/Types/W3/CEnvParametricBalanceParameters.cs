@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvParametricBalanceParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvParametricBalanceParameters
 	{
 		[REDProp("saturation")]
 		public SSimpleCurve Saturation { get; set; }

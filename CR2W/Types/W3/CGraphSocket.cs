@@ -1,12 +1,12 @@
 
 using System;
 using System.IO;
-
+using System.ComponentModel;
 using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
-	public class CGraphSocket
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CGraphSocket
 	{
 		[REDProp("block")]
 		public Ptr<CGraphBlock> Block { get; set; }

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CQuestEngineTimeWaitForCondition : IQuestCondition
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CQuestEngineTimeWaitForCondition : IQuestCondition
 {
 #region RED Properties
 

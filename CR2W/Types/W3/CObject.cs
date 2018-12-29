@@ -8,9 +8,12 @@ using System.Text;
 using System.Diagnostics;
 using CR2W.IO;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace CR2W.Types.W3
 {
+   
+
     /// <summary>
     /// Represnts a Witcher 3 object that can be read by the RedEngine3.
     /// This is the base class of all RedEngine3 serializable types.
@@ -19,6 +22,8 @@ namespace CR2W.Types.W3
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public abstract class CObject : IScriptable
     {
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        //public VirtualDictionary<uint, CObject> Children { get; set; }
         public Dictionary<uint, CObject> Children { get; set; }
 
         public override UInt16 Flags { get; set; }
@@ -26,6 +31,7 @@ namespace CR2W.Types.W3
 
         public CObject()
         {
+            //Children = new VirtualDictionary<uint, CObject>();
             Children = new Dictionary<uint, CObject>();
             Console.WriteLine($"CObject created: {this.GetType().Name}");
         }

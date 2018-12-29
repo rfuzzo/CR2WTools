@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CPhantomAttachment : CHardAttachment
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CPhantomAttachment : CHardAttachment
 {
 #region RED Properties
 

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CBehTreeNodeConditionCombatTargetNoticedDefinition : CBehTreeNodeConditionTargetNoticedDefinition
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CBehTreeNodeConditionCombatTargetNoticedDefinition : CBehTreeNodeConditionTargetNoticedDefinition
 {
 #region RED Properties
 

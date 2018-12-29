@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CBehTreeNodeProbabilitySelectorDefinition : IBehTreeNodeCompositeDefinition
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CBehTreeNodeProbabilitySelectorDefinition : IBehTreeNodeCompositeDefinition
 {
 #region RED Properties
 

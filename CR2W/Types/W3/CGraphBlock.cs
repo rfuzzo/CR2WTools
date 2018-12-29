@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CGraphBlock : CObject
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CGraphBlock : CObject
     {
 		[REDProp("sockets")]
 		public Array<Ptr<CGraphSocket>> Sockets { get; set; }

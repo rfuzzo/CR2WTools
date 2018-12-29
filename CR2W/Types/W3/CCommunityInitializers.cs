@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CCommunityInitializers : CObject
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CCommunityInitializers : CObject
 {
 #region RED Properties
 

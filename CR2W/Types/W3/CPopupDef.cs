@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CPopupDef : CObject
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CPopupDef : CObject
 	{
 		[REDProp("timeParam")]
 		public Ptr<IPopupTimeParam> TimeParam { get; set; }

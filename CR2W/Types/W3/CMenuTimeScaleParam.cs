@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CMenuTimeScaleParam : CObject, IMenuTimeParam
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CMenuTimeScaleParam : CObject, IMenuTimeParam
 	{
 		[REDProp("timeScale")]
 		public float TimeScale { get; set; }

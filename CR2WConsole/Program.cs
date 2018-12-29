@@ -220,7 +220,7 @@ namespace CR2WConsole
             Console.WriteLine("File:        {0}", res.GetPath());
             Console.WriteLine("Type:        {0}", res.GetType().Name);
             Console.WriteLine("Flags:       {0}", res.Flags);
-            Console.WriteLine("Children:    {0}", res.Children.Count);
+            Console.WriteLine("Children:    {0}", res.Children.Count());
             Console.WriteLine("Template:    {0}", res.Template);
             Console.WriteLine();
             Console.WriteLine("Test Values:");

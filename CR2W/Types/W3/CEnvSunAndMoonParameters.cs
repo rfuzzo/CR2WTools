@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvSunAndMoonParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvSunAndMoonParameters
 	{
 		[REDProp("activated")]
 		public bool Activated { get; set; }

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CBehaviorConstraintBoneObject : IBehaviorConstraintObject
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CBehaviorConstraintBoneObject : IBehaviorConstraintObject
 {
 #region RED Properties
 

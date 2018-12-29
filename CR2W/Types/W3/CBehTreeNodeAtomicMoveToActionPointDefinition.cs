@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CBehTreeNodeAtomicMoveToActionPointDefinition : CBehTreeNodeAtomicMoveToDefinition
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CBehTreeNodeAtomicMoveToActionPointDefinition : CBehTreeNodeAtomicMoveToDefinition
 {
 #region RED Properties
 

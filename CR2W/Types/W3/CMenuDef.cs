@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CMenuDef : CObject
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CMenuDef : CObject
 	{
 		[REDProp("timeParam")]
 		public Ptr<IMenuTimeParam> TimeParam { get; set; }

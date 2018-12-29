@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CSpawnTreeInitializerSetAppearance : ISpawnTreeInitializer
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CSpawnTreeInitializerSetAppearance : ISpawnTreeInitializer
 {
 #region RED Properties
 

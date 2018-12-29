@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvGlobalFogParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvGlobalFogParameters
 	{
 		[REDProp("fogActivated")]
 		public bool FogActivated { get; set; }

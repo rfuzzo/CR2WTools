@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CGuiConfigResource : CResource
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CGuiConfigResource : CResource
 	{
 		[REDProp("huds", 2, 0)]
 		public Array<SHudDescription> Huds { get; set; }

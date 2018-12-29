@@ -51,6 +51,7 @@
     <Compile Include="DDS\DDSImage.cs" />
     <Compile Include="DDS\DDSDecompressor.cs" />
     <Compile Include="DDS\DDSUtils.cs" />
+    <Compile Include="DictWrapper.cs" />
     <Compile Include="FNV1a\FNV1A32HashAlgorithm.cs" />
     <Compile Include="FNV1a\FNV1A64HashAlgorithm.cs" />
     <Compile Include="IO\CR2WLegacyReader.cs" />

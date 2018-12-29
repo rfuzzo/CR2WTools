@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CHudModuleResourceBlock : CGraphBlock, IGuiResourceBlock
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CHudModuleResourceBlock : CGraphBlock, IGuiResourceBlock
     {
 		[REDProp("moduleName")]
 		public string ModuleName { get; set; }

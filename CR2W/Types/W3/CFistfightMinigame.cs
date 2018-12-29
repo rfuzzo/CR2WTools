@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CFistfightMinigame : CMinigame
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CFistfightMinigame : CMinigame
 {
 #region RED Properties
 

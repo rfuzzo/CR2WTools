@@ -1,6 +1,8 @@
-﻿namespace CR2W.Types.W3
+﻿using System.ComponentModel;
+
+namespace CR2W.Types.W3
 {
-    public class CWizardBaseNode : CObject
+    [TypeConverter(typeof(ExpandableObjectConverter))]public class CWizardBaseNode : CObject
     {
 
     }

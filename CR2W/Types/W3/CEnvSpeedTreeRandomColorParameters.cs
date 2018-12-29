@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvSpeedTreeRandomColorParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvSpeedTreeRandomColorParameters
 	{
 		[REDProp("luminanceWeights")]
 		public SSimpleCurve LuminanceWeights { get; set; }

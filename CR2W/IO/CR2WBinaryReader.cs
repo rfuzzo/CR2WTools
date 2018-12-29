@@ -392,9 +392,16 @@ namespace CR2W.IO
         {
             var type = names[obj.typeID];
             Type resType = Type.GetType($"CR2W.Types.W3.{type}");
+            if (resType == null)
+                resType = Type.GetType($"CR2W.Types.W3.Scripted.{type}");
+
 
             if (resType == null)
+            {
                 throw new UnknownObjectTypeException($"{type} could not be found");
+                //resType = Type.GetType("CR2W.Types.W3.CObject");
+            }
+               
 
             if (!resType.IsSubclassOf(typeof(CObject)))
                 throw new InvalidOperationException($"{type} is not a CObject");

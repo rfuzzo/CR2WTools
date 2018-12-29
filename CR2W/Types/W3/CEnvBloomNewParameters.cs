@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvBloomNewParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvBloomNewParameters
 	{
 		[REDProp("activated")]
 		public bool Activated { get; set; }

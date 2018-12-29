@@ -1,10 +1,11 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Text;
 using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
-    public class CSourceTexture : CResource
+    [TypeConverter(typeof(ExpandableObjectConverter))]public class CSourceTexture : CResource
     {
         [REDProp("width")]
         public UInt32 Width { get; set; }

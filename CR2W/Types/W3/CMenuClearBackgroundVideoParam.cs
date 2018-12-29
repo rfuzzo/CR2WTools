@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CMenuClearBackgroundVideoParam : IMenuBackgroundVideoParam
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CMenuClearBackgroundVideoParam : IMenuBackgroundVideoParam
 	{
 
 	}

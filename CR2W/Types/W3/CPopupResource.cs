@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CPopupResource : CResource, IGuiResource
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CPopupResource : CResource, IGuiResource
 	{
 		[REDProp("resourceBlocks")]
 		public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set; }

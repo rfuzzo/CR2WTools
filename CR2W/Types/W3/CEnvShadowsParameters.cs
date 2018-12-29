@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvShadowsParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvShadowsParameters
 	{
 		[REDProp("activatedAutoHide")]
 		public bool ActivatedAutoHide { get; set; }

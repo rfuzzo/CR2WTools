@@ -1,8 +1,9 @@
 using System;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CAreaEnvironmentParams
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CAreaEnvironmentParams
 	{
 		[REDProp("m_finalColorBalance")]
 		public CEnvFinalColorBalanceParameters FinalColorBalance { get; set; }

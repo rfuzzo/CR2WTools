@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace CR2W.Types
     }
 
     [REDPrimitive]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
     public struct Handle<T>
     {
         public EHandleType HandleType { get; set; }
@@ -32,6 +34,7 @@ namespace CR2W.Types
         public string DepotPath { get; set; }
         public ushort Flags { get; set; }
 
+        [TypeConverter(typeof(string))]
         public Type HandleOf
         {
             get

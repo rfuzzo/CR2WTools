@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvToneMappingCurveParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvToneMappingCurveParameters
 	{
 		[REDProp("shoulderStrength")]
 		public SSimpleCurve ShoulderStrength { get; set; }

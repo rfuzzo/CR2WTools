@@ -3,11 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class IBehTreeTask : IScriptable
+[TypeConverter(typeof(ExpandableObjectConverter))]public class IBehTreeTask : IScriptable
 {
 #region RED Properties
 

@@ -1,9 +1,9 @@
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CMenuInheritBackgroundVideoParam : CObject, IMenuBackgroundVideoParam
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CMenuInheritBackgroundVideoParam : CObject, IMenuBackgroundVideoParam
 	{
 
 	}

@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CBehTreeConditionRespondToMusicDefinition : CBehTreeNodeConditionDefinition
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CBehTreeConditionRespondToMusicDefinition : CBehTreeNodeConditionDefinition
 {
 #region RED Properties
 

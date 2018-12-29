@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Drawing;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows.Forms;
 using CR2W.DDS;
 using CR2W.DDS.Utils;
 using CR2W.IO;
+using System.Threading.Tasks;
 
 namespace CR2W.Types.W3
 {
-    public class CSwfTexture : CBitmapTexture
+    [TypeConverter(typeof(ExpandableObjectConverter))]public class CSwfTexture : CBitmapTexture
     {
         [REDProp("linkageName")]
         public string LinkageName { get; set; }

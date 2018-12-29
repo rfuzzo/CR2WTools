@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace CR2W
 {
+
     public static class CResourceManager
     {
         /// <summary>

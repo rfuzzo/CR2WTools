@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CExtAnimDurationEvent : CExtAnimEvent
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CExtAnimDurationEvent : CExtAnimEvent
 {
 #region RED Properties
 

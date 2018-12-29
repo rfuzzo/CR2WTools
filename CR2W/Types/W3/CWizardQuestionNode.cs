@@ -1,9 +1,9 @@
 ﻿using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-    public class CWizardQuestionNode : CWizardBaseNode
+    [TypeConverter(typeof(ExpandableObjectConverter))]public class CWizardQuestionNode : CWizardBaseNode
     {
         [REDProp("uniqueName")]
         CName UniqueName { get; set; }

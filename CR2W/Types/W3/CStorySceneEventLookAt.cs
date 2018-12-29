@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CStorySceneEventLookAt : CStorySceneEvent
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CStorySceneEventLookAt : CStorySceneEvent
 {
 #region RED Properties
 

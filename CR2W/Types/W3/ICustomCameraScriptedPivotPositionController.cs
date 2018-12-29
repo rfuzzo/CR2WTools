@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class ICustomCameraScriptedPivotPositionController : ICustomCameraPivotPositionController
+[TypeConverter(typeof(ExpandableObjectConverter))]public class ICustomCameraScriptedPivotPositionController : ICustomCameraPivotPositionController
 {
 #region RED Properties
 

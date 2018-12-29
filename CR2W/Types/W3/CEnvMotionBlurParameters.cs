@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvMotionBlurParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvMotionBlurParameters
 	{
 		[REDProp("activated")]
 		public bool Activated { get; set; }

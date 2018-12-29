@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CMetalinDestinationComponent : CWayPointComponent
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CMetalinDestinationComponent : CWayPointComponent
 {
 #region RED Properties
 

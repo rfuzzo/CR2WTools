@@ -1,10 +1,10 @@
 
 using System;
-
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-	public class CEnvFlareColorGroupsParameters
+	[TypeConverter(typeof(ExpandableObjectConverter))]public class CEnvFlareColorGroupsParameters
 	{
 		[REDProp("activated")]
 		public bool Activated { get; set; }

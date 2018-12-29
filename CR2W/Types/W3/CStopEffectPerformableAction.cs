@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CStopEffectPerformableAction : IEffectManagmentPerformableAction
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CStopEffectPerformableAction : IEffectManagmentPerformableAction
 {
 #region RED Properties
 

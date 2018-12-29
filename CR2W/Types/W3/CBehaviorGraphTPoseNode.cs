@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
-public class CBehaviorGraphTPoseNode : CBehaviorGraphNode
+[TypeConverter(typeof(ExpandableObjectConverter))]public class CBehaviorGraphTPoseNode : CBehaviorGraphNode
 {
 #region RED Properties
 
