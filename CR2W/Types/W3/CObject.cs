@@ -17,14 +17,16 @@ namespace CR2W.Types.W3
     [REDClass]
     public abstract class CObject : IScriptable
     {
-        public Dictionary<uint, CObject> Children { get; set; }
+        //public Dictionary<uint, CObject> Children { get; set; }
+        public VirtualDictionary<uint, CObject> Children { get; set; }
 
         public override UInt16 Flags { get; set; }
         public override UInt32 Template { get; set; }
 
         public CObject()
         {
-            Children = new Dictionary<uint, CObject>();
+            //Children = new Dictionary<uint, CObject>();
+            Children = new VirtualDictionary<uint, CObject>();
             Console.WriteLine($"CObject created: {this.GetType().Name}");
         }
 

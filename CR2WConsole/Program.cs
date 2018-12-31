@@ -250,10 +250,10 @@ namespace CR2WConsole
             }
             else if(res is CEnvironmentDefinition env)
             {
-                Console.WriteLine("\t{0}", env.EnvParams.FinalColorBalance.BalanceMap0.DepotPath);
-                Console.WriteLine("\t{0}", env.EnvParams.FinalColorBalance.BalanceMap1.DepotPath);
-                Console.WriteLine("\t{0}", env.EnvParams.SpeedTree.BillboardsColor.CurveType);
-                Console.WriteLine("\t{0}", env.EnvParams.SSAOMS.HierarchyDepth.DataBaseType);
+                Console.WriteLine("\t{0}", env.EnvParams.M_finalColorBalance.BalanceMap0.DepotPath);
+                Console.WriteLine("\t{0}", env.EnvParams.M_finalColorBalance.BalanceMap1.DepotPath);
+                Console.WriteLine("\t{0}", env.EnvParams.M_speedTree.BillboardsColor.CurveType);
+                Console.WriteLine("\t{0}", env.EnvParams.M_ssaoMS.HierarchyDepth.DataBaseType);
             }
             else if(res is C2dArray arr)
             {
