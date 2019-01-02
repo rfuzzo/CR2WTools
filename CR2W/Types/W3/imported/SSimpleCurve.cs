@@ -22,7 +22,7 @@ public float ScalarEditScale { get; set;}
 [REDProp("ScalarEditOrigin")]
 public float ScalarEditOrigin { get; set;}
 
-[REDProp("dataCurveValues")]
+[REDProp("dataCurveValues", 142,0)]
 public Array<SCurveDataEntry> DataCurveValues { get; set;}
 
 [REDProp("dataBaseType")]

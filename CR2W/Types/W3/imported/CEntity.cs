@@ -25,7 +25,7 @@ public Ptr<CHardAttachment> TransformParent { get; set;}
 [REDProp("guid")]
 public CGUID Guid { get; set;}
 
-[REDProp("components")]
+[REDProp("components", 2,0)]
 public Array<Ptr<CComponent>> Components { get; set;}
 
 [REDProp("template")]

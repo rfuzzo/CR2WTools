@@ -13,7 +13,7 @@ public class CFXDefinition : CObject
 {
 #region RED Properties
 
-[REDProp("trackGroups")]
+[REDProp("trackGroups", 2,0)]
 public Array<Ptr<CFXTrackGroup>> TrackGroups { get; set;}
 
 [REDProp("length")]

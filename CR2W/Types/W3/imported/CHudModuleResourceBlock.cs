@@ -13,7 +13,7 @@ public class CHudModuleResourceBlock : IGuiResourceBlock
 {
 #region RED Properties
 
-[REDProp("sockets")]
+[REDProp("sockets", 2,0)]
 public Array<Ptr<CGraphSocket>> Sockets { get; set;}
 
 [REDProp("moduleName")]

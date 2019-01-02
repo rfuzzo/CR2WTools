@@ -13,7 +13,7 @@ public class CHudResource : IGuiResource
 {
 #region RED Properties
 
-[REDProp("resourceBlocks")]
+[REDProp("resourceBlocks", 2,0)]
 public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set;}
 
 [REDProp("hudClass")]

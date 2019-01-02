@@ -35,7 +35,7 @@ public bool IsStreamed { get; set;}
 public float Contribution { get; set;}
 
 [REDProp("nestingLevel")]
-public int NestingLevel { get; set;}
+public UInt32 NestingLevel { get; set;}
 
 [REDProp("effectIntensity")]
 public float EffectIntensity { get; set;}
@@ -56,7 +56,7 @@ public EngineTransform ParallaxTransform { get; set;}
 public SEnvProbeGenParams GenParams { get; set;}
 
 [REDProp("textureCacheHashes")]
-public Static<int> TextureCacheHashes { get; set;}
+public Static<UInt32> TextureCacheHashes { get; set;}
 
 #endregion
 }

@@ -19,7 +19,7 @@ public Ptr<CGraphBlock> Block { get; set;}
 [REDProp("name")]
 public CName Name { get; set;}
 
-[REDProp("connections")]
+[REDProp("connections", 2,0)]
 public Array<Ptr<CGraphConnection>> Connections { get; set;}
 
 #endregion

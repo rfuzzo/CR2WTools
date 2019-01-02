@@ -13,7 +13,7 @@ public class CMenuResource : IGuiResource
 {
 #region RED Properties
 
-[REDProp("resourceBlocks")]
+[REDProp("resourceBlocks", 2,0)]
 public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set;}
 
 [REDProp("menuClass")]
@@ -23,7 +23,7 @@ public CName MenuClass { get; set;}
 public Soft<CSwfResource> MenuFlashSwf { get; set;}
 
 [REDProp("layer")]
-public int Layer { get; set;}
+public UInt32 Layer { get; set;}
 
 [REDProp("menuDef")]
 public Ptr<CMenuDef> MenuDef { get; set;}

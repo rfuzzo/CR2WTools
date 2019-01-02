@@ -13,10 +13,10 @@ public class CEntityTemplate : CResource
 {
 #region RED Properties
 
-[REDProp("includes")]
+[REDProp("includes", 2,0)]
 public Array<Handle<CEntityTemplate>> Includes { get; set;}
 
-[REDProp("overrides")]
+[REDProp("overrides", 2,0)]
 public Array<SEntityTemplateOverride> Overrides { get; set;}
 
 [REDProp("properOverrides")]
@@ -34,44 +34,44 @@ public CName EntityClass { get; set;}
 [REDProp("entityObject")]
 public Ptr<CEntity> EntityObject { get; set;}
 
-[REDProp("bodyParts")]
+[REDProp("bodyParts", 2,0)]
 public Array<CEntityBodyPart> BodyParts { get; set;}
 
-[REDProp("appearances")]
+[REDProp("appearances", 2,0)]
 public Array<CEntityAppearance> Appearances { get; set;}
 
-[REDProp("usedAppearances")]
+[REDProp("usedAppearances", 2,0)]
 public Array<CName> UsedAppearances { get; set;}
 
-[REDProp("voicetagAppearances")]
+[REDProp("voicetagAppearances", 2,0)]
 public Array<VoicetagAppearancePair> VoicetagAppearances { get; set;}
 
-[REDProp("effects")]
+[REDProp("effects", 2,0)]
 public Array<Ptr<CFXDefinition>> Effects { get; set;}
 
-[REDProp("slots")]
+[REDProp("slots", 2,0)]
 public Array<EntitySlot> Slots { get; set;}
 
-[REDProp("templateParams")]
+[REDProp("templateParams", 2,0)]
 public Array<Ptr<CEntityTemplateParam>> TemplateParams { get; set;}
 
-[REDProp("coloringEntries")]
+[REDProp("coloringEntries", 2,0)]
 public Array<SEntityTemplateColoringEntry> ColoringEntries { get; set;}
 
-[REDProp("instancePropEntries")]
+[REDProp("instancePropEntries", 2,0)]
 public Array<SComponentInstancePropertyEntry> InstancePropEntries { get; set;}
 
-[REDProp("flatCompiledData")]
+[REDProp("flatCompiledData", 2,0)]
 public Array<byte> FlatCompiledData { get; set;}
 
-[REDProp("streamedAttachments")]
+[REDProp("streamedAttachments", 2,0)]
 public Array<SStreamedAttachment> StreamedAttachments { get; set;}
 
-[REDProp("cookedEffects")]
+[REDProp("cookedEffects", 2,0)]
 public Array<CEntityTemplateCookedEffect> CookedEffects { get; set;}
 
 [REDProp("cookedEffectsVersion")]
-public int CookedEffectsVersion { get; set;}
+public UInt32 CookedEffectsVersion { get; set;}
 
 #endregion
 }

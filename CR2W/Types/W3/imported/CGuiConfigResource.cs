@@ -13,13 +13,13 @@ public class CGuiConfigResource : CResource
 {
 #region RED Properties
 
-[REDProp("huds")]
+[REDProp("huds", 2,0)]
 public Array<SHudDescription> Huds { get; set;}
 
-[REDProp("menus")]
+[REDProp("menus", 2,0)]
 public Array<SMenuDescription> Menus { get; set;}
 
-[REDProp("popups")]
+[REDProp("popups", 2,0)]
 public Array<SPopupDescription> Popups { get; set;}
 
 [REDProp("scene")]

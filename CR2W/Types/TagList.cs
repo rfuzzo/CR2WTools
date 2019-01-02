@@ -12,8 +12,8 @@ namespace CR2W.Types
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public struct TagList
     {
-        public string[] tags;
-
+        
+        public string[] tags { get; set; }
 
 
 

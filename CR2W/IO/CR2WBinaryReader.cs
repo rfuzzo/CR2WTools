@@ -23,6 +23,13 @@ namespace CR2W.IO
             ReadAll();
         }
 
+        public CR2WBinaryReader(byte[] rawbytes, bool ignoreCrc = false)
+           : base( new MemoryStream(rawbytes), Encoding.ASCII, false )
+        {
+            IgnoreCRC = ignoreCrc;
+            ReadAll();
+        }
+
         #endregion
 
         #region Properties & Veriables
@@ -379,6 +386,7 @@ namespace CR2W.IO
                 objects[i] = CreateObject(sobjs[i]);
             }
 
+            ;
             if(objects[0] is CResource res)
             {
                 res.SetPath(FilePath);
@@ -441,6 +449,75 @@ namespace CR2W.IO
         /* - Info
          *      Region for methods for reading properties.
          */
+
+        /// <summary>
+        /// Read a shared data buffer stream
+        /// </summary>
+        /// <returns>byte[] value</returns>
+        public SharedDataBuffer ReadSharedDataBuffer(uint size)
+        {
+            SharedDataBuffer databuffer = new SharedDataBuffer();
+
+            //read raw bytes
+            var insize = ReadUInt32();
+            if (insize != 0)
+            {
+                var buffer = ReadBytes((int)insize - 4);
+                databuffer.data = buffer;
+
+                //construct class
+                using (var br = new CR2WBinaryReader(buffer, false))
+                {
+                    List<CObject> bufferobjects = new List<CObject>();
+                    for (int i = 0; i < br.sobjs.Length; i++)
+                    {
+                        bufferobjects.Add(br.CreateObject(br.sobjs[i]));
+                    }
+                    databuffer.buffer = bufferobjects;
+                }
+            }
+            
+            return databuffer;
+        }
+
+        public CPhysicalCollision ReadPhysicalCollision(uint size)
+        {
+            CPhysicalCollision physicalCollision = new CPhysicalCollision();
+
+            //read raw bytes
+            /*var parent = ReadUInt32();
+            var flags = ReadByte();
+            var name = ReadCName();*/
+
+            var bytes = ReadBytes((int)size);
+
+            //2b - 39 (door)
+            //2b - 40 (camera)
+            //b - 128
+            //b - 4
+            //2b - 4 name - name
+            //b - 0
+            //4b - -0.5
+            //b - 212
+            //b - 215
+            //b - 32
+            //b - 0
+            //b - 0
+            //b - 0
+            
+
+            /*var nameId = ReadUInt16();
+            if (nameId == 0)
+            {
+            }
+            var typeId = ReadInt16();
+            var size = ReadUInt32() - 4;
+            var prop = GetType().GetREDProperty(names[nameId], names[typeId]);*/
+
+            physicalCollision.data = bytes;
+            
+            return physicalCollision;
+        }
 
         /// <summary>
         /// Read a 2 byte CName from the current stream
@@ -619,11 +696,18 @@ namespace CR2W.IO
         {
             var size = ReadByte();
             var list = new TagList();
+            string[] tags = new string[size];
             for (var i = 0; i < size; i++)
             {
                 //ToDo - Add in the way tags are stored in a tag list.
                 //       I will keep tag list as a struct and not a class.
+                //var nameId = ReadUInt16();
+                var nameId = ReadUInt16();
+                string str = names[nameId];
+                tags[i] = str;
             }
+            list.tags = tags;
+
             return list;
         }
 

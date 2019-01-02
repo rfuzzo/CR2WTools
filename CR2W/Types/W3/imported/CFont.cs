@@ -13,7 +13,7 @@ public class CFont : CResource
 {
 #region RED Properties
 
-[REDProp("textures")]
+[REDProp("textures", 2,0)]
 public Array<Handle<CBitmapTexture>> Textures { get; set;}
 
 #endregion

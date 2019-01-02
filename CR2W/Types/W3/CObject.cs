@@ -112,11 +112,12 @@ namespace CR2W.Types.W3
                     br.BaseStream.Seek(size, SeekOrigin.Current);
                     continue;
                 }
-                var value = ParseProperty(br, prop.PropertyType);
+                Console.WriteLine("NOTE - parsing Property {0} : {1} in {2}!", br.names[nameId], br.names[typeId], instance.GetType().Name);
+                var value = ParseProperty(br, prop.PropertyType, size);
                 prop.SetValue(instance, value);
             }
         }
-        protected object ParseProperty(CR2WBinaryReader br, Type proptype)
+        protected object ParseProperty(CR2WBinaryReader br, Type proptype, uint size)
         {
             //Basic / Value Types
             switch (proptype.Name)
@@ -140,6 +141,8 @@ namespace CR2W.Types.W3
                 case "EngineTransform":   return br.ReadEngineTransform();
                 case "EngineQsTransform": return br.ReadEngineQsTransform();
                 case "CDateTime":         return br.ReadCDateTime();
+                case "SharedDataBuffer":  return br.ReadSharedDataBuffer(size);
+                case "CPhysicalCollision": return br.ReadPhysicalCollision(size);
             }
 
             //Parse Enumerators
@@ -158,7 +161,7 @@ namespace CR2W.Types.W3
                     var length = br.ReadUInt32();
                     for (int i = 0; i < length; i++)
                     {
-                        var value = ParseProperty(br, genprop);
+                        var value = ParseProperty(br, genprop, 0); //FIXME
                         proptype.GetMethod("Add").Invoke(instance, new[] { value });
                     }
                 }

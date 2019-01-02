@@ -23,7 +23,7 @@ public float FrameHeight { get; set;}
 public float FrameWidth { get; set;}
 
 [REDProp("frameCount")]
-public int FrameCount { get; set;}
+public UInt32 FrameCount { get; set;}
 
 [REDProp("height")]
 public float Height { get; set;}
@@ -32,7 +32,7 @@ public float Height { get; set;}
 public float Width { get; set;}
 
 [REDProp("version")]
-public int Version { get; set;}
+public UInt32 Version { get; set;}
 
 [REDProp("compressed")]
 public bool Compressed { get; set;}

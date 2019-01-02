@@ -16,7 +16,7 @@ public class CEntityBodyPart
 [REDProp("name")]
 public CName Name { get; set;}
 
-[REDProp("states")]
+[REDProp("states", 2,0)]
 public Array<CEntityBodyPartState> States { get; set;}
 
 [REDProp("wasIncluded")]

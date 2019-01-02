@@ -13,7 +13,7 @@ public class CFXTrack : CFXBase
 {
 #region RED Properties
 
-[REDProp("trackItems")]
+[REDProp("trackItems", 2,0)]
 public Array<Ptr<CFXTrackItem>> TrackItems { get; set;}
 
 [REDProp("name")]

@@ -13,14 +13,14 @@ public class CLayer : CResource
 {
 #region RED Properties
 
-[REDProp("entities")]
+[REDProp("entities", 32,0)]
 public Array<Ptr<CEntity>> Entities { get; set;}
 
 [REDProp("sectorData")]
 public Handle<CSectorData> SectorData { get; set;}
 
 [REDProp("nameCount")]
-public int NameCount { get; set;}
+public UInt32 NameCount { get; set;}
 
 #endregion
 }

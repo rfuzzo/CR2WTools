@@ -16,7 +16,7 @@ public class CFXTrackGroup : CFXBase
 [REDProp("name")]
 public string Name { get; set;}
 
-[REDProp("tracks")]
+[REDProp("tracks", 2,0)]
 public Array<Ptr<CFXTrack>> Tracks { get; set;}
 
 [REDProp("isExpanded")]

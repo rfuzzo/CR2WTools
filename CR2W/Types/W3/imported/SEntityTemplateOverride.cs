@@ -19,7 +19,7 @@ public CName ComponentName { get; set;}
 [REDProp("className")]
 public CName ClassName { get; set;}
 
-[REDProp("overriddenProperties")]
+[REDProp("overriddenProperties", 2,0)]
 public Array<CName> OverriddenProperties { get; set;}
 
 #endregion

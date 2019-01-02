@@ -17,7 +17,7 @@ public class SSwfFontDesc
 public string FontName { get; set;}
 
 [REDProp("numGlyphs")]
-public int NumGlyphs { get; set;}
+public UInt32 NumGlyphs { get; set;}
 
 [REDProp("italic")]
 public bool Italic { get; set;}

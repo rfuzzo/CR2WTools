@@ -13,7 +13,7 @@ public class CPopupResource : IGuiResource
 {
 #region RED Properties
 
-[REDProp("resourceBlocks")]
+[REDProp("resourceBlocks", 2,0)]
 public Array<Ptr<CGraphBlock>> ResourceBlocks { get; set;}
 
 [REDProp("popupClass")]
@@ -23,7 +23,7 @@ public CName PopupClass { get; set;}
 public Soft<CSwfResource> PopupFlashSwf { get; set;}
 
 [REDProp("layer")]
-public int Layer { get; set;}
+public UInt32 Layer { get; set;}
 
 [REDProp("popupDef")]
 public Ptr<CPopupDef> PopupDef { get; set;}

@@ -16,7 +16,7 @@ public class CEntityBodyPartState
 [REDProp("name")]
 public CName Name { get; set;}
 
-[REDProp("componentsInUse")]
+[REDProp("componentsInUse", 2,0)]
 public Array<CComponentReference> ComponentsInUse { get; set;}
 
 #endregion

@@ -31,6 +31,12 @@ public string Name { get; set;}
 [REDProp("isStreamed")]
 public bool IsStreamed { get; set;}
 
-#endregion
-}
+[REDProp("graphPositionX")]
+public Int16 GraphPositionX { get; set; }
+
+[REDProp("graphPositionY")]
+public Int16 GraphPositionY { get; set; }
+
+        #endregion
+    }
 }
