@@ -9,7 +9,7 @@ using CR2W.IO;
 namespace CR2W.Types.W3
 {
     [TypeConverter(typeof(ExpandableObjectConverter))]
-    public class SStreamedAttachment : CResource
+    public struct SStreamedAttachment
     {
         #region RED Properties
 
@@ -30,28 +30,10 @@ namespace CR2W.Types.W3
 
         #endregion
 
-        public override void ParseBytes(CR2WBinaryReader br, uint size)
-        {
-            base.ParseBytes(br, size);
 
-            /*
-             * 
-            var typeId = br.ReadInt16();
-            var datasize = br.ReadUInt32() - 4;
+        [TypeConverter(typeof(ExpandableObjectConverter))]
+        public CObject Child { get; set; }
 
-
-            //construct class
-            
-            using (var br = new CR2WBinaryReader(buffer, false))
-            {
-                List<CObject> bufferobjects = new List<CObject>();
-                for (int i = 0; i < br.sobjs.Length; i++)
-                {
-                    bufferobjects.Add(br.CreateObject(br.sobjs[i]));
-                }
-                databuffer.buffer = bufferobjects;
-            }
-            */
-        }
+        
     }
 }

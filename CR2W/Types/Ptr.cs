@@ -11,7 +11,7 @@ using CR2W.Types.W3;
 namespace CR2W.Types
 {
     [REDPrimitive]
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(PointerConverter))]
     public struct Ptr<T>
     {
         private T _instance;
@@ -33,6 +33,14 @@ namespace CR2W.Types
 
 
 
+        }
+
+        public override string ToString()
+        {
+            string pointerType = PointerType.Name.ToString();
+            string idx = Index.ToString();
+
+            return string.Concat(pointerType, idx);
         }
     }
 }

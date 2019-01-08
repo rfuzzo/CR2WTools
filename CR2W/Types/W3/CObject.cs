@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Diagnostics;
 using CR2W.IO;
+using System.ComponentModel;
 
 namespace CR2W.Types.W3
 {
@@ -17,16 +18,16 @@ namespace CR2W.Types.W3
     [REDClass]
     public abstract class CObject : IScriptable
     {
-        //public Dictionary<uint, CObject> Children { get; set; }
-        public VirtualDictionary<uint, CObject> Children { get; set; }
+        [TypeConverter(typeof(VirtualDictConverter))]
+        public Dictionary<uint, CObject> Children { get; set; }
 
         public override UInt16 Flags { get; set; }
         public override UInt32 Template { get; set; }
+        public uint ParentID { get; set; }
 
         public CObject()
         {
-            //Children = new Dictionary<uint, CObject>();
-            Children = new VirtualDictionary<uint, CObject>();
+            Children = new Dictionary<uint, CObject>();
             Console.WriteLine($"CObject created: {this.GetType().Name}");
         }
 
@@ -141,8 +142,10 @@ namespace CR2W.Types.W3
                 case "EngineTransform":   return br.ReadEngineTransform();
                 case "EngineQsTransform": return br.ReadEngineQsTransform();
                 case "CDateTime":         return br.ReadCDateTime();
+
                 case "SharedDataBuffer":  return br.ReadSharedDataBuffer(size);
-                case "CPhysicalCollision": return br.ReadPhysicalCollision(size);
+                case "CPhysicalCollision": return br.ReadPhysicalCollision(size); 
+                case "SStreamedAttachment": return br.ReadStreamedAttachment(size);
             }
 
             //Parse Enumerators
@@ -161,6 +164,7 @@ namespace CR2W.Types.W3
                     var length = br.ReadUInt32();
                     for (int i = 0; i < length; i++)
                     {
+
                         var value = ParseProperty(br, genprop, 0); //FIXME
                         proptype.GetMethod("Add").Invoke(instance, new[] { value });
                     }
@@ -194,6 +198,15 @@ namespace CR2W.Types.W3
                         proptype.GetProperty("HandleType").SetValue(instance, EHandleType.ResourceHandle);
                         proptype.GetProperty("DepotPath").SetValue(instance, br.resources[id-1].path);
                         proptype.GetProperty("Flags").SetValue(instance, br.resources[id-1].flags);
+                    }
+                }
+                else if (proptype.GetGenericTypeDefinition() == typeof(Static<>))
+                {
+                    var length = br.ReadUInt32();
+                    for (int i = 0; i < length; i++)
+                    {
+                        var value = ParseProperty(br, genprop, 0); //FIXME
+                        proptype.GetMethod("Add").Invoke(instance, new[] { value });
                     }
                 }
                 return instance;

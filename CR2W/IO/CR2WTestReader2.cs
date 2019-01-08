@@ -1042,7 +1042,7 @@ namespace CR2W.IO
             var size = ReadInt32();
             return new SharedDataBuffer()
             {
-                data = ReadBytes(size),
+                //data = ReadBytes(size),
             };
         }
         public DataBuffer ReadDataBuffer()

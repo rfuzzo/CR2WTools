@@ -8,7 +8,7 @@ using System.Linq;
 namespace CR2W.Types
 {
 
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(VirtualDictConverter))]
     public class VirtualDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         public Dictionary<TKey, TValue> wrappedDictionary;

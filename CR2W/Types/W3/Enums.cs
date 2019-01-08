@@ -13,7 +13,10 @@ namespace CR2W.Types.W3
 
     public enum ETopLevelAIPriorities { }
     public enum EModLogLevel { }
-    public enum ELightUsageMask { }
+    public enum ELightUsageMask
+    {
+        LUM_RenderToEnvProbe,
+    }
     public enum EStoryBoardActorType { }
     public enum ESoundAmbientDynamicParameter { }
     public enum ESkeletonBoneFlags { }

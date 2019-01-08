@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CR2W.Types
 {
-    [REDPrimitive]
-    public struct Static<T>
+    //[REDPrimitive]
+    //[TypeConverter(typeof(ListConverter))]
+    public class Static<T> : Array<T>
     {
 
-
-
+        
 
 
     }

@@ -12,9 +12,14 @@ namespace CR2W.Types
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public struct CPhysicalCollision
     {
-        
+        //parent pointer
+        public uint Parent { get; set; }
 
-        public byte[] data { get; set; }
+        //array of collision types (CName)
+        public Array<CName> CollisionTypes { get; set; }
+
+
+        public byte[] UnknownBytes { get; set; }
 
     }
 }

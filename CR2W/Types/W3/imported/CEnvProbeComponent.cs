@@ -55,7 +55,7 @@ public EngineTransform ParallaxTransform { get; set;}
 [REDProp("genParams")]
 public SEnvProbeGenParams GenParams { get; set;}
 
-[REDProp("textureCacheHashes")]
+[REDProp("textureCacheHashes", 4)]
 public Static<UInt32> TextureCacheHashes { get; set;}
 
 #endregion

@@ -86,7 +86,7 @@ namespace CR2W.IO
 
             if( !(version == 162 || version == 163) )
             {
-                throw new InvalidCR2WFileException($"This reader only supports CR2W versions 162 and 163. File version was read as {version}.");
+                //throw new InvalidCR2WFileException($"This reader only supports CR2W versions 162 and 163. File version was read as {version}.");
             }
 
             //Base data.
@@ -406,25 +406,36 @@ namespace CR2W.IO
             {
                 throw new UnknownObjectTypeException($"{type} could not be found");
             }
-               
-
-            if (!resType.IsSubclassOf(typeof(CObject)))
-                throw new InvalidOperationException($"{type} is not a CObject");
-
-            BaseStream.Seek(obj.offset, SeekOrigin.Begin);
-
-            CObject temp  = (CObject)Activator.CreateInstance(resType);
-            temp.Flags    = obj.flags;
-            temp.Template = obj.template;
-
-            if(obj.parentID > 0)
+           
+            if (!resType.IsSubclassOf(typeof(CObject)) && !(resType == typeof(CSectorData)))
             {
-                objects[obj.parentID - 1].Children.Add(obj.index, temp);
+                throw new InvalidOperationException($"{type} is not a CObject");
             }
 
-            temp.ParseBytes(this, obj.size);
+            /*if (resType == typeof(CSectorData))
+            {
 
-            return temp;
+
+
+            }
+            else*/
+            {
+                BaseStream.Seek(obj.offset, SeekOrigin.Begin);
+
+                CObject temp = (CObject)Activator.CreateInstance(resType);
+                temp.Flags = obj.flags;
+                temp.Template = obj.template;
+                temp.ParentID = obj.parentID;
+
+                if (obj.parentID > 0)
+                {
+                    objects[obj.parentID - 1].Children.Add(obj.index, temp);
+                }
+
+                temp.ParseBytes(this, obj.size);
+
+                return temp;
+            }
         }
 
         #endregion
@@ -449,11 +460,11 @@ namespace CR2W.IO
         /* - Info
          *      Region for methods for reading properties.
          */
-
+        
         /// <summary>
         /// Read a shared data buffer stream
         /// </summary>
-        /// <returns>byte[] value</returns>
+        /// <returns>SharedDataBuffer class</returns>
         public SharedDataBuffer ReadSharedDataBuffer(uint size)
         {
             SharedDataBuffer databuffer = new SharedDataBuffer();
@@ -462,37 +473,119 @@ namespace CR2W.IO
             var insize = ReadUInt32();
             if (insize != 0)
             {
-                var buffer = ReadBytes((int)insize - 4);
-                databuffer.data = buffer;
+                var buffer = ReadBytes((int)insize);
+                databuffer.data = buffer; //dbg
 
                 //construct class
                 using (var br = new CR2WBinaryReader(buffer, false))
                 {
-                    List<CObject> bufferobjects = new List<CObject>();
-                    for (int i = 0; i < br.sobjs.Length; i++)
-                    {
-                        bufferobjects.Add(br.CreateObject(br.sobjs[i]));
-                    }
-                    databuffer.buffer = bufferobjects;
+                    br.CreateResource();
+                    List<CObject> toplevelObjects = br.objects?.Where(x => x.ParentID == 0).ToList();
+                    databuffer.buffer = toplevelObjects;
+
+                    //dbg
+                    //List<CObject> bufferobjects = br.objects.ToList();
+                    //databuffer.bufferlist = bufferobjects;
                 }
             }
             
             return databuffer;
         }
 
+        /// <summary>
+        /// Read a shared data buffer stream
+        /// </summary>
+        /// <returns>SharedDataBuffer class</returns>
+        public SStreamedAttachment ReadStreamedAttachment(uint size)
+        {
+            SStreamedAttachment instance = new SStreamedAttachment();
+            List<string> header = new List<string>();
+
+            //FIXME parse this as class?
+            //first 0 byte
+            ReadByte();
+            //4 CNames 
+            for (int i=0;i<4;i++)
+            {
+                var nameId = ReadInt16();
+                var typeId = ReadInt16();
+                var size2 = ReadUInt32() - 4;
+                var value = ReadCName();
+                header.Add(value);
+            }
+            instance.ParentName = header[0];
+            instance.ParentClass = header[1];
+            instance.ChildName = header[2];
+            instance.ChildClass = header[3];
+            //one byte array
+            var nameId2 = ReadInt16();
+            var typeId2 = ReadInt16();
+            var size3 = ReadUInt32() - 4;
+            
+            //size again?
+            var size4 = ReadUInt32();
+
+            var bytestream = ReadBytes((int)size4);
+            Array<byte> tempData = new Array<byte>();
+            tempData.AddRange(bytestream);
+            instance.Data = tempData;
+
+            //var temp2 = ReadUInt16();
+
+            //construct object
+            /*
+            Type resType = Type.GetType($"CR2W.Types.W3.{instance.ChildClass}");
+            if (resType == null)
+            {
+                throw new UnknownObjectTypeException($"{instance.ChildClass} could not be found");
+            }
+
+            if (!resType.IsSubclassOf(typeof(CObject)) && !(resType == typeof(CSectorData)))
+            {
+                throw new InvalidOperationException($"{instance.ChildClass} is not a CObject");
+            }
+            CObject temp = (CObject)Activator.CreateInstance(resType);
+            temp.ParseBytes(this, size3);
+            instance.Child = temp;
+            */
+
+            using (var br = new CR2WBinaryReader(bytestream, false))
+            {
+                br.CreateResource();
+                CObject child = br.objects?.First();
+                instance.Child = child;
+            }
+
+
+            return instance;
+        }
+
+        /// <summary>
+        /// Read a CPhysicalCollision struct
+        /// </summary>
+        /// <returns>CPhysicalCollision struct</returns>
         public CPhysicalCollision ReadPhysicalCollision(uint size)
         {
             CPhysicalCollision physicalCollision = new CPhysicalCollision();
+            //dbg
+            long posBegin = this.BaseStream.Position;
 
             //read raw bytes
-            /*var parent = ReadUInt32();
-            var flags = ReadByte();
-            var name = ReadCName();*/
+            //handle parent
+            uint parent = ReadUInt32();
+            physicalCollision.Parent = parent;
 
-            var bytes = ReadBytes((int)size);
+            //array collision types
+            var arsize = ReadByte();
+            Array<CName> ardata = new Array<CName>();
+            for (int i=0;i<arsize;i++)
+            {
+                ardata.Add(ReadCName());
+            }
+            physicalCollision.CollisionTypes = ardata;
 
-            //2b - 39 (door)
-            //2b - 40 (camera)
+
+
             //b - 128
             //b - 4
             //2b - 4 name - name
@@ -504,18 +597,13 @@ namespace CR2W.IO
             //b - 0
             //b - 0
             //b - 0
-            
 
-            /*var nameId = ReadUInt16();
-            if (nameId == 0)
-            {
-            }
-            var typeId = ReadInt16();
-            var size = ReadUInt32() - 4;
-            var prop = GetType().GetREDProperty(names[nameId], names[typeId]);*/
 
-            physicalCollision.data = bytes;
-            
+            long posEnd = this.BaseStream.Position;
+            int bytesLeft = (int)(size - (posEnd - posBegin));
+            var unknownBytes = ReadBytes(bytesLeft);
+            physicalCollision.UnknownBytes = unknownBytes;
+
             return physicalCollision;
         }
 

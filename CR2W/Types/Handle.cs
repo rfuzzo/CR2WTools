@@ -24,7 +24,7 @@ namespace CR2W.Types
     }
 
     [REDPrimitive]
-    [TypeConverter(typeof(ExpandableObjectConverter))]
+    [TypeConverter(typeof(HandleConverter))]
     public struct Handle<T>
     {
         public EHandleType HandleType { get; set; }
