@@ -20,7 +20,7 @@ public float TexturesPerUnit { get; set;}
 public Ptr<IEvaluatorVector> Spread { get; set;}
 
 [REDProp("numSegments")]
-public int NumSegments { get; set;}
+public UInt32 NumSegments { get; set;}
 
 #endregion
 }

@@ -156,9 +156,10 @@ namespace CR2W.IO
             if(!IgnoreCRC)
             {
                 BaseStream.Seek(start, SeekOrigin.Begin);
-                if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size))) != crc)
+                var bytes = ReadBytes(Convert.ToInt32(size));
+                if (Crc32Algorithm.Compute(bytes) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 1 - Strings");
+                    //throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 1 - Strings");
                 }
             }
 
@@ -196,7 +197,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
                 {
-                    throw new MismatchCRC32Exception( "CRC32 Checksum failed for Table 2 - Names" );
+                    //throw new MismatchCRC32Exception( "CRC32 Checksum failed for Table 2 - Names" );
                 }
             }
 
@@ -223,7 +224,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*8)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 3 - Resources");
+                    //throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 3 - Resources");
                 }
             }
             resources = new SResource[size];
@@ -265,7 +266,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 5 - CObjects");
+                    //throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 5 - CObjects");
                 }
             }
 
@@ -301,7 +302,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 6 - Buffers");
+                    //throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 6 - Buffers");
                 }
             }
 
@@ -335,7 +336,7 @@ namespace CR2W.IO
                 BaseStream.Seek(start, SeekOrigin.Begin);
                 if (Crc32Algorithm.Compute(ReadBytes(Convert.ToInt32(size)*24)) != crc)
                 {
-                    throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 7 - Embedded");
+                    //throw new MismatchCRC32Exception("CRC32 Checksum failed for Table 7 - Embedded");
                 }
             }
 
@@ -381,14 +382,34 @@ namespace CR2W.IO
         {
             objects = new CObject[sobjs.Length];
 
+            //parse children first? 
             for (int i = 0; i < sobjs.Length; i++)
             {
                 objects[i] = CreateObject(sobjs[i]);
             }
 
-            ;
+
+            //FIXME
+            // 1. fill in references
+
+            
+           
+
+
+
             if(objects[0] is CResource res)
             {
+                // 2. add objects not in the resource (sector data, level information) 
+                // maybe do it with pointers, means in step 1
+                List<CObject> temp = new List<CObject>();
+                for (int i = 1; i < sobjs.Length; i++)
+                {
+                    if (objects[i].ParentID == 0)
+                        temp.Add(objects[i]);
+                }
+                res.AddInfo = temp;
+                //rf debug end
+
                 res.SetPath(FilePath);
                 return res;
             }
@@ -406,19 +427,17 @@ namespace CR2W.IO
             {
                 throw new UnknownObjectTypeException($"{type} could not be found");
             }
-           
-            if (!resType.IsSubclassOf(typeof(CObject)) && !(resType == typeof(CSectorData)))
+
+            if (resType.IsSubclassOf(typeof(ISerializable)) && !resType.IsSubclassOf(typeof(CObject)))
+            {
+                uint specsize = obj.size;
+                return null;
+            }
+            else if (!resType.IsSubclassOf(typeof(CObject)))
             {
                 throw new InvalidOperationException($"{type} is not a CObject");
             }
-
-            /*if (resType == typeof(CSectorData))
-            {
-
-
-
-            }
-            else*/
+            else
             {
                 BaseStream.Seek(obj.offset, SeekOrigin.Begin);
 
@@ -432,7 +451,18 @@ namespace CR2W.IO
                     objects[obj.parentID - 1].Children.Add(obj.index, temp);
                 }
 
+                //rf unknown bytes reader
+                long start = BaseStream.Position;
+
                 temp.ParseBytes(this, obj.size);
+
+                //rf unknown bytes reader
+                long end = BaseStream.Position;
+                int rest = (int)(obj.size - (end - start));
+                var ubprop = temp.GetType().GetProperties(BindingFlags.Public);
+                temp.UnknownBytes.AddRange(ReadBytes(rest));
+                
+
 
                 return temp;
             }
@@ -461,6 +491,45 @@ namespace CR2W.IO
          *      Region for methods for reading properties.
          */
         
+        public int ReadDynamicInt()
+        {
+            var result = 0;
+            var shift = 0;
+            byte b = 0;
+            var i = 1;
+
+            do
+            {
+                b = ReadByte();
+                if (b == 128)
+                {
+                    result = 0;
+                    break;
+                }
+
+                byte s = 6;
+                byte mask = 255;
+                if (b > 127)
+                {
+                    mask = 127;
+                    s = 7;
+                }
+                else if (b > 63)
+                {
+                    if (i == 1)
+                    {
+                        mask = 63;
+                    }
+                }
+                result = result | ((b & mask) << shift);
+                shift = shift + s;
+                i = i + 1;
+            } while (!(b < 64 || (i >= 3 && b < 128)));
+
+            return result;
+        }
+
+
         /// <summary>
         /// Read a shared data buffer stream
         /// </summary>
@@ -489,6 +558,37 @@ namespace CR2W.IO
                 }
             }
             
+            return databuffer;
+        }
+
+        /// <summary>
+        /// Read a shared data buffer stream
+        /// </summary>
+        /// <returns>SharedDataBuffer class</returns>
+        public DataBuffer ReadDataBuffer(uint size)
+        {
+            DataBuffer databuffer = new DataBuffer();
+
+            //read raw bytes
+            var insize = ReadUInt32();
+            if (insize != 0)
+            {
+                var buffer = ReadBytes((int)insize);
+                databuffer.data = buffer; //dbg
+
+                //construct class
+                /*using (var br = new CR2WBinaryReader(buffer, false))
+                {
+                    br.CreateResource();
+                    List<CObject> toplevelObjects = br.objects?.Where(x => x.ParentID == 0).ToList();
+                    databuffer.buffer = toplevelObjects;
+
+                    //dbg
+                    //List<CObject> bufferobjects = br.objects.ToList();
+                    //databuffer.bufferlist = bufferobjects;
+                }*/
+            }
+
             return databuffer;
         }
 
@@ -642,21 +742,45 @@ namespace CR2W.IO
         /// <summary>
         /// Read a single ANSI encoded string from the current stream.
         /// </summary>
-        /// <returns></returns>
-        public string ReadStringAnsi()
+        /// <returns>StringAnsi</returns>
+        public StringAnsi ReadStringAnsi()
         {
+            StringAnsi ret = new StringAnsi();
             var b = ReadByte();
             var nxt = (b & (1 << 7)) != 0;
             int len = b & ((1 << 7) - 1);
 
             if (nxt)
             {
-                return Encoding.Unicode.GetString(ReadBytes(len * 2));
+                ret.Tostring = Encoding.Unicode.GetString(ReadBytes(len * 2));
             }
             else
             {
-                return Encoding.ASCII.GetString(ReadBytes(len));
+                ret.Tostring = Encoding.ASCII.GetString(ReadBytes(len));
             }
+            return ret;
+        }
+
+        /// <summary>
+        /// Read a 7 bit flagged value as int from the current stream.
+        /// </summary>
+        /// <returns>int</returns>
+        public int Read7BitFlaggedValue()
+        {
+            var b1 = ReadByte();
+            var sign = (b1 & 128) == 128;
+            var next = (b1 & 64) == 64;
+            var size = b1 % 128 % 64;
+            var offset = 6;
+            while (next)
+            {
+                var b = ReadByte();
+                size = (b % 128) << offset | size;
+                next = (b & 128) == 128;
+                offset += 7;
+            }
+            size = sign ? size * -1 : size;
+            return size;
         }
 
         /// <summary>

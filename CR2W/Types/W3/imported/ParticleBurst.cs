@@ -17,7 +17,7 @@ public class ParticleBurst
 public float BurstTime { get; set;}
 
 [REDProp("spawnCount")]
-public int SpawnCount { get; set;}
+public UInt32 SpawnCount { get; set;}
 
 [REDProp("spawnTimeRange")]
 public float SpawnTimeRange { get; set;}

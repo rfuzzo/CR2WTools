@@ -12,8 +12,9 @@ namespace CR2W.Types
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public struct SharedDataBuffer
     {
- 
+
         //dbg
+        [TypeConverter(typeof(ListConverter))]
         public byte[] data;
 
         [TypeConverter(typeof(ListConverter))]

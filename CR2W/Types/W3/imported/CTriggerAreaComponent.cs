@@ -68,7 +68,7 @@ public ETriggerChannel IncludedChannels { get; set;}
 public ETriggerChannel ExcludedChannels { get; set;}
 
 [REDProp("triggerPriority")]
-public int TriggerPriority { get; set;}
+public UInt32 TriggerPriority { get; set;}
 
 [REDProp("enableCCD")]
 public bool EnableCCD { get; set;}

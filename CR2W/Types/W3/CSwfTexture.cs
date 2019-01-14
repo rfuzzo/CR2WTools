@@ -15,7 +15,7 @@ namespace CR2W.Types.W3
 
         public override void ParseBytes(CR2WBinaryReader br, uint size)
         {
-            base.ParseClass(br, this);
+            base.ParseClass(br, this, size);
 
             var zero        = br.ReadUInt32();
             var mipCount    = br.ReadUInt32();

@@ -8,17 +8,17 @@ using CR2W.IO;
 
 namespace CR2W.Types.W3
 {
-[TypeConverter(typeof(ExpandableObjectConverter))]
-public class Box 
-{
-#region RED Properties
+    [TypeConverter(typeof(ExpandableObjectConverter))]
+    public class Box 
+    {
+        #region RED Properties
 
-[REDProp("Min")]
-public Vector Min { get; set;}
+        [REDProp("Min")]
+        public Vector Min { get; set;}
 
-[REDProp("Max")]
-public Vector Max { get; set;}
+        [REDProp("Max")]
+        public Vector Max { get; set;}
 
-#endregion
-}
+        #endregion
+    }
 }

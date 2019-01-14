@@ -77,7 +77,7 @@ public Array<SBoneIndiceMapping> BoneIndicesMapping { get; set;}
 public Array<UInt16> FinalIndices { get; set;}
 
 [REDProp("chunkNumber")]
-public int ChunkNumber { get; set;}
+public UInt32 ChunkNumber { get; set;}
 
 #endregion
 }

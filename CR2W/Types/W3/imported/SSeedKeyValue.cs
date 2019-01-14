@@ -14,10 +14,10 @@ public class SSeedKeyValue
 #region RED Properties
 
 [REDProp("key")]
-public int Key { get; set;}
+public UInt32 Key { get; set;}
 
 [REDProp("val")]
-public int Val { get; set;}
+public UInt32 Val { get; set;}
 
 #endregion
 }

@@ -109,6 +109,19 @@ namespace CR2W.Types
             //items.Sort();
             return items;
         }
+
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            if (value is IList)
+            {
+                string displayText = "";
+                string myListElementType = ((IList)value).GetType().GetGenericArguments().Single().ToString().Split('.').Last();
+                displayText = $"{myListElementType}: {((IList)value).Count.ToString()}";
+                return displayText;
+            }
+            return base.ConvertTo(context, culture, value, destinationType);
+        }
+
     }
     #endregion
 
@@ -195,6 +208,21 @@ namespace CR2W.Types
                 items.Add(new ExpandableCollectionPropertyDescriptor(list, i));
             }
             return items;
+        }
+
+        public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
+        {
+            ICollection<CObject> vals = (ICollection<CObject>)(value.GetType().GetProperty("Values").GetValue(value));
+            IList list = vals.ToList();
+
+            if (list is IList)
+            {
+                string displayText = "";
+                string myListElementType = ((IList)list).GetType().GetGenericArguments().Single().ToString().Split('.').Last();
+                displayText = $"{myListElementType}: {((IList)list).Count.ToString()}";
+                return displayText;
+            }
+            return base.ConvertTo(context, culture, value, destinationType);
         }
     }
     #endregion

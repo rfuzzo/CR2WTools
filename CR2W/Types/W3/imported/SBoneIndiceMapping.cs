@@ -14,16 +14,16 @@ public class SBoneIndiceMapping
 #region RED Properties
 
 [REDProp("startingIndex")]
-public int StartingIndex { get; set;}
+public UInt32 StartingIndex { get; set;}
 
 [REDProp("endingIndex")]
-public int EndingIndex { get; set;}
+public UInt32 EndingIndex { get; set;}
 
 [REDProp("chunkIndex")]
-public int ChunkIndex { get; set;}
+public UInt32 ChunkIndex { get; set;}
 
 [REDProp("boneIndex")]
-public int BoneIndex { get; set;}
+public UInt32 BoneIndex { get; set;}
 
 #endregion
 }

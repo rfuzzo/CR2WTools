@@ -25,9 +25,13 @@ namespace CR2W.Types.W3
         public override UInt32 Template { get; set; }
         public uint ParentID { get; set; }
 
+        [TypeConverter(typeof(ListConverter))]
+        public List<byte> UnknownBytes { get; set; }
+
         public CObject()
         {
             Children = new Dictionary<uint, CObject>();
+            UnknownBytes = new List<byte>();
             Console.WriteLine($"CObject created: {this.GetType().Name}");
         }
 
@@ -66,7 +70,7 @@ namespace CR2W.Types.W3
         #region DeSerializing
         public virtual void ParseBytes(CR2WBinaryReader br, uint size)
         {
-            ParseClass(br, this);
+            ParseClass(br, this, size);
             #region Comments
             // - TODO:
             //      Figure out an elegant solution to map the data within a chunk to the class structure.
@@ -94,7 +98,7 @@ namespace CR2W.Types.W3
             //             attributes to map the values then there will be problems trying to integrate this.
             #endregion
         }
-        protected void ParseClass(CR2WBinaryReader br, object instance)
+        protected void ParseClass(CR2WBinaryReader br, object instance, uint objsize)
         {
             br.ReadByte();
             while (true)
@@ -134,6 +138,7 @@ namespace CR2W.Types.W3
                 case "Boolean":           return br.ReadBoolean();
                 case "Single":            return br.ReadSingle();
                 case "String":            return br.ReadString();
+                case "StringAnsi":        return br.ReadStringAnsi();
                 case "Double":            return br.ReadDouble();
                 case "CName":             return br.ReadCName();
                 case "CGUID":             return br.ReadCGUID();
@@ -143,9 +148,11 @@ namespace CR2W.Types.W3
                 case "EngineQsTransform": return br.ReadEngineQsTransform();
                 case "CDateTime":         return br.ReadCDateTime();
 
-                case "SharedDataBuffer":  return br.ReadSharedDataBuffer(size);
-                case "CPhysicalCollision": return br.ReadPhysicalCollision(size); 
+                case "SharedDataBuffer":    return br.ReadSharedDataBuffer(size);
+                case "DataBuffer":          return br.ReadDataBuffer(size);
                 case "SStreamedAttachment": return br.ReadStreamedAttachment(size);
+
+                case "CPhysicalCollision":  return br.ReadPhysicalCollision(size);
             }
 
             //Parse Enumerators
@@ -216,7 +223,7 @@ namespace CR2W.Types.W3
             if (proptype.IsClass || proptype.IsDefined(typeof(REDClassAttribute)))
             {
                 var instance = Activator.CreateInstance(proptype);
-                ParseClass(br, instance);
+                ParseClass(br, instance, size);
                 return instance;
             }
 

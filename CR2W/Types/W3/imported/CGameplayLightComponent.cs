@@ -38,7 +38,7 @@ public float RangeMin { get; set;}
 public float RangeMax { get; set;}
 
 [REDProp("rangeAngle")]
-public int RangeAngle { get; set;}
+public UInt32 RangeAngle { get; set;}
 
 [REDProp("height")]
 public float Height { get; set;}

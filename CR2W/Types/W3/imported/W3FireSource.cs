@@ -68,7 +68,7 @@ public bool IsInteractionActivator { get; set;}
 public Vector AimVector { get; set;}
 
 [REDProp("gameplayFlags")]
-public int GameplayFlags { get; set;}
+public UInt32 GameplayFlags { get; set;}
 
 [REDProp("focusModeVisibility")]
 public EFocusModeVisibility FocusModeVisibility { get; set;}

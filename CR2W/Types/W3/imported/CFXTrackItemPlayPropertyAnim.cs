@@ -26,7 +26,7 @@ public CName PropertyAnimationName { get; set;}
 public bool RestoreAtEnd { get; set;}
 
 [REDProp("loopCount")]
-public int LoopCount { get; set;}
+public UInt32 LoopCount { get; set;}
 
 #endregion
 }
