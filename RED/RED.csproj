@@ -1,0 +1,171 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7FEBA69C-BAC8-453F-913D-F33945611F3C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RED</RootNamespace>
+    <AssemblyName>RED</AssemblyName>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LZ4PCL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LZ4PCL.1.0.0\lib\portable-net4+netcore45+wpa81+MonoAndroid1+MonoTouch1\LZ4PCL.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CName.cs" />
+    <Compile Include="CR2W\CR2WPropertyReader.cs" />
+    <Compile Include="IO\ChunkedLz4\ChunkedLz4File.cs" />
+    <Compile Include="IO\ChunkedLz4\ChunkedLz4FileHeader.cs" />
+    <Compile Include="IO\ChunkedLz4\ChunkedLz4FileTable.cs" />
+    <Compile Include="IO\ChunkedLz4\Lz4Chunk.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4ActionPointCategoriesDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4AnimationsCategoriesDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4AttitudesDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4DefinitionsDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4DefinitionsEntitieTemplatesDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4DefinitionsNGPlusDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4JournalDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4ResourceDefinitionsDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4RewardsDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4ScaleformContentDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4SceneAnimationsDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4VideoDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CR4VoicetagDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\Mounters\CSaveFileDLCMounter.cs" />
+    <Compile Include="Core\CSwfTexture.cs" />
+    <Compile Include="Core\VoicetagAppearancePair.cs" />
+    <Compile Include="IO\REDBinaryReader.cs" />
+    <Compile Include="IO\REDBinaryWriter.cs" />
+    <Compile Include="Reflection\EnumExtensions.cs" />
+    <Compile Include="StringAnsi.cs" />
+    <Compile Include="TDynArray.cs" />
+    <Compile Include="Utilities\BitRotator.cs" />
+    <Compile Include="Core\Vector.cs" />
+    <Compile Include="CR2W\CR2WReader.cs" />
+    <Compile Include="DDS\DDS.cs" />
+    <Compile Include="DDS\DDSDecompressor.cs" />
+    <Compile Include="DDS\DDSImage.cs" />
+    <Compile Include="DDS\Utils\Colour565.cs" />
+    <Compile Include="DDS\Utils\Colour8888.cs" />
+    <Compile Include="DDS\Utils\DDSHelper.cs" />
+    <Compile Include="DDS\Utils\DDSStruct.cs" />
+    <Compile Include="DDS\Utils\DDSPixelFormat.cs" />
+    <Compile Include="Utilities\BitConverterExtensions.cs" />
+    <Compile Include="Core\CDLCDefinition\CDLCDefinition.cs" />
+    <Compile Include="Core\CDLCDefinition\IGameplayDLCMounter.cs" />
+    <Compile Include="Core\CDLCDefinition\SDLCLanguagePack.cs" />
+    <Compile Include="Core\CIndexed2dArray.cs" />
+    <Compile Include="Core\CJobTree\CJobAction.cs" />
+    <Compile Include="Core\CJobTree\CJobActionBase.cs" />
+    <Compile Include="Core\CJobTree\CJobForceOutAction.cs" />
+    <Compile Include="Core\CJobTree\CJobTree.cs" />
+    <Compile Include="Core\CJobTree\CJobTreeNode.cs" />
+    <Compile Include="Core\CJobTree\SJobTreeSettings.cs" />
+    <Compile Include="Core\CWizardDefinition\CWizardBaseNode.cs" />
+    <Compile Include="Core\CWizardDefinition\CWizardQuestionNode.cs" />
+    <Compile Include="CR2W\CR2WWriter.cs" />
+    <Compile Include="Core\CTerrainTile.cs" />
+    <Compile Include="Reflection\AssemblyDictionary.cs" />
+    <Compile Include="IExportable.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\REDAttribute.cs" />
+    <Compile Include="Reflection\REDReflection.cs" />
+    <Compile Include="CDateTime.cs" />
+    <Compile Include="CGUID.cs" />
+    <Compile Include="Core\C2dArray.cs" />
+    <Compile Include="Core\CBitmapTexture.cs" />
+    <Compile Include="Core\CObject.cs" />
+    <Compile Include="Core\CResource.cs" />
+    <Compile Include="Core\CResourceManager.cs" />
+    <Compile Include="Core\CSourceTexture.cs" />
+    <Compile Include="Core\CWizardDefinition\CWizardDefinition.cs" />
+    <Compile Include="Core\Enums.cs" />
+    <Compile Include="Core\IReferencable.cs" />
+    <Compile Include="Core\IScriptable.cs" />
+    <Compile Include="Core\ISerializable.cs" />
+    <Compile Include="Core\ITexture.cs" />
+    <Compile Include="CPhysicalCollision.cs" />
+    <Compile Include="CR2W\Utils\CR2WBuffer.cs" />
+    <Compile Include="CR2W\Utils\CR2WEmbedded.cs" />
+    <Compile Include="CR2W\Utils\CR2WExport.cs" />
+    <Compile Include="CR2W\CR2WTestReader.cs" />
+    <Compile Include="CR2W\Utils\CR2WHeader.cs" />
+    <Compile Include="CR2W\Utils\CR2WImport.cs" />
+    <Compile Include="CR2W\InvalidCR2WFileException.cs" />
+    <Compile Include="CR2W\Utils\CR2WName.cs" />
+    <Compile Include="CR2W\Utils\CR2WProperty.cs" />
+    <Compile Include="CR2W\Utils\CR2WTable.cs" />
+    <Compile Include="CRC32\Crc32Algorithm.cs" />
+    <Compile Include="CRC32\Crc32CAlgorithm.cs" />
+    <Compile Include="CRC32\MismatchCRC32Exception.cs" />
+    <Compile Include="CRC32\SafeProxy.cs" />
+    <Compile Include="CRC32\SafeProxyC.cs" />
+    <Compile Include="DataBuffer.cs" />
+    <Compile Include="DeferredDataBuffer.cs" />
+    <Compile Include="EngineQsTransform.cs" />
+    <Compile Include="EngineTransform.cs" />
+    <Compile Include="EntityHandle.cs" />
+    <Compile Include="FNV1A\FNV1A32HashAlgorithm.cs" />
+    <Compile Include="FNV1A\FNV1A64HashAlgorithm.cs" />
+    <Compile Include="Handle.cs" />
+    <Compile Include="IdTag.cs" />
+    <Compile Include="LocalizedString.cs" />
+    <Compile Include="Pointer.cs" />
+    <Compile Include="SharedDataBuffer.cs" />
+    <Compile Include="Soft.cs" />
+    <Compile Include="Static.cs" />
+    <Compile Include="TagList.cs" />
+    <Compile Include="REDClass.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
